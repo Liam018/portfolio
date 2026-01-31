@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageSquare, Send, Bot, X, Trash2, Sparkles } from 'lucide-react';
+import { MessageSquare, Send, Bot, X, Trash2, Sparkles, Maximize2, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const INITIAL_MESSAGE = { role: 'bot', text: "Hi! I'm Liam's AI assistant. Ask me anything about his skills, projects, or background!" };
   const [messages, setMessages] = useState([INITIAL_MESSAGE]);
@@ -14,7 +15,7 @@ const ChatBot = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, isTyping]);
+  }, [messages, isTyping, isExpanded]);
 
   const knowledgeBase = {
     skills: "Liam is proficient in Frontend (React, React Native, Vite, Tailwind CSS), Backend (Supabase, Django REST, MariaDB/SQL), and Design (UI/UX, Photoshop, Figma, Framer).",
@@ -79,10 +80,22 @@ const ChatBot = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            layout
             initial={{ opacity: 0, y: 30, scale: 0.9, transformOrigin: 'bottom right' }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            animate={{ 
+              opacity: 1, 
+              y: 0, 
+              scale: 1,
+              width: isExpanded 
+                ? (window.innerWidth < 1024 ? 'calc(100vw - 48px)' : '600px') 
+                : (window.innerWidth < 640 ? 'calc(100vw - 48px)' : '400px'),
+              height: isExpanded 
+                ? (window.innerHeight < 800 ? 'calc(100vh - 120px)' : '700px') 
+                : (window.innerHeight < 600 ? 'calc(100vh - 120px)' : '550px')
+            }}
             exit={{ opacity: 0, y: 30, scale: 0.9 }}
-            className="glass mb-4 w-[350px] sm:w-[400px] h-[550px] rounded-[32px] overflow-hidden flex flex-col shadow-2xl border-white/10"
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="glass mb-4 rounded-[32px] overflow-hidden flex flex-col shadow-2xl border-white/10"
           >
             {/* Header */}
             <div className="p-5 bg-gradient-to-r from-primary to-secondary flex justify-between items-center text-white relative overflow-hidden">
@@ -114,6 +127,13 @@ const ChatBot = () => {
                   <Trash2 size={18} />
                 </button>
                 <button 
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  title={isExpanded ? "Minimize" : "Maximize"}
+                  className="hover:bg-white/10 p-2 rounded-xl transition-colors text-white/80 hover:text-white hidden sm:block"
+                >
+                  {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                </button>
+                <button 
                   onClick={() => setIsOpen(false)} 
                   className="hover:bg-white/10 p-2 rounded-xl transition-colors text-white/80 hover:text-white"
                 >
@@ -131,6 +151,7 @@ const ChatBot = () => {
                 {messages.map((m, idx) => (
                   <motion.div 
                     key={idx}
+                    layout
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
