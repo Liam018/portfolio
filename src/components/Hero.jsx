@@ -1,17 +1,30 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useRef } from 'react';
 
 const Hero = () => {
-  return (
-    <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-      {/* Background Orbs */}
-      <div className="absolute top-0 -left-20 w-72 h-72 bg-primary/20 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-0 -right-20 w-96 h-96 bg-secondary/10 rounded-full blur-[120px] -z-10" />
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
 
+  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+  
+  // Parallax offsets
+  const y1 = useSpring(useTransform(scrollYProgress, [0, 1], [0, 200]), springConfig);
+  const y2 = useSpring(useTransform(scrollYProgress, [0, 1], [0, -150]), springConfig);
+  const y3 = useSpring(useTransform(scrollYProgress, [0, 1], [0, 100]), springConfig);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+
+  return (
+    <section ref={containerRef} id="hero" className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
+          style={{ y: y3, opacity, scale }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <span className="px-4 py-1.5 rounded-full glass text-sm font-medium text-primary mb-6 inline-block">
             Available for Internships & Projects

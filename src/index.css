@@ -45,6 +45,7 @@ html.light {
 
     body {
         @apply bg-background text-text font-sans antialiased selection:bg-primary/30 selection:text-primary;
+        transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     h1,
@@ -62,6 +63,7 @@ html.light {
         background: var(--glass-bg);
         backdrop-filter: blur(12px);
         border: 1px solid var(--border);
+        transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .btn-primary {

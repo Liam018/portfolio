@@ -1,15 +1,36 @@
 import { useState, useEffect, useRef } from 'react';
 import { MessageSquare, Send, Bot, X, Trash2, Sparkles, Maximize2, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import pitchel from '../assets/pitchel.png';
 
 const ChatBot = () => {
+  const INITIAL_MESSAGE = { role: 'bot', text: "Hi! I'm Liam's AI assistant. Ask me anything about his skills, projects, or background! #skills" };
+  
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const INITIAL_MESSAGE = { role: 'bot', text: "Hi! I'm Liam's AI assistant. Ask me anything about his skills, projects, or background!" };
-  const [messages, setMessages] = useState([INITIAL_MESSAGE]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [messages, setMessages] = useState(() => {
+    const saved = localStorage.getItem('chat_history');
+    return saved ? JSON.parse(saved) : [INITIAL_MESSAGE];
+  });
   const [input, setInput] = useState('');
   const scrollRef = useRef(null);
+  const inputRef = useRef(null);
+
+  // Persistence
+  useEffect(() => {
+    localStorage.setItem('chat_history', JSON.stringify(messages));
+  }, [messages]);
+
+  // Auto-focus input
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      setTimeout(() => inputRef.current.focus(), 300);
+    } else if (isOpen) {
+      setUnreadCount(0);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -18,18 +39,38 @@ const ChatBot = () => {
   }, [messages, isTyping, isExpanded]);
 
   const knowledgeBase = {
-    skills: "Liam is proficient in Frontend (React, React Native, Vite, Tailwind CSS), Backend (Supabase, Django REST, MariaDB/SQL), and Design (UI/UX, Photoshop, Figma, Framer).",
-    projects: "His featured projects include an Interactive Campus Kiosk (his 3rd-year final project) and AgriLako (his Capstone project built with React Native and Supabase).",
-    education: "He is currently pursuing a BS in Information Technology at Saint Louis College in San Fernando City, La Union.",
-    contact: "You can reach Liam at liamkurt014@gmail.com or find him on LinkedIn and GitHub @Liam018.",
-    background: "He's an IT student from San Fernando City, La Union, passionate about full-stack development and UI/UX design.",
+    skills: "Liam is proficient in **Frontend** (React, React Native, Vite, Tailwind CSS), **Backend** (Supabase, Django REST, MariaDB/SQL), and **Design** (UI/UX, Photoshop, Figma, Framer). View them at #skills.",
+    projects: "His featured projects include an **Interactive Campus Kiosk** and **AgriLako** (built with React Native and Supabase). Check them out at #project-highlight.",
+    education: "He is currently pursuing a **BS in Information Technology** at Saint Louis College in San Fernando City, La Union.",
+    contact: "You can reach Liam at **liamkurt014@gmail.com** or find him on LinkedIn and GitHub @Liam018. More details at #contact.",
+    background: "He's an IT student from San Fernando City, La Union, passionate about full-stack development and UI/UX design. Meet him at #about.",
     // Meme Logic
     pagbilan: "Kala ko ba ayaw mo?",
     gustoko: "Ha? Ilan?",
     bente: "Tarantadooo",
     bakit: "Saan mo ilalagay?",
     dito: "Ohhululll",
-    default: "I'm not sure about that. Try asking about his skills, projects, education, or contact info!"
+    default: "I'm not sure about that. Try asking about his **skills**, **projects**, **education**, or **contact** info!"
+  };
+
+  const findBestResponse = (query) => {
+    const q = query.toLowerCase();
+    
+    // Meme Logic First
+    if (/pagbilan/i.test(q)) return knowledgeBase.pagbilan;
+    if (/gusto ko/i.test(q)) return knowledgeBase.gustoko;
+    if (/bente pesos/i.test(q)) return knowledgeBase.bente;
+    if (/bakit/i.test(q)) return knowledgeBase.bakit;
+    if (/dito oh/i.test(q)) return knowledgeBase.dito;
+
+    // Knowledge Base with Regex
+    if (/(skill|tool|stack|tech|know|language)/i.test(q)) return knowledgeBase.skills;
+    if (/(project|work|portfolio|app|build|made)/i.test(q)) return knowledgeBase.projects;
+    if (/(education|study|school|college|degree|learn)/i.test(q)) return knowledgeBase.education;
+    if (/(contact|email|reach|message|hire|linkedin|github)/i.test(q)) return knowledgeBase.contact;
+    if (/(who|about|background|bio|profile|liam)/i.test(q)) return knowledgeBase.background;
+
+    return knowledgeBase.default;
   };
 
   const suggestions = [
@@ -45,38 +86,68 @@ const ChatBot = () => {
     if (!messageText.trim()) return;
 
     const userMessage = messageText.toLowerCase().trim();
-    setMessages(prev => [...prev, { role: 'user', text: messageText }]);
+    
+    // Check for meme image
+    let userImage = null;
+    if (userMessage.includes("dito oh")) {
+      userImage = pitchel;
+    }
+
+    setMessages(prev => [...prev, { role: 'user', text: messageText, image: userImage }]);
     setInput('');
     setIsTyping(true);
 
-    // Simulate bot thinking
-    setTimeout(() => {
-      let botResponse = knowledgeBase.default;
-      
-      // Meme Sequence First
-      if (userMessage === "pagbilan") botResponse = knowledgeBase.pagbilan;
-      else if (userMessage.includes("gusto ko")) botResponse = knowledgeBase.gustoko;
-      else if (userMessage.includes("bente pesos")) botResponse = knowledgeBase.bente;
-      else if (userMessage === "bakit?") botResponse = knowledgeBase.bakit;
-      else if (userMessage === "dito oh") botResponse = knowledgeBase.dito;
-      // Knowledge Base
-      else if (userMessage.includes('skill')) botResponse = knowledgeBase.skills;
-      else if (userMessage.includes('project')) botResponse = knowledgeBase.projects;
-      else if (userMessage.includes('education') || userMessage.includes('study') || userMessage.includes('school') || userMessage.includes('college')) botResponse = knowledgeBase.education;
-      else if (userMessage.includes('contact') || userMessage.includes('email')) botResponse = knowledgeBase.contact;
-      else if (userMessage.includes('who') || userMessage.includes('about') || userMessage.includes('background')) botResponse = knowledgeBase.background;
+    const botResponse = findBestResponse(userMessage);
+    
+    // Dynamic typing delay based on response length
+    const typingDuration = Math.min(800 + botResponse.length * 15, 2500);
 
+    setTimeout(() => {
       setIsTyping(false);
       setMessages(prev => [...prev, { role: 'bot', text: botResponse }]);
-    }, 1500);
+      if (!isOpen) setUnreadCount(prev => prev + 1);
+    }, typingDuration);
   };
 
   const clearChat = () => {
     setMessages([INITIAL_MESSAGE]);
+    localStorage.removeItem('chat_history');
+  };
+
+  const FormattedMessage = ({ text }) => {
+    const parts = text.split(/(\*\*.*?\*\*|#\S+)/g);
+    return (
+      <div className="space-y-1">
+        {parts.map((part, i) => {
+          if (part.startsWith('**') && part.endsWith('**')) {
+            return <strong key={i} className="font-bold text-primary">{part.slice(2, -2)}</strong>;
+          }
+          if (part.startsWith('#')) {
+            const id = part.slice(1);
+            return (
+              <button
+                key={i}
+                onClick={() => {
+                  const el = document.getElementById(id);
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                    if (window.innerWidth < 768) setIsOpen(false);
+                  }
+                }}
+                className="text-primary hover:underline font-bold inline-flex items-center gap-1"
+              >
+                {part}
+              </button>
+            );
+          }
+          return <span key={i}>{part}</span>;
+        })}
+      </div>
+    );
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end">
+    <div className="fixed bottom-6 right-6 z-60 flex flex-col items-end">
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -98,15 +169,22 @@ const ChatBot = () => {
             className="glass mb-4 rounded-[32px] overflow-hidden flex flex-col shadow-2xl border-white/10"
           >
             {/* Header */}
-            <div className="p-5 bg-gradient-to-r from-primary to-secondary flex justify-between items-center text-white relative overflow-hidden">
+            <div className="p-5 bg-linear-to-r from-primary to-secondary flex justify-between items-center text-white relative overflow-hidden">
                <div className="absolute top-0 left-0 w-full h-full bg-white/5 pointer-events-none" />
                <div className="flex items-center space-x-3 z-10">
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md border border-white/30">
-                    <Bot size={22} />
-                  </div>
                   <motion.div 
-                    animate={{ scale: [1, 1.2, 1] }}
+                    animate={isTyping ? { scale: [1, 1.1, 1] } : {}}
+                    transition={{ duration: 1, repeat: Infinity }}
+                    className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md border border-white/30"
+                  >
+                    <Bot size={22} />
+                  </motion.div>
+                  <motion.div 
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      opacity: [1, 0.7, 1]
+                    }}
                     transition={{ duration: 2, repeat: Infinity }}
                     className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-primary" 
                   />
@@ -156,12 +234,21 @@ const ChatBot = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
-                    <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${
+                    <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed space-y-2 ${
                       m.role === 'user' 
-                        ? 'bg-gradient-to-br from-primary to-secondary text-white rounded-tr-none shadow-lg shadow-primary/20 font-medium' 
+                        ? 'bg-linear-to-br from-primary to-secondary text-white rounded-tr-none shadow-lg shadow-primary/20 font-medium' 
                         : 'glass text-text rounded-tl-none border-white/5'
                     }`}>
-                      {m.text}
+                      {m.text && <FormattedMessage text={m.text} />}
+                      {m.image && (
+                        <motion.img 
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          src={m.image} 
+                          alt="Bot response" 
+                          className="w-full h-auto rounded-xl shadow-lg border border-white/10"
+                        />
+                      )}
                     </div>
                   </motion.div>
                 ))}
@@ -190,7 +277,7 @@ const ChatBot = () => {
             </div>
 
             {/* Suggestions & Input */}
-            <div className="p-4 bg-white/[0.02] border-t border-white/10 space-y-4">
+            <div className="p-4 bg-white/2 border-t border-white/10 space-y-4">
               <div className="flex flex-wrap gap-2">
                 {suggestions.map((s, idx) => (
                   <motion.button
@@ -205,18 +292,28 @@ const ChatBot = () => {
                 ))}
               </div>
 
-              <form onSubmit={handleSend} className="relative group">
-                <input
-                  type="text"
+              <form 
+                onSubmit={handleSend} 
+                className="relative group search-container"
+              >
+                <textarea
+                  ref={inputRef}
+                  rows="1"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSend(e);
+                    }
+                  }}
                   placeholder="Ask me something..."
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 pr-12 outline-none text-sm text-text focus:border-primary/50 focus:bg-white/[0.08] transition-all placeholder:text-text-muted/50"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 pr-12 outline-none text-sm text-text focus:border-primary/50 focus:bg-white/8 transition-all placeholder:text-text-muted/50 resize-none min-h-[56px] max-h-32 flex items-center"
                 />
                 <button 
                   type="submit" 
                   disabled={!input.trim()}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-primary hover:text-white hover:bg-primary p-2 rounded-xl transition-all disabled:opacity-0"
+                  className="absolute right-3 bottom-3 text-primary hover:text-white hover:bg-primary p-2 rounded-xl transition-all disabled:opacity-0"
                 >
                   <Send size={18} />
                 </button>
@@ -230,9 +327,23 @@ const ChatBot = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center text-white shadow-2xl relative overflow-hidden group"
+        className="w-16 h-16 bg-linear-to-br from-primary to-secondary rounded-2xl flex items-center justify-center text-white shadow-2xl relative overflow-hidden group"
       >
         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+        
+        <AnimatePresence>
+          {unreadCount > 0 && !isOpen && (
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-background z-20"
+            >
+              {unreadCount}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <AnimatePresence mode="wait">
           {isOpen ? (
             <motion.div key="close" initial={{ rotate: -90 }} animate={{ rotate: 0 }} exit={{ rotate: 90 }}>

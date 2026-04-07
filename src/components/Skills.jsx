@@ -1,28 +1,41 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useRef } from 'react';
 import { Code2, Server, Palette, CheckCircle2 } from 'lucide-react';
 
 const Skills = () => {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+  
+  // Enter/Exit transitions
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.9, 1, 1, 0.9]);
+
   const categories = [
     {
       title: "Frontend",
       icon: <Code2 className="w-6 h-6 text-primary" />,
       desc: "Building intuitive interfaces",
       color: "bg-primary/10",
-      skills: ["React.js", "React Native", "Expo", "Vite", "Tailwind CSS", "Framer Motion"]
+      skills: ["React.js", "React Native", "Tailwind CSS", "HTML", "CSS", "JavaScript", "TypeScript"]
     },
     {
       title: "Backend",
       icon: <Server className="w-6 h-6 text-secondary" />,
       desc: "Architecting solid logic",
       color: "bg-secondary/10",
-      skills: ["Supabase", "Django REST", "MariaDB/SQL"]
+      skills: ["PostgreSQL", "Django REST", "MariaDB/SQL", "Laravel"]
     },
     {
       title: "Design",
       icon: <Palette className="w-6 h-6 text-accent" />,
       desc: "Designing user journeys",
       color: "bg-accent/10",
-      skills: ["UI/UX", "Photoshop", "Figma", "Framer"]
+      skills: ["Photoshop", "Figma", "Framer"]
     }
   ];
 
@@ -47,8 +60,11 @@ const Skills = () => {
   };
 
   return (
-    <section id="skills" className="py-24 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={containerRef} id="skills" className="py-24 relative overflow-hidden">
+      <motion.div 
+        style={{ opacity, scale }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         <div className="text-center mb-16">
           <h2 className="section-title mb-4">The Toolbox</h2>
           <p className="text-text-muted max-w-2xl mx-auto">
@@ -76,7 +92,7 @@ const Skills = () => {
                   <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">{cat.title}</h3>
+                  <h3 className="text-xl font-bold text-text">{cat.title}</h3>
                   <p className="text-xs text-text-muted">{cat.desc}</p>
                 </div>
               </div>
@@ -88,7 +104,7 @@ const Skills = () => {
                     key={skill}
                     variants={skillVars}
                     whileHover={{ scale: 1.05, y: -2 }}
-                    className="flex items-center px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/5 text-sm text-text-muted hover:text-white hover:bg-white/[0.08] hover:border-white/10 transition-all cursor-default"
+                    className="flex items-center px-3 py-1.5 rounded-xl bg-text/5 border border-border text-sm text-text-muted hover:text-text hover:bg-text/10 hover:border-primary/30 transition-all cursor-default"
                   >
                     <CheckCircle2 className="w-3 h-3 mr-1.5 text-primary opacity-50" />
                     {skill}
@@ -101,7 +117,7 @@ const Skills = () => {
             </motion.div>
           ))}
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 };

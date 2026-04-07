@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useRef } from 'react';
 import profileIllustration from '../assets/profile_illustration.png';
 
 const infoCards = [
@@ -11,9 +12,27 @@ const infoCards = [
 const interests = ['Web Prep', 'UI/UX', 'Mobile Dev', 'Supabase', 'React Native'];
 
 const About = () => {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+  const y1 = useSpring(useTransform(scrollYProgress, [0, 1], [-50, 50]), springConfig);
+  const y2 = useSpring(useTransform(scrollYProgress, [0, 1], [50, -50]), springConfig);
+  const y3 = useSpring(useTransform(scrollYProgress, [0, 1], [0, -100]), springConfig);
+
+  // Enter/Exit transitions
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.9, 1, 1, 0.9]);
+
   return (
-    <section id="about" className="py-24 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={containerRef} id="about" className="py-24 relative overflow-hidden">
+      <motion.div 
+        style={{ opacity, scale }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           
           {/* Left Side: Visuals */}
@@ -22,6 +41,7 @@ const About = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             className="flex flex-col items-center lg:items-start relative"
+            style={{ y: y1 }}
           >
             <div className="relative z-10 glass rounded-[40px] p-2 overflow-hidden aspect-square max-w-md w-full mx-auto lg:mx-0">
                <motion.img 
@@ -51,9 +71,15 @@ const About = () => {
               ))}
             </div>
 
-            {/* Background blobs */}
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl -z-10" />
-            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary/20 rounded-full blur-3xl -z-10" />
+            {/* Background blobs with parallax */}
+            <motion.div 
+              style={{ y: y2 }}
+              className="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl -z-10" 
+            />
+            <motion.div 
+              style={{ y: y3 }}
+              className="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary/20 rounded-full blur-3xl -z-10" 
+            />
           </motion.div>
 
           {/* Right Side: Content */}
@@ -62,7 +88,7 @@ const About = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
               Tracing My Path in Tech
             </h2>
             
@@ -89,7 +115,7 @@ const About = () => {
           </motion.div>
 
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

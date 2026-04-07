@@ -16,8 +16,8 @@ const Navbar = () => {
 
     const observerOption = {
       root: null,
-      rootMargin: '0px',
-      threshold: 0.4,
+      rootMargin: '-10% 0px -70% 0px',
+      threshold: 0,
     };
 
     const handleIntersect = (entries) => {
@@ -29,7 +29,7 @@ const Navbar = () => {
     };
 
     const observer = new IntersectionObserver(handleIntersect, observerOption);
-    const sections = ['about', 'skills', 'project-highlight', 'contact'];
+    const sections = ['hero', 'about', 'skills', 'project-highlight', 'contact'];
     sections.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
@@ -90,7 +90,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-4">
             <ThemeToggle />
-            <button onClick={() => setIsOpen(!isOpen)} className="text-text-muted hover:text-white">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-text-muted hover:text-text transition-colors">
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
@@ -110,7 +110,7 @@ const Navbar = () => {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="block px-3 py-2 text-base font-medium text-text-muted hover:text-white hover:bg-white/5 rounded-lg"
+                className="block px-3 py-2 text-base font-medium text-text-muted hover:text-text hover:bg-text/5 rounded-lg"
               >
                 {link.name}
               </a>
