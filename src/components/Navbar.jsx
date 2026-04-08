@@ -63,26 +63,29 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-500 ${
-      scrolled 
-        ? 'py-4' 
-        : 'py-6'
-    }`}>
-      {/* Background Glass Layer */}
-      <div className={`absolute inset-0 transition-opacity duration-500 ${
-        scrolled ? 'opacity-100' : 'opacity-0'
-      }`}>
-        <div className="absolute inset-0 glass border-b border-white/5 shadow-2xl shadow-black/20" />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="flex justify-between items-center">
+    <nav className="fixed w-full z-50 flex justify-center pointer-events-none pt-4 md:pt-6">
+      <motion.div 
+        initial={false}
+        animate={{
+          width: scrolled ? '92%' : '100%',
+          maxWidth: scrolled ? '1200px' : '100vw',
+          y: scrolled ? 0 : -8,
+        }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        className={`relative flex items-center justify-between px-6 transition-all duration-500 pointer-events-auto ${
+          scrolled 
+            ? 'glass rounded-full shadow-2xl shadow-black/30 border border-white/10 py-3' 
+            : 'py-4'
+        }`}
+      >
+        <div className="flex w-full items-center justify-between">
           {/* Logo Section */}
           <motion.a 
             href="#hero"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.05, rotate: -1.5 }}
+            whileTap={{ scale: 0.95 }}
             className="flex items-center space-x-3 group cursor-pointer"
           >
             <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg group-hover:shadow-primary/40 transition-shadow duration-300">
@@ -112,17 +115,13 @@ const Navbar = () => {
                   }`}
                 >
                   <span className="relative z-10">{link.name}</span>
-                  {/* Active/Hover Pill */}
-                  {(activeSection === link.id || hoveredLink === link.id) && (
+                  {/* Active Section Pill */}
+                  {activeSection === link.id && (
                     <motion.div
                       layoutId="nav-pill"
                       initial={false}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                      className={`absolute inset-0 rounded-full z-0 ${
-                        activeSection === link.id 
-                          ? 'bg-linear-to-r from-primary to-secondary' 
-                          : 'bg-white/10 dark:bg-white/5'
-                      }`}
+                      className="absolute inset-0 rounded-full z-0 bg-linear-to-r from-primary to-secondary"
                     />
                   )}
                 </a>
@@ -140,8 +139,8 @@ const Navbar = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ y: -2, scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ y: -3, scale: 1.15, rotate: social.label === 'GitHub' ? -5 : 5 }}
+                    whileTap={{ scale: 0.9 }}
                     className="p-2 text-text-muted hover:text-primary transition-colors duration-300"
                   >
                     {social.icon}
@@ -155,7 +154,7 @@ const Navbar = () => {
           <div className="hidden lg:block">
             <motion.a
               href="#contact"
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, x: 5 }}
               whileTap={{ scale: 0.95 }}
               className="bg-text text-background px-6 py-2.5 rounded-full text-sm font-bold flex items-center space-x-2 group shadow-xl hover:shadow-primary/20 transition-all"
             >
@@ -178,13 +177,13 @@ const Navbar = () => {
             </motion.button>
           </div>
         </div>
-      </div>
 
-      {/* Progress Bar */}
-      <motion.div 
-        className="absolute bottom-0 left-0 right-0 h-[2px] bg-linear-to-r from-primary via-secondary to-accent origin-left z-20" 
-        style={{ scaleX }}
-      />
+        {/* Progress Bar inside the pill */}
+        <motion.div 
+          className="absolute bottom-0 left-6 right-6 h-[1.5px] bg-linear-to-r from-primary via-secondary to-accent origin-left z-20" 
+          style={{ scaleX }}
+        />
+      </motion.div>
 
       {/* Mobile Nav Overlay */}
       <AnimatePresence>
@@ -194,7 +193,7 @@ const Navbar = () => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.15 }}
-            className="lg:hidden absolute top-full left-0 w-full bg-background/95 backdrop-blur-2xl border-b border-white/10 z-[999]"
+            className="lg:hidden absolute top-full left-0 right-0 mt-2 bg-background/95 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden z-999 shadow-2xl"
           >
             <div className="px-6 py-8 space-y-6">
               <div className="grid gap-4">

@@ -111,7 +111,7 @@ const About = () => {
               My journey involves hands-on experience with React Native, Supabase, and full-stack architecture. I love turning complex problems into elegant, user-centric solutions that make a difference.
             </p>
 
-            <div className="grid grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-2 gap-4">
               {infoCards.map((card, index) => (
                 <motion.div
                   key={index}
@@ -123,7 +123,7 @@ const About = () => {
                   <span className="block text-xs text-text-muted mt-0.5">{card.sub}</span>
                 </motion.div>
               ))}
-            </div>
+            </div> */}
           </motion.div>
 
         </div>

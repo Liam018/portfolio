@@ -41,7 +41,7 @@ html.light {
 @layer base {
     html {
         scroll-behavior: smooth;
-        scroll-padding-top: 25px;
+        scroll-padding-top: 60px;
     }
 
     body {
