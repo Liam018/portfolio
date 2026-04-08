@@ -2,6 +2,14 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useRef } from 'react';
 import { Code2, Server, Palette, CheckCircle2 } from 'lucide-react';
 
+// Shared smooth transition
+const smoothTransition = {
+  type: "spring",
+  stiffness: 120,
+  damping: 22,
+  mass: 0.6,
+};
+
 const Skills = () => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -9,11 +17,13 @@ const Skills = () => {
     offset: ["start end", "end start"]
   });
 
-  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+  const smoothConfig = { stiffness: 50, damping: 20, restDelta: 0.001 };
   
-  // Enter/Exit transitions
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.9, 1, 1, 0.9]);
+  // Spring-smoothed enter/exit transitions
+  const rawOpacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
+  const rawScale = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.95, 1, 1, 0.95]);
+  const opacity = useSpring(rawOpacity, smoothConfig);
+  const scale = useSpring(rawScale, smoothConfig);
 
   const categories = [
     {
@@ -44,25 +54,34 @@ const Skills = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15
+        staggerChildren: 0.12,
+        delayChildren: 0.05,
       }
     }
   };
 
   const itemVars = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: smoothTransition,
+    }
   };
 
   const skillVars = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1 }
+    hidden: { opacity: 0, scale: 0.85 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { type: "spring", stiffness: 80, damping: 15 },
+    }
   };
 
   return (
     <section ref={containerRef} id="skills" className="py-24 relative overflow-hidden">
       <motion.div 
-        style={{ opacity, scale }}
+        style={{ opacity, scale, transformOrigin: 'center center', willChange: 'transform, opacity' }}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         <div className="text-center mb-16">
@@ -77,7 +96,7 @@ const Skills = () => {
           variants={containerVars}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-15%" }}
         >
           {categories.map((cat, idx) => (
             <motion.div
@@ -103,7 +122,7 @@ const Skills = () => {
                   <motion.div
                     key={skill}
                     variants={skillVars}
-                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileHover={{ scale: 1.05, y: -2, transition: { type: "spring", stiffness: 300, damping: 20 } }}
                     className="flex items-center px-3 py-1.5 rounded-xl bg-text/5 border border-border text-sm text-text-muted hover:text-text hover:bg-text/10 hover:border-primary/30 transition-all cursor-default"
                   >
                     <CheckCircle2 className="w-3 h-3 mr-1.5 text-primary opacity-50" />

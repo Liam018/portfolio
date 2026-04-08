@@ -1,7 +1,15 @@
 import { useState, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Mail, Linkedin, Github, Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
+
+// Shared smooth transition
+const smoothTransition = {
+  type: "spring",
+  stiffness: 120,
+  damping: 22,
+  mass: 0.6,
+};
 
 const Contact = () => {
   const form = useRef();
@@ -15,9 +23,13 @@ const Contact = () => {
     offset: ["start end", "end start"]
   });
 
-  // Enter/Exit transitions
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.9, 1, 1, 0.9]);
+  const smoothConfig = { stiffness: 50, damping: 20, restDelta: 0.001 };
+
+  // Spring-smoothed enter/exit transitions
+  const rawOpacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
+  const rawScale = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.95, 1, 1, 0.95]);
+  const opacity = useSpring(rawOpacity, smoothConfig);
+  const scale = useSpring(rawScale, smoothConfig);
 
   const contactInfo = [
     { 
@@ -72,7 +84,7 @@ const Contact = () => {
       <div className="absolute top-1/2 right-0 -translate-y-1/2 w-72 h-72 bg-secondary/10 rounded-full blur-[120px] -z-10" />
 
       <motion.div 
-        style={{ opacity, scale }}
+        style={{ opacity, scale, transformOrigin: 'center center', willChange: 'transform, opacity' }}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         <div className="text-center mb-16">
@@ -86,9 +98,10 @@ const Contact = () => {
           
           {/* Left Column: Contact Details */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={smoothTransition}
+            viewport={{ once: true, margin: "-15%" }}
             className="space-y-6"
           >
             <h3 className="text-2xl font-bold mb-8">Contact Information</h3>
@@ -98,7 +111,7 @@ const Contact = () => {
                 href={info.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ x: 10 }}
+                whileHover={{ x: 10, transition: { type: "spring", stiffness: 300, damping: 20 } }}
                 className="flex items-center gap-5 glass p-6 rounded-2xl hover:bg-white/5 transition-all group"
               >
                 <div className={`w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center ${info.color} group-hover:scale-110 transition-transform shadow-lg shadow-black/20`}>
@@ -114,9 +127,10 @@ const Contact = () => {
 
           {/* Right Column: Contact Form */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ ...smoothTransition, delay: 0.1 }}
+            viewport={{ once: true, margin: "-15%" }}
             className="glass p-6 md:p-8 rounded-[32px] relative overflow-hidden"
           >
             <AnimatePresence mode="wait">
@@ -128,6 +142,7 @@ const Contact = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                   className="space-y-4"
                 >
                   <div className="grid md:grid-cols-2 gap-4">
@@ -177,6 +192,7 @@ const Contact = () => {
                     <motion.div 
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
                       className="flex items-center gap-2 text-red-100/80 text-sm bg-red-500/20 p-3 rounded-xl border border-red-500/30"
                     >
                       <AlertCircle className="w-4 h-4" />
@@ -202,8 +218,9 @@ const Contact = () => {
               ) : (
                 <motion.div 
                   key="success"
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 100, damping: 20 }}
                   className="py-20 text-center space-y-4"
                 >
                   <div className="w-20 h-20 bg-accent/20 rounded-full flex items-center justify-center mx-auto text-accent mb-6">

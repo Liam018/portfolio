@@ -5,13 +5,13 @@ import Skills from './components/Skills';
 import ProjectHighlight from './components/ProjectHighlight';
 import ChatBot from './components/ChatBot';
 import Contact from './components/Contact';
-import BackgroundOrbs from './components/BackgroundOrbs';
+// import BackgroundOrbs from './components/BackgroundOrbs';
 import Footer from './components/Footer';
 
 function App() {
   return (
     <div className="min-h-screen relative overflow-x-hidden">
-      <BackgroundOrbs />
+      {/* <BackgroundOrbs /> */}
       <Navbar />
       <Hero />
       <About />

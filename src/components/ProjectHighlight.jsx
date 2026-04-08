@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Github, ExternalLink, Zap } from 'lucide-react';
 import agrilakoMobile from '../assets/agrilakoMobile.jpg';
 import agrilakoWeb from '../assets/agrilakoWeb.png';
@@ -34,9 +34,13 @@ const ProjectHighlight = () => {
     offset: ["start end", "end start"]
   });
 
-  // Enter/Exit transitions
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.9, 1, 1, 0.9]);
+  const smoothConfig = { stiffness: 50, damping: 20, restDelta: 0.001 };
+
+  // Spring-smoothed enter/exit transitions
+  const rawOpacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
+  const rawScale = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.95, 1, 1, 0.95]);
+  const opacity = useSpring(rawOpacity, smoothConfig);
+  const scale = useSpring(rawScale, smoothConfig);
 
   const next = () => setCurrentIndex((prev) => (prev + 1) % highlights.length);
   const prev = () => setCurrentIndex((prev) => (prev - 1 + highlights.length) % highlights.length);
@@ -44,7 +48,7 @@ const ProjectHighlight = () => {
   return (
     <section ref={containerRef} id="project-highlight" className="py-20 bg-white/1 overflow-hidden">
       <motion.div 
-        style={{ opacity, scale }}
+        style={{ opacity, scale, transformOrigin: 'center center', willChange: 'transform, opacity' }}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         <div className="mb-12">
@@ -74,10 +78,15 @@ const ProjectHighlight = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ 
+                  type: "spring",
+                  stiffness: 250,
+                  damping: 25,
+                  mass: 0.5,
+                }}
                 className="grid lg:grid-cols-2 gap-12 items-center"
               >
                 {/* Visual Side */}
@@ -150,13 +159,15 @@ const ProjectHighlight = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
             onClick={() => setSelectedImg(null)}
-            className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out"
+            className="fixed inset-0 z-100 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out"
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 25 }}
               className="relative max-w-5xl w-full h-full flex items-center justify-center"
             >
               <img 

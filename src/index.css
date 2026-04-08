@@ -41,6 +41,7 @@ html.light {
 @layer base {
     html {
         scroll-behavior: smooth;
+        scroll-padding-top: 25px;
     }
 
     body {
@@ -61,7 +62,8 @@ html.light {
 @layer components {
     .glass {
         background: var(--glass-bg);
-        backdrop-filter: blur(12px);
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
         border: 1px solid var(--border);
         transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -71,10 +73,10 @@ html.light {
     }
 
     .section-title {
-        @apply text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+        @apply text-4xl md:text-5xl font-bold mb-12 text-center bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent;
     }
 
     .accent-gradient {
-        @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+        @apply bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent;
     }
 }

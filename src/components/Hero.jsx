@@ -8,23 +8,30 @@ const Hero = () => {
     offset: ["start start", "end start"]
   });
 
-  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+  const smoothConfig = { stiffness: 50, damping: 20, restDelta: 0.001 };
   
-  // Parallax offsets
-  const y1 = useSpring(useTransform(scrollYProgress, [0, 1], [0, 200]), springConfig);
-  const y2 = useSpring(useTransform(scrollYProgress, [0, 1], [0, -150]), springConfig);
-  const y3 = useSpring(useTransform(scrollYProgress, [0, 1], [0, 100]), springConfig);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+  // Parallax offsets — softer springs for buttery movement
+  const y1 = useSpring(useTransform(scrollYProgress, [0, 1], [0, 200]), smoothConfig);
+  const y2 = useSpring(useTransform(scrollYProgress, [0, 1], [0, -150]), smoothConfig);
+  const y3 = useSpring(useTransform(scrollYProgress, [0, 1], [0, 80]), smoothConfig);
+
+  // Spring-smoothed scroll-linked opacity & scale
+  const rawOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const rawScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
+  const opacity = useSpring(rawOpacity, smoothConfig);
+  const scale = useSpring(rawScale, smoothConfig);
 
   return (
     <section ref={containerRef} id="hero" className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
-          style={{ y: y3, opacity, scale }}
-          initial={{ opacity: 0, y: 20 }}
+          style={{ y: y3, opacity, scale, willChange: 'transform, opacity' }}
+          initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ 
+            duration: 0.7, 
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
         >
           <span className="px-4 py-1.5 rounded-full glass text-sm font-medium text-primary mb-6 inline-block">
             Available for Internships & Projects

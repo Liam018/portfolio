@@ -11,6 +11,14 @@ const infoCards = [
 
 const interests = ['Web Prep', 'UI/UX', 'Mobile Dev', 'Supabase', 'React Native'];
 
+// Shared smooth transition for whileInView elements
+const smoothTransition = {
+  type: "spring",
+  stiffness: 120,
+  damping: 22,
+  mass: 0.6,
+};
+
 const About = () => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -18,28 +26,31 @@ const About = () => {
     offset: ["start end", "end start"]
   });
 
-  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
-  const y1 = useSpring(useTransform(scrollYProgress, [0, 1], [-50, 50]), springConfig);
-  const y2 = useSpring(useTransform(scrollYProgress, [0, 1], [50, -50]), springConfig);
-  const y3 = useSpring(useTransform(scrollYProgress, [0, 1], [0, -100]), springConfig);
+  const smoothConfig = { stiffness: 50, damping: 20, restDelta: 0.001 };
+  const y1 = useSpring(useTransform(scrollYProgress, [0, 1], [-30, 30]), smoothConfig);
+  const y2 = useSpring(useTransform(scrollYProgress, [0, 1], [30, -30]), smoothConfig);
+  const y3 = useSpring(useTransform(scrollYProgress, [0, 1], [0, -60]), smoothConfig);
 
-  // Enter/Exit transitions
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.9, 1, 1, 0.9]);
+  // Spring-smoothed enter/exit transitions
+  const rawOpacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
+  const rawScale = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.95, 1, 1, 0.95]);
+  const opacity = useSpring(rawOpacity, smoothConfig);
+  const scale = useSpring(rawScale, smoothConfig);
 
   return (
     <section ref={containerRef} id="about" className="py-24 relative overflow-hidden">
       <motion.div 
-        style={{ opacity, scale }}
+        style={{ opacity, scale, transformOrigin: 'center center', willChange: 'transform, opacity' }}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           
           {/* Left Side: Visuals */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={smoothTransition}
+            viewport={{ once: true, margin: "-15%" }}
             className="flex flex-col items-center lg:items-start relative"
             style={{ y: y1 }}
           >
@@ -84,9 +95,10 @@ const About = () => {
 
           {/* Right Side: Content */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ ...smoothTransition, delay: 0.1 }}
+            viewport={{ once: true, margin: "-15%" }}
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
               Tracing My Path in Tech
@@ -103,7 +115,7 @@ const About = () => {
               {infoCards.map((card, index) => (
                 <motion.div
                   key={index}
-                  whileHover={{ y: -5 }}
+                  whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 20 } }}
                   className="glass p-5 rounded-2xl border-white/5"
                 >
                   <span className={`block text-2xl font-bold ${card.color}`}>{card.value}</span>
