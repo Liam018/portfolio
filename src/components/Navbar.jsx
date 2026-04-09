@@ -104,7 +104,7 @@ const Navbar = () => {
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         className={`relative flex items-center justify-between px-6 transition-all duration-500 pointer-events-auto ${
           scrolled 
-            ? 'glass rounded-full shadow-2xl shadow-black/30 border border-white/10 py-3' 
+            ? 'glass backdrop-blur-md rounded-full shadow-2xl shadow-black/30 border border-white/10 py-3' 
             : 'py-4'
         }`}
       >
@@ -223,7 +223,7 @@ const Navbar = () => {
             animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
             exit={{ opacity: 0, scale: 0.95, y: -10, filter: 'blur(10px)' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="lg:hidden absolute top-full left-4 right-4 mt-4 glass rounded-[2.5rem] overflow-hidden z-999 shadow-2xl shadow-primary/5 pointer-events-auto"
+            className="lg:hidden absolute top-full left-4 right-4 mt-4 glass backdrop-blur-md rounded-[2.5rem] overflow-hidden z-999 shadow-2xl shadow-primary/5 pointer-events-auto"
           >
             <div className="px-8 py-10 flex flex-col space-y-10">
               <div className="flex flex-col space-y-4">
@@ -275,7 +275,7 @@ const Navbar = () => {
                         whileTap={{ scale: 0.9 }}
                         key={social.label} 
                         href={social.href} 
-                        className="p-3.5 glass rounded-full text-text-muted hover:text-primary hover:border-primary/30 transition-all duration-300 shadow-lg"
+                        className="p-3.5 glass backdrop-blur-md rounded-full text-text-muted hover:text-primary hover:border-primary/30 transition-all duration-300 shadow-lg"
                       >
                         {social.icon}
                       </motion.a>

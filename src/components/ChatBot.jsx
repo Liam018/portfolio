@@ -166,7 +166,7 @@ const ChatBot = () => {
             }}
             exit={{ opacity: 0, y: 30, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="glass mb-4 rounded-[32px] overflow-hidden flex flex-col shadow-2xl border-white/10"
+            className="glass backdrop-blur-md mb-4 rounded-[32px] overflow-hidden flex flex-col shadow-2xl border-white/10"
           >
             {/* Header */}
             <div className="p-5 bg-linear-to-r from-primary to-secondary flex justify-between items-center text-white relative overflow-hidden">
@@ -237,7 +237,7 @@ const ChatBot = () => {
                     <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed space-y-2 ${
                       m.role === 'user' 
                         ? 'bg-linear-to-br from-primary to-secondary text-white rounded-tr-none shadow-lg shadow-primary/20 font-medium' 
-                        : 'glass text-text rounded-tl-none border-white/5'
+                        : 'glass backdrop-blur-md text-text rounded-tl-none border-white/5'
                     }`}>
                       {m.text && <FormattedMessage text={m.text} />}
                       {m.image && (
@@ -259,7 +259,7 @@ const ChatBot = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="flex justify-start"
                   >
-                    <div className="glass p-4 rounded-2xl rounded-tl-none border-white/5">
+                    <div className="glass backdrop-blur-md p-4 rounded-2xl rounded-tl-none border-white/5">
                       <div className="flex gap-1">
                         {[0, 1, 2].map((i) => (
                           <motion.div
@@ -285,7 +285,7 @@ const ChatBot = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleSend(null, s.label)}
-                    className="text-[10px] uppercase tracking-wider font-bold px-3 py-2 rounded-xl glass hover:bg-primary/20 hover:text-primary transition-all border-white/5"
+                    className="text-[10px] uppercase tracking-wider font-bold px-3 py-2 rounded-xl glass backdrop-blur-md hover:bg-primary/20 hover:text-primary transition-all border-white/5"
                   >
                     {s.label}
                   </motion.button>
