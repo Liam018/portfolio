@@ -9,8 +9,8 @@
     --primary: #3b82f6;
     --secondary: #8b5cf6;
     --accent: #10b981;
-    --border: rgba(255, 255, 255, 0.1);
-    --glass-bg: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.12);
+    --glass-bg: rgba(255, 255, 255, 0.05);
 }
 
 html.light {
@@ -22,8 +22,8 @@ html.light {
     --primary: #2563eb;
     --secondary: #7c3aed;
     --accent: #059669;
-    --border: rgba(0, 0, 0, 0.05);
-    --glass-bg: rgba(0, 0, 0, 0.03);
+    --border: rgba(0, 0, 0, 0.08);
+    --glass-bg: rgba(0, 0, 0, 0.04);
 }
 
 @theme {
@@ -68,6 +68,9 @@ html.light {
         -webkit-backdrop-filter: blur(16px) saturate(180%);
         border: 1px solid var(--border);
         transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        backface-visibility: hidden;
     }
 
     .btn-primary {
