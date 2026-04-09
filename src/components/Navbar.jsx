@@ -132,7 +132,7 @@ const Navbar = () => {
           maxWidth: scrolled ? '1200px' : '100vw',
         }}
         transition={{ 
-          duration: 1,
+          duration: 0.8,
           ease: [0.22, 1, 0.36, 1] // Smooth quintic ease
         }}
         className={`relative flex items-center justify-between px-6 transition-all duration-500 pointer-events-auto ${

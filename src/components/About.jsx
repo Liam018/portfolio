@@ -83,7 +83,7 @@ const About = () => {
       words.forEach((word, i) => {
         if (word === 'Liam_Resume.pdf') {
           finalParts.push(
-            <a key={i} href={resumePdf} download="Liam_Kurt_Resume.pdf" className="text-accent hover:text-white transition-colors flex items-center gap-1.5 font-bold group inline-flex">
+            <a key={i} href={resumePdf} download="Liam_Kurt_Resume.pdf" className="text-accent hover:text-white transition-colors flex items-center gap-1.5 font-bold group">
               <FileText size={14} className="group-hover:scale-110 transition-transform" />
               {word}
             </a>
@@ -366,7 +366,7 @@ const About = () => {
                       ${viewMode === 'fullscreen' ? 'h-[80vh] md:h-[85vh] w-full rounded-3xl border' : 'h-[400px] md:h-[450px] rounded-2xl border'}`}
                   >
                       {/* Scanline Overlay */}
-                      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] z-20 bg-[length:100%_4px,3px_100%] opacity-15" />
+                      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] z-20 bg-size-[100%_4px,3px_100%] opacity-15" />
                       
                       {/* Header */}
                       <div className={`bg-[#0a0a0a] px-4 py-4 md:px-6 border-b border-white/10 flex items-center justify-between shrink-0 z-30`}>
