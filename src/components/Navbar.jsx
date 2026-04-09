@@ -193,7 +193,7 @@ const Navbar = () => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.15 }}
-            className="lg:hidden absolute top-full left-0 right-0 mt-2 bg-background/95 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden z-999 shadow-2xl"
+            className="lg:hidden absolute top-full left-4 right-4 mt-2 bg-background/95 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden z-999 shadow-2xl pointer-events-auto"
           >
             <div className="px-6 py-8 space-y-6">
               <div className="grid gap-4">
