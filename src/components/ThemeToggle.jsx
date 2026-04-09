@@ -50,8 +50,8 @@ const ThemeToggle = () => {
           clipPath: clipPath,
         },
         {
-          duration: 500,
-          easing: 'ease-in-out',
+          duration: 900,
+          easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
           pseudoElement: '::view-transition-new(root)',
         }
       );
@@ -61,22 +61,27 @@ const ThemeToggle = () => {
   return (
     <button 
       onClick={toggleTheme}
-      className="p-2.5 rounded-xl glass hover:scale-110 transition-all text-text-muted hover:text-primary relative group flex items-center justify-center w-10 h-10 overflow-hidden"
+      className="p-2.5 rounded-xl glass hover:scale-105 active:scale-95 transition-all text-text-muted hover:text-primary relative group flex items-center justify-center w-10 h-10 overflow-hidden"
       aria-label="Toggle Theme"
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={isDark ? 'dark' : 'light'}
-          initial={{ y: -20, rotate: -90, opacity: 0 }}
-          animate={{ y: 0, rotate: 0, opacity: 1 }}
-          exit={{ y: 20, rotate: 90, opacity: 0 }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          initial={{ rotate: -90, x: -30, y: 10, opacity: 0 }}
+          animate={{ rotate: 0, x: 0, y: 0, opacity: 1 }}
+          exit={{ rotate: 90, x: 30, y: 10, opacity: 0 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 250,
+            damping: 25,
+            mass: 1
+          }}
           className="relative z-10"
         >
-          {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          {isDark ? <Moon size={20} /> : <Sun size={20} />}
         </motion.div>
       </AnimatePresence>
-      <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
     </button>
   );
 };

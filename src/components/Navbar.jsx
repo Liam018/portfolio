@@ -1,22 +1,31 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring, useTransform } from 'framer-motion';
 import { Menu, X, Github, Linkedin, ArrowRight } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import logoAsset from '../assets/LKKE.png';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.scrollY > 20;
+    }
+    return false;
+  });
   const navRef = useRef(null);
   const [activeSection, setActiveSection] = useState('');
   const [hoveredLink, setHoveredLink] = useState(null);
 
+  // Progress scale and spark values
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
   });
+
+  const sparkPosition = useTransform(scaleX, [0, 1], ["0%", "100%"]);
+  const sparkOpacity = useTransform(scaleX, [0, 0.05], [0, 1]);
 
   // Prevent background scrolling when mobile menu is open
   useEffect(() => {
@@ -52,6 +61,21 @@ const Navbar = () => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
+
+    // Instant sync for progress bar on mount
+    const calculateInitialProgress = () => {
+      requestAnimationFrame(() => {
+        const winScroll = window.scrollY;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        if (height > 0) {
+          scaleX.set(winScroll / height);
+        }
+      });
+    };
+    
+    // Slight delay to ensure content layout is fully calculated 
+    // after the preloader mounts the main app content
+    const timer = setTimeout(calculateInitialProgress, 100);
 
     const observerOption = {
       root: null,
@@ -95,13 +119,22 @@ const Navbar = () => {
   return (
     <nav ref={navRef} className="fixed w-full z-50 flex justify-center pointer-events-none pt-4 md:pt-6">
       <motion.div 
-        initial={false}
+        initial={{ 
+          y: -150, 
+          opacity: 0,
+          width: scrolled ? '92%' : '100%',
+          maxWidth: scrolled ? '1200px' : '100vw'
+        }}
         animate={{
+          y: scrolled ? 0 : -8,
+          opacity: 1,
           width: scrolled ? '92%' : '100%',
           maxWidth: scrolled ? '1200px' : '100vw',
-          y: scrolled ? 0 : -8,
         }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        transition={{ 
+          duration: 1,
+          ease: [0.22, 1, 0.36, 1] // Smooth quintic ease
+        }}
         className={`relative flex items-center justify-between px-6 transition-all duration-500 pointer-events-auto ${
           scrolled 
             ? 'glass backdrop-blur-md rounded-full shadow-2xl shadow-black/30 border border-white/10 py-3' 
@@ -127,12 +160,11 @@ const Navbar = () => {
             </div>
             <div className="flex flex-col">
               <span className="text-lg font-display font-bold accent-gradient leading-tight tracking-tight">Liam Kurt</span>
-              <span className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-medium">Programmer</span>
             </div>
           </motion.a>
 
           {/* Desktop Nav Links */}
-          <div className="hidden lg:flex items-center bg-white/5 dark:bg-black/20 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/10">
+          <div className="hidden lg:flex items-center glass rounded-full px-2 py-1.5 backdrop-blur-md glass-bg">
             <div className="flex items-center space-x-1">
               {navLinks.map((link) => (
                 <a 
@@ -209,10 +241,34 @@ const Navbar = () => {
         </div>
 
         {/* Progress Bar inside the pill */}
-        <motion.div 
-          className="absolute bottom-0 left-6 right-6 h-[1.5px] bg-linear-to-r from-primary via-secondary to-accent origin-left z-20" 
-          style={{ scaleX }}
-        />
+        <AnimatePresence>
+          {scrolled && (
+            <motion.div 
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 4 }}
+              transition={{ duration: 0.3 }}
+              className="absolute bottom-0 left-8 right-8 h-[2px] z-20 pointer-events-none"
+            >
+              <div className="relative w-full h-full bg-white/5 dark:bg-black/20 rounded-full overflow-hidden">
+                <motion.div 
+                  className="absolute inset-0 bg-linear-to-r from-primary via-secondary to-accent origin-left shadow-[0_0_12px_rgba(59,130,246,0.5)]" 
+                  style={{ scaleX }}
+                />
+                
+                {/* Dynamic leading Spark */}
+                <motion.div
+                  className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_15px_#fff,0_0_30px_var(--primary)] pointer-events-none z-30"
+                  style={{ 
+                    left: sparkPosition,
+                    translateX: "-50%",
+                    opacity: sparkOpacity
+                  }}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* Mobile Nav Overlay */}
