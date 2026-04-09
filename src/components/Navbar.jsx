@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { Menu, X, Github, Linkedin, ArrowRight } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
@@ -7,6 +7,7 @@ import logoAsset from '../assets/LKKE.png';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navRef = useRef(null);
   const [activeSection, setActiveSection] = useState('');
   const [hoveredLink, setHoveredLink] = useState(null);
 
@@ -16,6 +17,35 @@ const Navbar = () => {
     damping: 30,
     restDelta: 0.001
   });
+
+  // Prevent background scrolling when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,7 +81,7 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'About', href: '#about', id: 'about' },
+    { name: 'About Me', href: '#about', id: 'about' },
     { name: 'Skills', href: '#skills', id: 'skills' },
     { name: 'Projects', href: '#project-highlight', id: 'project-highlight' },
     { name: 'Contact', href: '#contact', id: 'contact' },
@@ -63,7 +93,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed w-full z-50 flex justify-center pointer-events-none pt-4 md:pt-6">
+    <nav ref={navRef} className="fixed w-full z-50 flex justify-center pointer-events-none pt-4 md:pt-6">
       <motion.div 
         initial={false}
         animate={{
@@ -189,21 +219,21 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.15 }}
-            className="lg:hidden absolute top-full left-4 right-4 mt-2 bg-background/95 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden z-999 shadow-2xl pointer-events-auto"
+            initial={{ opacity: 0, scale: 0.95, y: -20, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, scale: 0.95, y: -10, filter: 'blur(10px)' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="lg:hidden absolute top-full left-4 right-4 mt-4 glass rounded-[2.5rem] overflow-hidden z-999 shadow-2xl shadow-primary/5 pointer-events-auto"
           >
-            <div className="px-6 py-8 space-y-6">
-              <div className="grid gap-4">
+            <div className="px-8 py-10 flex flex-col space-y-10">
+              <div className="flex flex-col space-y-4">
                 {navLinks.map((link, i) => (
                   <motion.a
                     key={link.name}
                     href={link.href}
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
+                    transition={{ delay: i * 0.1 + 0.1, type: "spring", stiffness: 300, damping: 24 }}
                     onClick={(e) => {
                       e.preventDefault();
                       const href = link.href;
@@ -214,32 +244,54 @@ const Navbar = () => {
                         if (target) {
                           target.scrollIntoView({ behavior: 'smooth' });
                         }
-                      }, 150);
+                      }, 200);
                     }}
-                    className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/30 transition-all"
+                    className="group flex flex-col relative w-fit py-2"
                   >
-                    <span className={`text-xl font-medium ${activeSection === link.id ? 'text-primary' : 'text-text'}`}>
-                      {link.name}
-                    </span>
-                    <ArrowRight size={20} className={activeSection === link.id ? 'text-primary' : 'text-text-muted'} />
+                    <div className="flex items-center space-x-6">
+                      <span className={`text-4xl font-display font-bold tracking-tight transition-colors duration-300 ${activeSection === link.id ? 'text-primary' : 'text-text-muted group-hover:text-text'}`}>
+                        {link.name}
+                      </span>
+                      {activeSection === link.id && (
+                        <motion.div 
+                          layoutId="active-indicator-mobile" 
+                          className="w-2.5 h-2.5 rounded-full bg-primary shadow-lg shadow-primary/50" 
+                        />
+                      )}
+                    </div>
                   </motion.a>
                 ))}
               </div>
 
-              <div className="pt-6 border-t border-white/10 flex items-center justify-between">
-                <div className="flex space-x-4">
-                  {socialLinks.map((social) => (
-                    <a key={social.label} href={social.href} className="p-3 bg-white/5 rounded-full text-text-muted hover:text-white transition-colors">
-                      {social.icon}
-                    </a>
-                  ))}
+              <div className="h-px bg-border w-full opacity-50" />
+
+              <div className="flex flex-col space-y-6">
+                <span className="text-xs font-bold uppercase tracking-[0.3em] text-text-muted">Connect</span>
+                <div className="flex flex-col space-y-6">
+                  <div className="flex items-center space-x-4">
+                    {socialLinks.map((social) => (
+                      <motion.a 
+                        whileHover={{ y: -3, scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        key={social.label} 
+                        href={social.href} 
+                        className="p-3.5 glass rounded-full text-text-muted hover:text-primary hover:border-primary/30 transition-all duration-300 shadow-lg"
+                      >
+                        {social.icon}
+                      </motion.a>
+                    ))}
+                  </div>
+                  <a 
+                    href="mailto:liamkurt014@gmail.com" 
+                    className="text-base font-medium text-text group flex items-center space-x-3 w-fit"
+                  >
+                    <div className="relative overflow-hidden h-6">
+                      <span className="block group-hover:-translate-y-full transition-transform duration-300">liamkurt014@gmail.com</span>
+                      <span className="block absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 text-primary">liamkurt014@gmail.com</span>
+                    </div>
+                    <ArrowRight size={18} className="text-primary opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                  </a>
                 </div>
-                <a 
-                  href="mailto:liamkurt014@gmail.com" 
-                  className="text-sm font-medium text-primary hover:underline underline-offset-4"
-                >
-                  liamkurt014@gmail.com
-                </a>
               </div>
             </div>
           </motion.div>

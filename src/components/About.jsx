@@ -54,13 +54,13 @@ const About = () => {
             className="flex flex-col items-center lg:items-start relative"
             style={{ y: y1 }}
           >
-            <div className="relative z-10 glass rounded-[40px] p-2 overflow-hidden aspect-square max-w-md w-full mx-auto lg:mx-0">
+            <div className="relative z-10 p-2 overflow-hidden aspect-square max-w-md w-full mx-auto lg:mx-0">
                <motion.img 
                 src={profileIllustration} 
                 alt="Profile Illustration"
                 className="w-full h-full object-cover rounded-[38px]"
                 animate={{ 
-                  y: [0, -15, 0],
+                  y: [0, -5, 0],
                 }}
                 transition={{
                   duration: 6,
@@ -82,15 +82,7 @@ const About = () => {
               ))}
             </div>
 
-            {/* Background blobs with parallax */}
-            <motion.div 
-              style={{ y: y2 }}
-              className="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl -z-10" 
-            />
-            <motion.div 
-              style={{ y: y3 }}
-              className="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary/20 rounded-full blur-3xl -z-10" 
-            />
+            
           </motion.div>
 
           {/* Right Side: Content */}
@@ -104,26 +96,12 @@ const About = () => {
               Tracing My Path in Tech
             </h2>
             
-            <p className="text-lg text-text-muted leading-relaxed mb-6">
+            <p className="text-lg text-text leading-relaxed mb-6 justify-center">
               I'm an IT student from San Fernando City, La Union, passionate about the intersection of design and functionality. Currently pursuing my BS in Information Technology at Saint Louis College, I focus on creating seamless user experiences across web and mobile platforms.
             </p>
-            <p className="text-lg text-text-muted leading-relaxed mb-10">
+            <p className="text-lg text-text leading-relaxed mb-10 justify-center">
               My journey involves hands-on experience with React Native, Supabase, and full-stack architecture. I love turning complex problems into elegant, user-centric solutions that make a difference.
             </p>
-
-            {/* <div className="grid grid-cols-2 gap-4">
-              {infoCards.map((card, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 20 } }}
-                  className="glass p-5 rounded-2xl border-white/5"
-                >
-                  <span className={`block text-2xl font-bold ${card.color}`}>{card.value}</span>
-                  <span className="block text-sm font-semibold text-text mt-1">{card.label}</span>
-                  <span className="block text-xs text-text-muted mt-0.5">{card.sub}</span>
-                </motion.div>
-              ))}
-            </div> */}
           </motion.div>
 
         </div>

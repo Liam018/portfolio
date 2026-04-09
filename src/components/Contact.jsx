@@ -152,7 +152,7 @@ const Contact = () => {
                         type="text" 
                         name="user_name"
                         required
-                        className="w-full bg-white/3 border border-border rounded-2xl px-5 py-3.5 focus:outline-none focus:border-primary/50 transition-colors text-text"
+                        className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-2xl px-5 py-3.5 focus:outline-none focus:border-primary/50 transition-colors text-text placeholder:text-text-muted/70"
                         placeholder="John Doe"
                       />
                     </div>
@@ -162,7 +162,7 @@ const Contact = () => {
                         type="email" 
                         name="user_email"
                         required
-                        className="w-full bg-white/3 border border-border rounded-2xl px-5 py-3.5 focus:outline-none focus:border-primary/50 transition-colors text-text"
+                        className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-2xl px-5 py-3.5 focus:outline-none focus:border-primary/50 transition-colors text-text placeholder:text-text-muted/70"
                         placeholder="john@example.com"
                       />
                     </div>
@@ -173,7 +173,7 @@ const Contact = () => {
                       type="text" 
                       name="subject"
                       required
-                      className="w-full bg-white/3 border border-border rounded-2xl px-5 py-3.5 focus:outline-none focus:border-primary/50 transition-colors text-text"
+                      className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-2xl px-5 py-3.5 focus:outline-none focus:border-primary/50 transition-colors text-text placeholder:text-text-muted/70"
                       placeholder="Project Discussion"
                     />
                   </div>
@@ -183,7 +183,7 @@ const Contact = () => {
                       name="message"
                       required
                       rows="3"
-                      className="w-full bg-white/3 border border-border rounded-2xl px-5 py-3.5 focus:outline-none focus:border-primary/50 transition-colors text-text resize-none"
+                      className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-2xl px-5 py-3.5 focus:outline-none focus:border-primary/50 transition-colors text-text placeholder:text-text-muted/70 resize-none"
                       placeholder="Tell me about your project..."
                     ></textarea>
                   </div>

@@ -125,7 +125,7 @@ const Skills = () => {
                     whileHover={{ scale: 1.05, y: -2, transition: { type: "spring", stiffness: 300, damping: 20 } }}
                     className="flex items-center px-3 py-1.5 rounded-xl bg-text/5 border border-border text-sm text-text-muted hover:text-text hover:bg-text/10 hover:border-primary/30 transition-all cursor-default"
                   >
-                    <CheckCircle2 className="w-3 h-3 mr-1.5 text-primary opacity-50" />
+                    <CheckCircle2 className="w-3 h-3 mr-1.5 text-primary" />
                     {skill}
                   </motion.div>
                 ))}

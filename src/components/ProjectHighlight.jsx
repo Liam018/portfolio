@@ -46,7 +46,7 @@ const ProjectHighlight = () => {
   const prev = () => setCurrentIndex((prev) => (prev - 1 + highlights.length) % highlights.length);
 
   return (
-    <section ref={containerRef} id="project-highlight" className="py-20 bg-white/1 overflow-hidden">
+    <section ref={containerRef} id="project-highlight" className="py-20 overflow-hidden">
       <motion.div 
         style={{ opacity, scale, transformOrigin: 'center center', willChange: 'transform, opacity' }}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"

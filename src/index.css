@@ -3,7 +3,8 @@
 :root {
     --background: #0a0a0a;
     --card: #151515;
-    --text: #f8fafc;
+    --text: #ffffff;
+    /* --text: #f8fafc; */
     --text-muted: #94a3b8;
     --primary: #3b82f6;
     --secondary: #8b5cf6;
@@ -15,13 +16,14 @@
 html.light {
     --background: #f8fafc;
     --card: #ffffff;
-    --text: #0f172a;
+    --text: #000000;
+    /* --text: #0f172a; */
     --text-muted: #475569;
     --primary: #2563eb;
     --secondary: #7c3aed;
     --accent: #059669;
     --border: rgba(0, 0, 0, 0.05);
-    --glass-bg: rgba(0, 0, 0, 0.02);
+    --glass-bg: rgba(0, 0, 0, 0.03);
 }
 
 @theme {
@@ -80,3 +82,10 @@ html.light {
         @apply bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent;
     }
 }
+
+/* View Transitions Support */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
