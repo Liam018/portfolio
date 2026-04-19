@@ -41,7 +41,7 @@ const Hero = () => {
             <span className="accent-gradient">Experiences</span> that Matter
           </h1>
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-text-muted mb-10">
-            IT Student from La Union specializing in Full-stack Development, 
+            IT Student specializing in Full-stack Development, 
             UI/UX Design, and building impactful mobile & web applications.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

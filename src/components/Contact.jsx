@@ -64,7 +64,20 @@ const Contact = () => {
     const TEMPLATE_ID = "template_cfyrrp9";
     const PUBLIC_KEY = "Zu3cahiYg8AldOjgs";
 
-    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY)
+    // Gather data from form and add current time
+    const formData = new FormData(form.current);
+    const templateParams = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      title: formData.get('title'),
+      message: formData.get('message'),
+      time: new Date().toLocaleString('en-US', { 
+        weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', 
+        hour: '2-digit', minute: '2-digit' 
+      })
+    };
+
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
       .then((result) => {
           setIsSending(false);
           setIsSent(true);
@@ -150,7 +163,7 @@ const Contact = () => {
                       <label className="text-sm font-medium text-text-muted ml-1">Your Name</label>
                       <input 
                         type="text" 
-                        name="user_name"
+                        name="name"
                         required
                         className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-2xl px-5 py-3.5 focus:outline-none focus:border-primary/50 transition-colors text-text placeholder:text-text-muted/70"
                         placeholder="John Doe"
@@ -160,7 +173,7 @@ const Contact = () => {
                       <label className="text-sm font-medium text-text-muted ml-1">Email Address</label>
                       <input 
                         type="email" 
-                        name="user_email"
+                        name="email"
                         required
                         className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-2xl px-5 py-3.5 focus:outline-none focus:border-primary/50 transition-colors text-text placeholder:text-text-muted/70"
                         placeholder="john@example.com"
@@ -171,7 +184,7 @@ const Contact = () => {
                     <label className="text-sm font-medium text-text-muted ml-1">Subject</label>
                     <input 
                       type="text" 
-                      name="subject"
+                      name="title"
                       required
                       className="w-full bg-black/5 dark:bg-white/5 border border-border rounded-2xl px-5 py-3.5 focus:outline-none focus:border-primary/50 transition-colors text-text placeholder:text-text-muted/70"
                       placeholder="Project Discussion"
