@@ -1,6 +1,10 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useRef } from 'react';
 import { Code2, Server, Palette, CheckCircle2 } from 'lucide-react';
+import { OrbitingCircles } from "@/components/ui/orbiting-circles";
+import { FaReact, FaHtml5, FaCss3Alt, FaLaravel, FaFigma, FaDatabase } from "react-icons/fa";
+import { SiTailwindcss, SiJavascript, SiTypescript, SiPostgresql, SiDjango, SiMariadb, SiFramer } from "react-icons/si";
+import { DiPhotoshop } from "react-icons/di";
 
 // Shared smooth transition
 const smoothTransition = {
@@ -31,21 +35,48 @@ const Skills = () => {
       icon: <Code2 className="w-6 h-6 text-primary" />,
       desc: "Building intuitive interfaces",
       color: "bg-primary/10",
-      skills: ["React.js", "React Native", "Tailwind CSS", "HTML", "CSS", "JavaScript", "TypeScript"]
+      skills: ["React.js", "React Native", "Tailwind CSS", "HTML", "CSS", "JavaScript", "TypeScript"],
+      orbitInner: [
+        <FaReact key="react" className="text-[#61DAFB] size-6" />,
+        <SiJavascript key="js" className="text-[#F7DF1E] size-6" />
+      ],
+      orbitOuter: [
+        <SiTailwindcss key="tailwind" className="text-[#06B6D4] size-8" />,
+        <SiTypescript key="ts" className="text-[#3178C6] size-8" />,
+        <FaHtml5 key="html" className="text-[#E34F26] size-8" />,
+        <FaCss3Alt key="css" className="text-[#1572B6] size-8" />
+      ]
     },
     {
       title: "Backend",
       icon: <Server className="w-6 h-6 text-secondary" />,
       desc: "Architecting solid logic",
       color: "bg-secondary/10",
-      skills: ["PostgreSQL", "Django REST", "MariaDB/SQL", "Laravel"]
+      skills: ["PostgreSQL", "Django REST", "MariaDB/SQL", "Laravel"],
+      orbitInner: [
+        <SiPostgresql key="postgres" className="text-[#4169E1] size-6" />,
+        <FaLaravel key="laravel" className="text-[#FF2D20] size-6" />
+      ],
+      orbitOuter: [
+        <SiDjango key="django" className="text-[#092E20] size-8" />,
+        <SiMariadb key="mariadb" className="text-[#003545] size-8" />,
+        <FaDatabase key="sql" className="text-secondary size-8" />
+      ]
     },
     {
       title: "Design",
       icon: <Palette className="w-6 h-6 text-accent" />,
       desc: "Designing user journeys",
       color: "bg-accent/10",
-      skills: ["Photoshop", "Figma", "Framer"]
+      skills: ["Photoshop", "Figma", "Framer"],
+      orbitInner: [
+        <FaFigma key="figma" className="text-[#F24E1E] size-6" />,
+        <SiFramer key="framer" className="text-text size-6" />
+      ],
+      orbitOuter: [
+        <DiPhotoshop key="ps" className="text-[#31A8FF] size-8" />,
+        <FaFigma key="figma2" className="text-[#A259FF] size-8" />
+      ]
     }
   ];
 
@@ -102,8 +133,18 @@ const Skills = () => {
             <motion.div
               key={cat.title}
               variants={itemVars}
-              className="glass p-8 rounded-[32px] hover:border-primary/30 transition-all duration-500 group relative"
+              className="glass p-8 rounded-[32px] hover:border-primary/30 transition-all duration-500 group relative overflow-hidden"
             >
+              {/* Orbiting Circles Background */}
+              <div className="absolute inset-0 flex items-center justify-center -z-10 opacity-10 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none">
+                <OrbitingCircles className="size-[30px] border-none bg-transparent" duration={20} radius={80}>
+                  {cat.orbitInner}
+                </OrbitingCircles>
+                <OrbitingCircles className="size-[40px] border-none bg-transparent" reverse duration={30} radius={130}>
+                  {cat.orbitOuter}
+                </OrbitingCircles>
+              </div>
+
               {/* Category Header */}
               <div className="flex items-center gap-4 mb-6">
                 <div className={`p-3 rounded-2xl ${cat.color} relative overflow-hidden`}>

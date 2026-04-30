@@ -20,12 +20,12 @@
         var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (!theme && supportDarkMode) theme = 'dark';
         
-        if (theme === 'light') {
-          document.documentElement.style.backgroundColor = '#f8fafc';
-          document.documentElement.classList.add('light');
-        } else {
+        if (theme === 'dark') {
           document.documentElement.style.backgroundColor = '#0a0a0a';
-          document.documentElement.classList.remove('light');
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.style.backgroundColor = '#f8fafc';
+          document.documentElement.classList.remove('dark');
         }
       } catch (e) { }
     })();

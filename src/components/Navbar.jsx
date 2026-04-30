@@ -141,7 +141,7 @@ const Navbar = () => {
             : 'py-4'
         }`}
       >
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between px-2">
           {/* Logo Section */}
           <motion.a 
             href="#hero"
@@ -159,7 +159,7 @@ const Navbar = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-display font-bold accent-gradient leading-tight tracking-tight">Liam Kurt</span>
+              <span className="text-lg font-display font-bold accent-gradient leading-tight tracking-tight">Liam Kurt Kasten Edano</span>
             </div>
           </motion.a>
 

@@ -7,7 +7,7 @@ export const highlights = [
     category: "Capstone Project • Web & Mobile App",
     images: [agrilakoWeb, agrilakoMobile],
     desc: "My Capstone project and 3rd place Hackathon entry: a robust agriculture marketplace built with React(Web App), React Native(Mobile App) and Supabase - PostgreSQL(Backend). Features real-time notifications, secure user roles, and an administrative dashboard.",
-    tech: ["React Native", "React", "Vite", "Tailwind", "Expo", "Supabase", "Auth"],
+    tech: ["React Native", "React", "Vite", "Tailwind", "Expo", "Supabase"],
     links: { github: "https://github.com/Liam018", live: "#" },
     color: "from-primary/20 to-secondary/20"
   },

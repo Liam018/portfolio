@@ -1,5 +1,7 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useRef } from 'react';
+import { DiaTextReveal } from './ui/dia-text-reveal';
+import { AuroraText } from './ui/aurora-text';
 
 const Hero = () => {
   const containerRef = useRef(null);
@@ -37,12 +39,11 @@ const Hero = () => {
             Available for Internships & Projects
           </span>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-extrabold mb-6 leading-tight">
-            Building Digital <br />
-            <span className="accent-gradient">Experiences</span> that Matter
+            Bringing Ideas to <br />
+            <AuroraText>Life</AuroraText> with Code
           </h1>
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-text-muted mb-10">
-            IT Student specializing in Full-stack Development, 
-            UI/UX Design, and building impactful mobile & web applications.
+            <DiaTextReveal text="Passionate IT student building clean, responsive web and mobile applications." />
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="#project-highlight" className="btn-primary w-full sm:w-auto text-center">
