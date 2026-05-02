@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useInView } from 'framer-motion';
-import { Terminal, FastForward, FileText, X, Minus, Maximize2 } from 'lucide-react';
+import { Terminal, FastForward, FileText, X, Minus, Maximize2, Book, Gamepad, Music } from 'lucide-react';
 import resumePdf from '../assets/RESUME.pdf';
 
 const AboutTerminal = ({ viewMode, setViewMode }) => {
@@ -17,6 +17,12 @@ const AboutTerminal = ({ viewMode, setViewMode }) => {
 
   const introText = "Liam Kurt Kasten Edaño — Pursuing BSIT at Saint Louis College. My journey is fueled by the intersection of beautiful design and reliable functionality. I specialize in React Native, Supabase, and Full-stack Web Development, driven by curiosity and a commitment to continuous learning.";
 
+  const iconMap = {
+    Book: <Book size={14} className="inline-block ml-1.5 text-secondary" />,
+    Gamepad: <Gamepad size={14} className="inline-block ml-1.5 text-secondary" />,
+    Music: <Music size={14} className="inline-block ml-1.5 text-secondary" />
+  };
+
   const commands = {
     help: 'Available: whoami, tech, resume, socials, hobbies, contact, clear',
     whoami: 'Liam Kurt — IT Student & Full-stack Developer based in La Union.',
@@ -24,7 +30,7 @@ const AboutTerminal = ({ viewMode, setViewMode }) => {
     resume: 'Click to download: Liam_Resume.pdf',
     socials: 'github.com/Liam018 \n linkedin.com/in/liam-kurt-edano',
     contact: 'liamkurt014@gmail.com',
-    hobbies: '📚 Reading Manhwa/Manga/Donghua, 🎮 Playing online games, 🎵 Listening to music',
+    hobbies: 'Reading Manhwa/Manga/Donghua [Book], Playing online games [Gamepad], Listening to music [Music]',
     clear: 'clear'
   };
 
@@ -35,77 +41,86 @@ const AboutTerminal = ({ viewMode, setViewMode }) => {
     const keywords = ['Liam Kurt Kasten Edaño', 'Saint Louis College', 'React Native', 'Supabase', 'Full-stack', 'Vite', 'Tailwind', 'React', 'BSIT', 'La Union'];
     const hashtags = ['#skills', '#about', '#projects', '#contact'];
     
-    let parts = [text];
-    
-    keywords.forEach(keyword => {
-      let newParts = [];
-      parts.forEach(part => {
-        if (typeof part !== 'string') {
-          newParts.push(part);
-          return;
-        }
-        const regex = new RegExp(`(${keyword})`, 'gi');
-        const split = part.split(regex);
-        split.forEach((s, i) => {
-          if (s.toLowerCase() === keyword.toLowerCase()) {
-            newParts.push(<span key={`${keyword}-${i}`} className="text-secondary font-bold brightness-110">{s}</span>);
-          } else if (s) {
-            newParts.push(s);
-          }
-        });
-      });
-      parts = newParts;
-    });
+    // Convert to word-based processing
+    const words = text.split(/(\s+|\n)/);
+    const result = [];
 
-    // Format URLs and Hashtags
-    let finalParts = [];
-    parts.forEach(part => {
-      if (typeof part !== 'string') {
-        finalParts.push(part);
+    words.forEach((word, i) => {
+      // Check for Icon Placeholders
+      const iconKey = word.match(/\[(Book|Gamepad|Music)\]/);
+      if (iconKey && iconMap[iconKey[1]]) {
+        result.push(iconMap[iconKey[1]]);
         return;
       }
-      
-      const words = part.split(/(\s+|\n)/);
-      words.forEach((word, i) => {
-        if (word === 'Liam_Resume.pdf') {
-          finalParts.push(
-            <a key={i} href={resumePdf} download="Liam_Kurt_Resume.pdf" className="text-accent hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5 font-bold group">
-              <FileText size={14} className="group-hover:scale-110 transition-transform" />
-              {word}
-            </a>
-          );
-        } else if (word.includes('github.com') || word.includes('linkedin.com')) {
-          finalParts.push(
-            <a key={i} href={`https://${word}`} target="_blank" rel="noreferrer" className="text-accent underline hover:text-slate-900 dark:hover:text-white transition-colors">
-              {word}
-            </a>
-          );
-        } else if (word.includes('@')) {
-          finalParts.push(
-            <a key={i} href={`mailto:${word}`} className="text-accent hover:text-slate-900 dark:hover:text-white transition-colors">
-              {word}
-            </a>
-          );
-        } else if (hashtags.some(h => word.startsWith(h))) {
-          finalParts.push(
-            <button 
-              key={i} 
-              onClick={() => {
-                const id = word.slice(1);
-                document.getElementById(id === 'projects' ? 'project-highlight' : id)?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="text-primary font-bold hover:underline"
-            >
-              {word}
-            </button>
-          );
-        } else {
-          finalParts.push(word);
-        }
-      });
+
+      // Check for Keywords
+      const foundKeyword = keywords.find(k => word.toLowerCase().includes(k.toLowerCase()));
+      if (foundKeyword) {
+        const parts = word.split(new RegExp(`(${foundKeyword})`, 'gi'));
+        parts.forEach((p, j) => {
+          if (p.toLowerCase() === foundKeyword.toLowerCase()) {
+            result.push(<span key={`${i}-${j}`} className="text-secondary font-bold brightness-110">{p}</span>);
+          } else if (p) {
+            result.push(p);
+          }
+        });
+        return;
+      }
+
+      // Format Resume Link
+      if (word === 'Liam_Resume.pdf') {
+        result.push(
+          <a key={i} href={resumePdf} download="Liam_Kurt_Resume.pdf" className="text-accent hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5 font-bold group">
+            <FileText size={14} className="group-hover:scale-110 transition-transform" />
+            {word}
+          </a>
+        );
+        return;
+      }
+
+      // Format Social Links
+      if (word.includes('github.com') || word.includes('linkedin.com')) {
+        result.push(
+          <a key={i} href={`https://${word}`} target="_blank" rel="noreferrer" className="text-accent underline hover:text-slate-900 dark:hover:text-white transition-colors">
+            {word}
+          </a>
+        );
+        return;
+      }
+
+      // Format Email
+      if (word.includes('@')) {
+        result.push(
+          <a key={i} href={`mailto:${word}`} className="text-accent hover:text-slate-900 dark:hover:text-white transition-colors">
+            {word}
+          </a>
+        );
+        return;
+      }
+
+      // Format Hashtags
+      if (hashtags.some(h => word.startsWith(h))) {
+        result.push(
+          <button 
+            key={i} 
+            onClick={() => {
+              const cleanId = word.slice(1).replace(/[.,!?;:]+$/, "");
+              const targetId = cleanId === 'projects' ? 'project-highlight' : cleanId;
+              document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="text-primary font-bold hover:underline focus:outline-none focus:ring-2 focus:ring-primary/50 rounded"
+          >
+            {word}
+          </button>
+        );
+        return;
+      }
+
+      // Default: push word as is
+      result.push(word);
     });
 
-    return finalParts;
+    return result;
   };
 
   // Auto-typing effect
@@ -182,26 +197,29 @@ const AboutTerminal = ({ viewMode, setViewMode }) => {
         <button 
           onClick={() => setViewMode('static')}
           title="Close to Reader Mode"
-          className="w-3 h-3 rounded-full bg-[#ff5f56] shadow-[0_0_8px_rgba(255,95,86,0.3)] hover:brightness-125 transition-all flex items-center justify-center group/btn" 
+          aria-label="Close terminal and switch to reader mode"
+          className="w-3 h-3 rounded-full bg-[var(--terminal-red)] shadow-[0_0_8px_rgba(255,95,86,0.3)] hover:brightness-125 transition-all flex items-center justify-center group/btn" 
         >
           <X size={6} className="text-black/60 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
         </button>
         <button 
           onClick={() => setViewMode('terminal')}
           title="Standard Mode"
-          className="w-3 h-3 rounded-full bg-[#ffbd2e] shadow-[0_0_8px_rgba(255,189,46,0.3)] hover:brightness-125 transition-all flex items-center justify-center group/btn" 
+          aria-label="Minimize terminal"
+          className="w-3 h-3 rounded-full bg-[var(--terminal-yellow)] shadow-[0_0_8px_rgba(255,189,46,0.3)] hover:brightness-125 transition-all flex items-center justify-center group/btn" 
         >
           <Minus size={6} className="text-black/60 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
         </button>
         <button 
           onClick={() => setViewMode('fullscreen')}
           title="Maximize"
-          className="w-3 h-3 rounded-full bg-[#27c93f] shadow-[0_0_8px_rgba(39,201,63,0.3)] hover:brightness-125 transition-all flex items-center justify-center group/btn" 
+          aria-label="Maximize terminal to fullscreen"
+          className="w-3 h-3 rounded-full bg-[var(--terminal-green)] shadow-[0_0_8px_rgba(39,201,63,0.3)] hover:brightness-125 transition-all flex items-center justify-center group/btn" 
         >
           <Maximize2 size={6} className="text-black/60 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
         </button>
       </div>
-      <div className="hidden sm:flex items-center space-x-3 text-[9px] uppercase tracking-[0.2em] font-mono font-bold">
+      <div className="hidden sm:flex items-center space-x-3 text-[9px] uppercase tracking-[0.2em] font-mono font-bold" aria-hidden="true">
         <span className={`transition-colors duration-300 ${viewMode === 'static' ? 'text-primary' : 'text-slate-400 dark:text-white/20'}`}>Close</span>
         <span className="text-slate-300 dark:text-white/10">/</span>
         <span className={`transition-colors duration-300 ${viewMode === 'terminal' ? 'text-[#ffbd2e]' : 'text-slate-400 dark:text-white/20'}`}>Min</span>

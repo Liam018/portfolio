@@ -2,6 +2,8 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useRef } from 'react';
 import { DiaTextReveal } from './ui/dia-text-reveal';
 import { AuroraText } from './ui/aurora-text';
+import { DotPattern } from './ui/dot-pattern';
+import { cn } from '@/lib/utils';
 
 const Hero = () => {
   const containerRef = useRef(null);
@@ -25,6 +27,13 @@ const Hero = () => {
 
   return (
     <section ref={containerRef} id="hero" className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
+      <DotPattern
+        className={cn(
+          "mask-[linear-gradient(to_bottom,transparent,white_20%,white_80%,transparent),linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
+          "[mask-composite:intersect]",
+          "opacity-20"
+        )}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           style={{ y: y3, opacity, scale, willChange: 'transform, opacity' }}

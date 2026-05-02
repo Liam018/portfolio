@@ -4,10 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useChatBot } from '../hooks/useChatBot';
 import { SUGGESTIONS } from '../constants/chatbotData';
 
-/**
- * FormattedMessage component handles markdown-like text formatting and
- * internal navigation links (hashtags).
- */
+
 const FormattedMessage = ({ text, setIsOpen }) => {
   const parts = text.split(/(\*\*.*?\*\*|#\S+)/g);
   
@@ -26,12 +23,13 @@ const FormattedMessage = ({ text, setIsOpen }) => {
           return <strong key={i} className="font-bold text-primary">{part.slice(2, -2)}</strong>;
         }
         if (part.startsWith('#')) {
-          const id = part.slice(1);
+          const id = part.slice(1).replace(/[.,!?;:]+$/, "");
           return (
             <button
               key={i}
               onClick={() => handleHashClick(id)}
-              className="text-primary hover:underline font-bold inline-flex items-center gap-1 focus:outline-none"
+              aria-label={`Jump to ${id} section`}
+              className="text-primary hover:underline font-bold inline-flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
             >
               {part}
             </button>
@@ -61,12 +59,32 @@ const ChatBot = () => {
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Auto-focus input when opened
+  // Auto-focus input when opened (Desktop Only)
   useEffect(() => {
-    if (isOpen && inputRef.current) {
+    if (isOpen && inputRef.current && window.innerWidth >= 1024) {
       const timer = setTimeout(() => inputRef.current.focus(), 300);
       return () => clearTimeout(timer);
     }
+  }, [isOpen]);
+
+  // Lock scroll on mobile when chat is open
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth < 768;
+      if (isOpen && isMobile) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   // Scroll to bottom when messages or typing status changes
@@ -82,6 +100,7 @@ const ChatBot = () => {
         {isOpen && (
           <div className="relative mb-6">
             <motion.div
+              layout
               initial={{ opacity: 0, scale: 0, y: 100, x: 100, filter: 'blur(10px)' }}
               animate={{ 
                 opacity: 1, 
@@ -99,12 +118,15 @@ const ChatBot = () => {
               exit={{ opacity: 0, scale: 0, y: 100, x: 100, filter: 'blur(10px)' }}
               transition={{ 
                 type: "spring", 
-                stiffness: 300, 
-                damping: 28, 
-                mass: 0.8
+                stiffness: 350, 
+                damping: 30, 
+                mass: 1
               }}
-              style={{ transformOrigin: 'bottom right' }}
-              className="glass backdrop-blur-md rounded-[32px] overflow-hidden flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-white/10 relative z-10"
+              style={{ 
+                transformOrigin: 'bottom right',
+                willChange: 'width, height, transform, opacity, filter'
+              }}
+              className="glass backdrop-blur-md rounded-[32px] overflow-hidden flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-text/10 dark:border-white/10 relative z-10"
             >
               {/* Header */}
               <div className="p-5 bg-linear-to-r from-primary to-secondary flex justify-between items-center text-white relative overflow-hidden">
@@ -124,13 +146,13 @@ const ChatBot = () => {
                         opacity: [1, 0.5, 1]
                       }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-primary" 
+                      className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-primary" 
                     />
                   </div>
                   <div>
                     <h4 className="font-display font-bold leading-none">Liam Assistant</h4>
                     <span className="text-[10px] text-white/70 uppercase tracking-widest font-semibold flex items-center gap-1 mt-1">
-                      <Sparkles size={8} className="text-yellow-300" /> Online
+                      <Sparkles size={8} className="text-accent" /> Online
                     </span>
                   </div>
                 </div>
@@ -139,8 +161,9 @@ const ChatBot = () => {
                     whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
                     whileTap={{ scale: 0.9 }}
                     onClick={clearChat}
+                    aria-label="Clear chat history"
                     title="Clear Chat"
-                    className="hover:bg-white/10 p-2 rounded-xl transition-colors text-white/80 hover:text-white"
+                    className="hover:bg-white/10 p-2 rounded-xl transition-colors text-white/80 hover:text-white focus-visible:ring-2 focus-visible:ring-white/50"
                   >
                     <Trash2 size={18} />
                   </motion.button>
@@ -148,8 +171,9 @@ const ChatBot = () => {
                      whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
                      whileTap={{ scale: 0.9 }}
                     onClick={() => setIsExpanded(!isExpanded)}
+                    aria-label={isExpanded ? "Minimize chat window" : "Maximize chat window"}
                     title={isExpanded ? "Minimize" : "Maximize"}
-                    className="hover:bg-white/10 p-2 rounded-xl transition-colors text-white/80 hover:text-white hidden sm:block"
+                    className="hover:bg-white/10 p-2 rounded-xl transition-colors text-white/80 hover:text-white hidden sm:block focus-visible:ring-2 focus-visible:ring-white/50"
                   >
                     {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
                   </motion.button>
@@ -157,7 +181,8 @@ const ChatBot = () => {
                      whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)', rotate: 90 }}
                      whileTap={{ scale: 0.9 }}
                     onClick={() => setIsOpen(false)} 
-                    className="hover:bg-white/10 p-2 rounded-xl transition-colors text-white/80 hover:text-white"
+                    aria-label="Close chat window"
+                    className="hover:bg-white/10 p-2 rounded-xl transition-colors text-white/80 hover:text-white focus-visible:ring-2 focus-visible:ring-white/50"
                   >
                     <X size={18} />
                   </motion.button>
@@ -190,7 +215,7 @@ const ChatBot = () => {
                     <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed space-y-2 shadow-lg transition-colors group ${
                       m.role === 'user' 
                         ? 'bg-linear-to-br from-primary to-secondary text-white rounded-tr-none shadow-primary/20 font-medium' 
-                        : 'glass backdrop-blur-md text-text rounded-tl-none border-white/5'
+                        : 'glass backdrop-blur-md text-text rounded-tl-none border border-text/5 dark:border-white/5'
                     }`}>
                       {m.text && <FormattedMessage text={m.text} setIsOpen={setIsOpen} />}
                       {m.image && (
@@ -199,7 +224,7 @@ const ChatBot = () => {
                           animate={{ opacity: 1, scale: 1, y: 0 }}
                           src={m.image} 
                           alt="Bot response" 
-                          className="w-full h-auto rounded-xl shadow-lg border border-white/10"
+                          className="w-full h-auto rounded-xl shadow-lg border border-text/10 dark:border-white/10"
                         />
                       )}
                     </div>
@@ -212,7 +237,7 @@ const ChatBot = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     className="flex justify-start"
                   >
-                    <div className="glass backdrop-blur-md p-4 rounded-2xl rounded-tl-none border-white/5">
+                    <div className="glass backdrop-blur-md p-4 rounded-2xl rounded-tl-none border border-text/5 dark:border-white/5">
                       <div className="flex gap-1.5 items-center">
                         {[0, 1, 2].map((i) => (
                           <motion.div
@@ -256,7 +281,8 @@ const ChatBot = () => {
                       whileHover={{ scale: 1.05, backgroundColor: 'rgba(59, 130, 246, 0.1)' }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleSend(null, s.label)}
-                      className="text-[10px] uppercase tracking-wider font-bold px-3 py-2 rounded-xl glass backdrop-blur-md hover:bg-primary/20 hover:text-primary transition-all border-white/5"
+                      aria-label={`Ask about ${s.label}`}
+                      className="text-[10px] uppercase tracking-wider font-bold px-3 py-2 rounded-xl glass backdrop-blur-md hover:bg-primary/20 hover:text-primary transition-all border border-text/5 dark:border-white/5 focus-visible:ring-2 focus-visible:ring-primary/50 outline-none"
                     >
                       {s.label}
                     </motion.button>
@@ -279,15 +305,17 @@ const ChatBot = () => {
                       handleSend(e);
                     }
                   }}
+                  aria-label="Message Liam Assistant"
                   placeholder="Ask me something..."
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 pr-12 outline-none text-sm text-text focus:border-primary/50 focus:bg-white/8 transition-all placeholder:text-text-muted/50 resize-none min-h-[56px] max-h-32 flex items-center"
+                  className="w-full bg-text/5 dark:bg-white/5 border border-text/10 dark:border-white/10 rounded-2xl px-5 py-4 pr-12 outline-none text-sm text-text focus-visible:ring-2 focus-visible:ring-primary/50 focus:border-primary/50 focus:bg-text/8 dark:focus:bg-white/8 transition-all placeholder:text-text-muted/50 resize-none min-h-[56px] max-h-32 flex items-center"
                 />
                 <motion.button 
                   type="submit" 
                   disabled={!input.trim()}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="absolute right-3 bottom-3 text-primary hover:text-white hover:bg-primary p-2 rounded-xl transition-all disabled:opacity-0"
+                  aria-label="Send message"
+                  className="absolute right-3 bottom-3 text-primary hover:text-white hover:bg-primary p-2 rounded-xl transition-all disabled:opacity-0 focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   <Send size={18} />
                 </motion.button>
@@ -307,12 +335,13 @@ const ChatBot = () => {
           damping: 20,
           delay: 0.6 
         }}
-        whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
-        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.1, y: -4 }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 bg-linear-to-br from-primary to-secondary rounded-2xl flex items-center justify-center text-white shadow-2xl relative overflow-hidden group border border-white/10"
+        className="w-16 h-16 glass rounded-full flex items-center justify-center text-primary shadow-2xl relative group outline-none"
       >
-        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+        {/* Inner Tint */}
+        <div className="absolute inset-0 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors duration-300" />
         
         <AnimatePresence>
           {unreadCount > 0 && !isOpen && (
@@ -320,7 +349,7 @@ const ChatBot = () => {
               initial={{ scale: 0, opacity: 0, y: 10 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0, opacity: 0, y: 10 }}
-              className="absolute -top-1 -right-1 min-w-[24px] h-6 px-1.5 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-background z-20 shadow-lg"
+              className="absolute top-0 right-0 min-w-[22px] h-[22px] px-1.5 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-background z-20 shadow-lg"
             >
               {unreadCount}
             </motion.div>
@@ -336,7 +365,7 @@ const ChatBot = () => {
               exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              <X size={32} />
+              <X size={28} />
             </motion.div>
           ) : (
             <motion.div 
@@ -346,11 +375,15 @@ const ChatBot = () => {
               exit={{ rotate: -90, scale: 0.5, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              <MessageSquare size={32} />
+              <MessageSquare size={28} />
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Ambient Glow */}
+        <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
       </motion.button>
+
     </div>
   );
 };

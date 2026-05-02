@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from 'framer-motion';
-import { Menu, X, Github, Linkedin, ArrowRight } from 'lucide-react';
+import { Menu, X, Github, Linkedin, ArrowRight, FileText } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import logoAsset from '../assets/LKKE.png';
 
@@ -59,6 +60,11 @@ const Navbar = () => {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
+      
+      // Auto-activate contact section if at bottom of page
+      if ((window.innerHeight + Math.round(window.scrollY)) >= document.documentElement.scrollHeight - 50) {
+        setActiveSection('contact');
+      }
     };
     window.addEventListener('scroll', handleScroll);
 
@@ -77,18 +83,18 @@ const Navbar = () => {
     // after the preloader mounts the main app content
     const timer = setTimeout(calculateInitialProgress, 100);
 
-    const observerOption = {
-      root: null,
-      rootMargin: '-10% 0px -70% 0px',
-      threshold: 0,
-    };
-
     const handleIntersect = (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
           setActiveSection(entry.target.id);
         }
       });
+    };
+
+    const observerOption = {
+      root: null,
+      rootMargin: '-20% 0px -20% 0px', // More balanced active area
+      threshold: [0.1, 0.5],
     };
 
     const observer = new IntersectionObserver(handleIntersect, observerOption);
@@ -104,11 +110,15 @@ const Navbar = () => {
     };
   }, []);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isHomePage = location.pathname === '/';
+
   const navLinks = [
-    { name: 'About Me', href: '#about', id: 'about' },
-    { name: 'Skills', href: '#skills', id: 'skills' },
-    { name: 'Projects', href: '#project-highlight', id: 'project-highlight' },
-    { name: 'Contact', href: '#contact', id: 'contact' },
+    { name: 'About Me', href: isHomePage ? '#about' : '/#about', id: 'about' },
+    { name: 'Skills', href: isHomePage ? '#skills' : '/#skills', id: 'skills' },
+    { name: 'Projects', href: isHomePage ? '#project-highlight' : '/#project-highlight', id: 'project-highlight' },
+    { name: 'Contact', href: isHomePage ? '#contact' : '/#contact', id: 'contact' },
   ];
 
   const socialLinks = [
@@ -126,13 +136,14 @@ const Navbar = () => {
           maxWidth: scrolled ? '1200px' : '100vw'
         }}
         animate={{
-          y: scrolled ? 0 : -8,
+          y: 0,
           opacity: 1,
           width: scrolled ? '92%' : '100%',
           maxWidth: scrolled ? '1200px' : '100vw',
         }}
         transition={{ 
           duration: 0.8,
+          delay: 0.2,
           ease: [0.22, 1, 0.36, 1] // Smooth quintic ease
         }}
         className={`relative flex items-center justify-between px-6 transition-all duration-500 pointer-events-auto ${
@@ -145,8 +156,6 @@ const Navbar = () => {
           {/* Logo Section */}
           <motion.a 
             href="#hero"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
             whileHover={{ scale: 1.05, rotate: -1.5 }}
             whileTap={{ scale: 0.95 }}
             className="flex items-center space-x-3 group cursor-pointer"
@@ -159,7 +168,9 @@ const Navbar = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-display font-bold accent-gradient leading-tight tracking-tight">Liam Kurt Kasten Edano</span>
+              <span className="text-lg font-display font-bold accent-gradient leading-tight tracking-tight">
+                Liam Kurt<span className="hidden sm:inline"> Kasten Edano</span><span className="sm:hidden">...</span>
+              </span>
             </div>
           </motion.a>
 
@@ -167,26 +178,35 @@ const Navbar = () => {
           <div className="hidden lg:flex items-center glass rounded-full px-2 py-1.5 backdrop-blur-md glass-bg">
             <div className="flex items-center space-x-1">
               {navLinks.map((link) => (
-                <a 
-                  key={link.name} 
-                  href={link.href}
-                  onMouseEnter={() => setHoveredLink(link.id)}
-                  onMouseLeave={() => setHoveredLink(null)}
-                  className={`relative px-4 py-2 text-sm font-medium transition-colors duration-300 ${
-                    activeSection === link.id ? 'text-white' : 'text-text-muted hover:text-text'
-                  }`}
-                >
-                  <span className="relative z-10">{link.name}</span>
-                  {/* Active Section Pill */}
-                  {activeSection === link.id && (
-                    <motion.div
-                      layoutId="nav-pill"
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                      className="absolute inset-0 rounded-full z-0 bg-linear-to-r from-primary to-secondary"
-                    />
-                  )}
-                </a>
+                isHomePage ? (
+                  <a 
+                    key={link.name} 
+                    href={link.href}
+                    onMouseEnter={() => setHoveredLink(link.id)}
+                    onMouseLeave={() => setHoveredLink(null)}
+                    className={`relative px-4 py-2 text-sm font-medium transition-colors duration-300 ${
+                      activeSection === link.id ? 'text-white' : 'text-text-muted hover:text-text'
+                    }`}
+                  >
+                    <span className="relative z-10">{link.name}</span>
+                    {activeSection === link.id && (
+                      <motion.div
+                        layoutId="nav-pill"
+                        initial={false}
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                        className="absolute inset-0 rounded-full z-0 bg-linear-to-r from-primary to-secondary"
+                      />
+                    )}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className="relative px-4 py-2 text-sm font-medium text-text-muted hover:text-text transition-colors duration-300"
+                  >
+                    {link.name}
+                  </Link>
+                )
               ))}
             </div>
             
@@ -201,6 +221,7 @@ const Navbar = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={social.label}
                     whileHover={{ y: -3, scale: 1.15, rotate: social.label === 'GitHub' ? -5 : 5 }}
                     whileTap={{ scale: 0.9 }}
                     className="p-2 text-text-muted hover:text-primary transition-colors duration-300"
@@ -213,7 +234,14 @@ const Navbar = () => {
           </div>
 
           {/* Connect Button (Desktop) */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:flex items-center space-x-3">
+            <Link
+              to="/resume"
+              className="px-6 py-2.5 rounded-full text-sm font-bold flex items-center space-x-2 border border-border hover:bg-text/5 transition-all text-text"
+            >
+              <FileText size={16} />
+              <span>Resume</span>
+            </Link>
             <motion.a
               href="#contact"
               whileHover={{ scale: 1.05, x: 5 }}
@@ -227,12 +255,16 @@ const Navbar = () => {
 
           {/* Mobile UI Buttons */}
           <div className="lg:hidden flex items-center space-x-4">
+            <Link to="/resume" aria-label="View Resume" className="p-2 rounded-xl bg-text/5 border border-border text-text">
+              <FileText size={24} />
+            </Link>
             <ThemeToggle />
             <motion.button 
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsOpen(!isOpen)} 
+              aria-label={isOpen ? "Close menu" : "Open menu"}
               className={`p-2 rounded-xl backdrop-blur-md transition-colors ${
-                isOpen ? 'bg-primary text-white' : 'bg-white/5 border border-white/10 text-text'
+                isOpen ? 'bg-primary text-white' : 'bg-text/5 border border-border text-text'
               }`}
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -294,13 +326,20 @@ const Navbar = () => {
                       e.preventDefault();
                       const href = link.href;
                       setIsOpen(false);
-                      // Wait for the exit animation to finish before scrolling
-                      setTimeout(() => {
-                        const target = document.querySelector(href);
-                        if (target) {
-                          target.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }, 200);
+                      
+                      if (!isHomePage) {
+                        navigate('/');
+                        // Small delay for navigation to complete
+                        setTimeout(() => {
+                          const target = document.querySelector(href.replace('/', ''));
+                          if (target) target.scrollIntoView({ behavior: 'smooth' });
+                        }, 500);
+                      } else {
+                        setTimeout(() => {
+                          const target = document.querySelector(href);
+                          if (target) target.scrollIntoView({ behavior: 'smooth' });
+                        }, 200);
+                      }
                     }}
                     className="group flex flex-col relative w-fit py-2"
                   >

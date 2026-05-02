@@ -41,6 +41,11 @@
     --sidebar-accent-foreground: #0f172a;
     --sidebar-border: rgba(0, 0, 0, 0.15);
     --sidebar-ring: #2563eb;
+
+    /* Terminal Window Controls */
+    --terminal-red: #ff5f56;
+    --terminal-yellow: #ffbd2e;
+    --terminal-green: #27c93f;
 }
 
 .dark {

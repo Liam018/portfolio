@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import Skills from './components/Skills';
-import ProjectHighlight from './components/ProjectHighlight';
-import ChatBot from './components/ChatBot';
-import Contact from './components/Contact';
+import Portfolio from './pages/Portfolio';
+import ResumePage from './pages/ResumePage';
 import Preloader from './components/Preloader';
-import Footer from './components/Footer';
+import Navbar from './components/Navbar';
+import ScrollToTopFAB from './components/ScrollToTopFAB';
+
+const Navigation = () => {
+  const location = useLocation();
+  const showNavbar = location.pathname !== '/resume';
+  return showNavbar ? <Navbar /> : null;
+};
 
 function App() {
   const [isLoading, setIsLoading] = useState(() => {
@@ -38,24 +41,22 @@ function App() {
   }, [isLoading]);
 
   return (
-    <>
+    <Router>
       <AnimatePresence mode="wait">
         {isLoading && <Preloader key="preloader" />}
       </AnimatePresence>
       
       {!isLoading && (
-        <div className="min-h-screen relative overflow-x-hidden">
-          <Navbar />
-          <Hero />
-          <About />
-          <Skills />
-          <ProjectHighlight />
-          <ChatBot />
-          <Contact />
-          <Footer />
+        <div className="relative">
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<Portfolio />} />
+            <Route path="/resume" element={<ResumePage />} />
+          </Routes>
+          <ScrollToTopFAB />
         </div>
       )}
-    </>
+    </Router>
   );
 }
 

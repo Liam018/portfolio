@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { INITIAL_MESSAGE, findBestResponse } from '../constants/chatbotData';
 
 export const useChatBot = () => {
@@ -11,11 +11,19 @@ export const useChatBot = () => {
     return saved ? JSON.parse(saved) : [INITIAL_MESSAGE];
   });
   const [input, setInput] = useState('');
+  const timeoutRef = useRef(null);
 
   // Persistence
   useEffect(() => {
     localStorage.setItem('chat_history', JSON.stringify(messages));
   }, [messages]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   // Handle unread count
   useEffect(() => {
@@ -27,6 +35,8 @@ export const useChatBot = () => {
   const clearChat = useCallback(() => {
     setMessages([INITIAL_MESSAGE]);
     localStorage.removeItem('chat_history');
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setIsTyping(false);
   }, []);
 
   const handleSend = useCallback((e, customValue) => {
@@ -59,7 +69,9 @@ export const useChatBot = () => {
     // Dynamic typing delay based on response length
     const typingDuration = Math.min(800 + botResponse.text.length * 15, 2500);
 
-    setTimeout(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    timeoutRef.current = setTimeout(() => {
       setIsTyping(false);
       setMessages(prev => [...prev, { role: 'bot', text: botResponse.text, image: botResponse.image }]);
       if (!isOpen) setUnreadCount(prev => prev + 1);

@@ -8,9 +8,9 @@ const BrowserFrame = ({ children }) => (
   <div className="w-full h-full bg-[#1a1a1e] rounded-xl border border-white/10 overflow-hidden flex flex-col">
     <div className="h-6 md:h-8 bg-[#252529] border-b border-white/5 flex items-center px-3 md:px-4 gap-1.5 md:gap-2 shrink-0">
       <div className="flex gap-1 md:gap-1.5">
-        <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[#ff5f56]" />
-        <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[#ffbd2e]" />
-        <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[#27c93f]" />
+        <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[var(--terminal-red)]" />
+        <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[var(--terminal-yellow)]" />
+        <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[var(--terminal-green)]" />
       </div>
       <div className="flex-1 max-w-[400px] h-4 md:h-5 bg-black/20 rounded-md mx-auto" />
     </div>

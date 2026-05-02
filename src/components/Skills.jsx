@@ -162,11 +162,14 @@ const Skills = () => {
                 {cat.skills.map((skill, sIdx) => (
                   <motion.div
                     key={skill}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`Skill: ${skill}`}
                     variants={skillVars}
                     whileHover={{ scale: 1.05, y: -2, transition: { type: "spring", stiffness: 300, damping: 20 } }}
-                    className="flex items-center px-3 py-1.5 rounded-xl bg-text/5 border border-border text-sm text-text-muted hover:text-text hover:bg-text/10 hover:border-primary/30 transition-all cursor-default"
+                    className="flex items-center px-3 py-1.5 rounded-xl bg-text/5 border border-border text-sm text-text-muted hover:text-text hover:bg-text/10 hover:border-primary/30 transition-all cursor-default focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
-                    <CheckCircle2 className="w-3 h-3 mr-1.5 text-primary" />
+                    <CheckCircle2 className="w-3 h-3 mr-1.5 text-primary" aria-hidden="true" />
                     {skill}
                   </motion.div>
                 ))}
