@@ -84,15 +84,7 @@ const ResumePage = () => {
     }
   ];
 
-  const seminars = [
-    { title: "Cyber Awareness & Workshop Seminar", organization: "Saint Louis College", year: "2026" },
-    { title: "Personality Development Seminar", organization: "Saint Louis College", year: "2026" },
-    { title: "Team Building Workshop", organization: "Saint Louis College", year: "2026" },
-    { title: "Anti-Sexual Harassment Seminar", organization: "Saint Louis College", year: "2026" },
-    { title: "Office Productivity Seminar", organization: "Saint Louis College", year: "2026" },
-    { title: "Startup & Design Thinking Seminar", organization: "Saint Louis College", year: "2025" },
-    { title: "IT Careers and Opportunities", organization: "UP ITDC", year: "2025" }
-  ];
+
 
   return (
     <div className="min-h-screen bg-background text-text selection:bg-primary/30 py-20 px-4 sm:px-6 lg:px-8">
@@ -189,21 +181,9 @@ const ResumePage = () => {
             </div>
           </Section>
 
-          <Section title="Seminars & Trainings" icon={BookOpen} delay={0.4}>
-            <div className="space-y-4">
-              {seminars.map((sem, i) => (
-                <div key={i} className="flex items-start gap-4 p-5 rounded-2xl bg-text/5 border border-border hover:border-primary/20 transition-all">
-                  <div className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-md h-fit mt-1">{sem.year}</div>
-                  <div>
-                    <h4 className="text-lg font-bold leading-tight">{sem.title}</h4>
-                    <div className="text-sm uppercase tracking-wider text-text-muted mt-1">{sem.organization}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Section>
 
-          <Section title="Achievements" icon={Award} delay={0.5}>
+
+          <Section title="Achievements" icon={Award} delay={0.4}>
             <div className="space-y-6">
               {achievements.map((ach, i) => (
                 <div key={i} className="p-8 rounded-[32px] bg-text/5 border border-border hover:border-primary/30 transition-colors group">
@@ -215,45 +195,10 @@ const ResumePage = () => {
             </div>
           </Section>
 
-          {/* <Section title="Languages" icon={BookOpen} delay={0.6}>
-            <div className="flex flex-wrap gap-4">
-              <div className="px-6 py-4 rounded-2xl bg-text/5 border border-border">
-                <div className="text-lg font-bold">English</div>
-                <div className="text-xs text-text-muted uppercase tracking-widest">Fluent</div>
-              </div>
-              <div className="px-6 py-4 rounded-2xl bg-text/5 border border-border">
-                <div className="text-lg font-bold">Filipino</div>
-                <div className="text-xs text-text-muted uppercase tracking-widest">Native</div>
-              </div>
-              <div className="px-6 py-4 rounded-2xl bg-text/5 border border-border">
-                <div className="text-lg font-bold">Ilocano</div>
-                <div className="text-xs text-text-muted uppercase tracking-widest">Native</div>
-              </div>
-            </div>
-          </Section> */}
+         
 
-          {/* Portfolio Link CTA */}
-          <div className="p-10 rounded-[40px] bg-linear-to-br from-primary/10 via-secondary/10 to-transparent border border-border flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
-            <div className="max-w-md">
-              <h4 className="text-2xl font-bold mb-2">Portfolio Website</h4>
-              <p className="text-text-muted">Explore the full interactive experience including projects and custom terminal.</p>
-            </div>
-            <a 
-              href="https://portfolio-bice-tau-34.vercel.app/" 
-              target="_blank" 
-              rel="noreferrer"
-              className="px-10 py-4 bg-white text-black rounded-2xl font-bold hover:scale-105 transition-transform flex items-center gap-3 shadow-2xl"
-            >
-              Open Portfolio <ExternalLink size={20} />
-            </a>
-          </div>
         </div>
       </div>
-      
-      {/* Footer Branding */}
-      {/* <div className="text-center mt-12 text-text-muted text-sm font-mono opacity-50 uppercase tracking-widest">
-        &copy; 2026 Liam Kurt • Built with React & Vite
-      </div> */}
     </div>
   );
 };

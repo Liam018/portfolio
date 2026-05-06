@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Terminal } from 'lucide-react';
 import profileIllustration from '../assets/profile_illustration.png';
 import AboutTerminal from './AboutTerminal';
+import profile from '../assets/profile1.png';
+import profileHover from '../assets/profile4.png';
 
 // Shared smooth transition
 const smoothTransition = {
@@ -19,6 +21,7 @@ const Highlight = ({ children }) => (
 const About = () => {
   const containerRef = useRef(null);
   const [viewMode, setViewMode] = useState('terminal'); // 'static' | 'terminal' | 'fullscreen'
+  const [isHovered, setIsHovered] = useState(false);
 
   // Handle scroll lock and auto-close on navigation
   useEffect(() => {
@@ -56,14 +59,14 @@ const About = () => {
     <section 
       ref={containerRef} 
       id="about" 
-      className={`${viewMode === 'fullscreen' ? 'fixed inset-0 z-9999 bg-[#050505] flex items-center justify-center py-0 overflow-y-auto' : 'py-24 relative overflow-hidden'}`}
+      className={`${viewMode === 'fullscreen' ? 'fixed inset-0 z-9999 bg-white dark:bg-[#050505] flex items-center justify-center py-0 overflow-y-auto' : 'py-24 relative overflow-hidden'}`}
     >
       <motion.div 
         style={viewMode === 'fullscreen' ? {} : { opacity, scale, transformOrigin: 'center center', willChange: 'transform, opacity' }}
         className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full ${viewMode === 'fullscreen' ? 'h-full flex flex-col justify-center' : ''}`}
       >
         {viewMode !== 'fullscreen' && (
-          <div className="text-center mb-12 md:mb-14">
+          <div className="text-center mb-2 md:mb-4">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -78,7 +81,7 @@ const About = () => {
             </motion.div>
           </div>
         )}
-        <div className={`grid ${viewMode === 'fullscreen' ? 'grid-cols-1 max-w-6xl mx-auto' : 'lg:grid-cols-2 max-w-6xl mx-auto'} gap-10 lg:gap-12 lg:items-start items-center w-full`}>
+        <div className={`grid ${viewMode === 'fullscreen' ? 'grid-cols-1 max-w-6xl mx-auto' : 'lg:grid-cols-2 max-w-6xl mx-auto'} gap-4 lg:gap-6 items-center w-full`}>
           
           {/* Left Side: Visuals - Hidden in Fullscreen */}
           {viewMode !== 'fullscreen' && (
@@ -87,20 +90,29 @@ const About = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={smoothTransition}
               viewport={{ once: true, margin: "-15%" }}
-              className="flex flex-col items-center lg:items-start relative"
+              className="flex flex-col items-center relative"
             >
-              <div className="relative z-10 p-2 overflow-hidden aspect-square max-w-md w-full mx-auto lg:ml-auto lg:mr-4">
+              <div className="relative z-10 p-2 overflow-hidden max-w-[280px] sm:max-w-[340px] w-full mx-auto mask-[linear-gradient(to_bottom,black_70%,transparent_100%)]">
                  <motion.img 
-                  src={profileIllustration} 
+                  src={isHovered ? profileHover : profile} 
                   alt="Profile Illustration"
-                  className="w-full h-full object-cover rounded-[38px]"
+                  className="w-full h-auto object-cover rounded-[38px] transition-all duration-500"
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
                   animate={{ 
                     y: [0, -5, 0],
+                    scale: isHovered ? 1.05 : 1,
                   }}
                   transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: "easeInOut"
+                    y: {
+                      duration: 6,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    },
+                    scale: {
+                      duration: 0.4,
+                      ease: "easeOut"
+                    }
                   }}
                  />
               </div>
