@@ -125,32 +125,38 @@ const ProjectHighlight = () => {
         style={{ opacity, scale, transformOrigin: 'center center', willChange: 'transform, opacity' }}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
-        <div className="mb-12 flex flex-col gap-2">
-          <div className="flex items-center justify-between md:justify-start gap-4 md:gap-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-12 flex flex-col items-center text-center gap-2"
+        >
+          <div className="flex items-center justify-center gap-4 md:gap-8">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold">Featured <span className="text-primary">Projects</span></h2>
             
-            <div className="flex items-center gap-3 md:gap-4 shrink-0 select-none">
-              <div className="flex flex-col items-center h-[1.5em] overflow-hidden">
+            <div className="flex items-center gap-2 select-none">
+              <div className="flex items-center h-8 overflow-hidden">
                 <AnimatePresence mode="wait" custom={direction}>
                   <motion.span
                     key={currentIndex}
                     custom={direction}
-                    initial={{ y: direction > 0 ? 20 : -20, opacity: 0 }}
+                    initial={{ y: direction > 0 ? 15 : -15, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: direction > 0 ? -20 : 20, opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className="text-primary font-display font-bold text-xl md:text-2xl"
+                    exit={{ y: direction > 0 ? -15 : 15, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="text-2xl font-display font-bold text-primary"
                   >
                     0{currentIndex + 1}
                   </motion.span>
                 </AnimatePresence>
               </div>
-              <div className="h-px w-6 md:w-8 bg-primary/30" />
-              <span className="text-text-muted font-display text-xs md:text-sm tracking-widest lowercase">/ 0{highlights.length}</span>
+              <span className="text-text-muted/20 text-xl font-light">/</span>
+              <span className="text-text-muted font-display text-sm mt-1">0{highlights.length}</span>
             </div>
           </div>
           <p className="text-text-muted text-base md:text-lg">A detailed look at my projects.</p>
-        </div>
+        </motion.div>
 
         <div className="relative group">
           {/* Side Navigation Arrows */}
@@ -194,7 +200,13 @@ const ProjectHighlight = () => {
                 className="grid lg:grid-cols-2 gap-16 items-center cursor-grab active:cursor-grabbing"
               >
                 {/* Visual Side: Overlapping Mockups */}
-                <div className="relative aspect-4/3 md:aspect-video lg:aspect-video flex items-center justify-center">
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9, y: 40 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative aspect-4/3 md:aspect-video lg:aspect-video flex items-center justify-center"
+                >
                   <div className="absolute inset-0 bg-primary/5 blur-[100px] rounded-full scale-75" />
                   
                   {/* Browser Mockup */}
@@ -215,7 +227,7 @@ const ProjectHighlight = () => {
 
                   {/* Phone Mockup (Overlapping) */}
                   {highlights[currentIndex].images?.[1] && (
-                    <div className="absolute bottom-[-5%] right-[2%] md:right-[-2%] z-20 hover:scale-105 transition-transform duration-500">
+                    <div className="absolute bottom-[-12%] right-[2%] md:right-[-2%] z-20 hover:scale-105 transition-transform duration-500">
                       <PhoneFrame>
                         <button 
                           onClick={() => setSelectedImg(highlights[currentIndex].images[1])}
@@ -226,11 +238,17 @@ const ProjectHighlight = () => {
                       </PhoneFrame>
                     </div>
                   )}
-                </div>
+                </motion.div>
 
                 {/* Content Side */}
-                <div className="space-y-8">
-                  <div className="space-y-4">
+                <motion.div 
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  className="space-y-8 flex flex-col items-center text-center lg:items-start lg:text-left"
+                >
+                  <div className="space-y-4 flex flex-col items-center lg:items-start">
                     <span className="inline-block px-3 py-1 bg-primary/10 border border-primary/20 rounded-md text-primary font-bold text-xs tracking-widest uppercase">
                       {highlights[currentIndex].category}
                     </span>
@@ -240,18 +258,18 @@ const ProjectHighlight = () => {
                   </div>
 
                   {/* Tech Stack */}
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
                     {highlights[currentIndex].tech.map(t => (
-                      <span key={t} className="px-3 py-1 glass bg-white/5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-primary hover:text-white">
+                      <span key={t} className="px-3 py-1 glass bg-white/5 border border-border rounded-full text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-primary hover:text-white">
                         {t}
                       </span>
                     ))}
                   </div>
                   
-                  <p className="text-xl text-text-muted leading-relaxed font-light border-l-2 border-primary/20 pl-6">
+                  <p className="text-xl text-text-muted leading-relaxed font-light border-l-0 lg:border-l-2 border-primary/20 pl-0 lg:pl-6">
                      "{highlights[currentIndex].desc}"
                   </p>
-                </div>
+                </motion.div>
               </motion.div>
             </AnimatePresence>
           </div>

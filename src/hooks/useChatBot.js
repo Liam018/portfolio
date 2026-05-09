@@ -12,6 +12,7 @@ export const useChatBot = () => {
   });
   const [input, setInput] = useState('');
   const timeoutRef = useRef(null);
+  const pendingResponsesRef = useRef(0);
 
   // Persistence
   useEffect(() => {
@@ -36,6 +37,7 @@ export const useChatBot = () => {
     setMessages([INITIAL_MESSAGE]);
     localStorage.removeItem('chat_history');
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    pendingResponsesRef.current = 0;
     setIsTyping(false);
   }, []);
 
@@ -45,23 +47,13 @@ export const useChatBot = () => {
     if (!messageText.trim()) return;
 
     const userMessage = messageText.trim();
+    const userId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 
-    // Add user message to state
-    // We check for "dito oh" specifically for the user image if needed, 
-    // but the original logic had it in handleSend. 
-    // Let's refine: the bot logic should decide what the bot responds with.
-    // The original code also added an image to the USER message if they said "dito oh".
-
-    let userImage = null;
-    if (userMessage.toLowerCase().includes("dito oh")) {
-      // In the original, it used 'pitchel' directly. 
-      // We can't easily import pitchel here without duplicating, 
-      // or we can pass it as a param if we really want to keep it in the hook.
-      // However, it's better to keep assets in the data layer.
-    }
-
-    setMessages(prev => [...prev, { role: 'user', text: messageText }]);
+    setMessages(prev => [...prev, { id: userId, role: 'user', text: messageText }]);
     setInput('');
+    
+    // Support multiple concurrent responses
+    pendingResponsesRef.current++;
     setIsTyping(true);
 
     const botResponse = findBestResponse(userMessage);
@@ -69,11 +61,21 @@ export const useChatBot = () => {
     // Dynamic typing delay based on response length
     const typingDuration = Math.min(800 + botResponse.text.length * 15, 2500);
 
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setTimeout(() => {
+      pendingResponsesRef.current--;
+      
+      // Only hide typing indicator if no more responses are pending
+      if (pendingResponsesRef.current === 0) {
+        setIsTyping(false);
+      }
 
-    timeoutRef.current = setTimeout(() => {
-      setIsTyping(false);
-      setMessages(prev => [...prev, { role: 'bot', text: botResponse.text, image: botResponse.image }]);
+      setMessages(prev => [...prev, { 
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
+        role: 'bot', 
+        text: botResponse.text, 
+        image: botResponse.image,
+        replyTo: { id: userId, text: userMessage }
+      }]);
       if (!isOpen) setUnreadCount(prev => prev + 1);
     }, typingDuration);
   }, [input, isOpen]);

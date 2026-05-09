@@ -59,6 +59,17 @@ const ChatBot = () => {
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
 
+  const scrollToMessage = (id) => {
+    const el = document.getElementById(`msg-${id}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('ring-2', 'ring-primary/50', 'ring-offset-2', 'dark:ring-offset-black');
+      setTimeout(() => {
+        el.classList.remove('ring-2', 'ring-primary/50', 'ring-offset-2', 'dark:ring-offset-black');
+      }, 2000);
+    }
+  };
+
   // Auto-focus input when opened (Desktop Only)
   useEffect(() => {
     if (isOpen && inputRef.current && window.innerWidth >= 1024) {
@@ -197,7 +208,8 @@ const ChatBot = () => {
               <AnimatePresence initial={false}>
                 {messages.map((m, idx) => (
                   <motion.div 
-                    key={idx}
+                    key={m.id || idx}
+                    id={`msg-${m.id}`}
                     initial={{ opacity: 0, y: 15, scale: 0.95 }}
                     animate={{ 
                       opacity: 1, 
@@ -210,13 +222,22 @@ const ChatBot = () => {
                         delay: 0.05 
                       }
                     }}
-                    className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} scroll-mt-20`}
                   >
-                    <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed space-y-2 shadow-lg transition-colors group ${
+                    <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed space-y-2 shadow-lg transition-all duration-500 group ${
                       m.role === 'user' 
                         ? 'bg-linear-to-br from-primary to-secondary text-white rounded-tr-none shadow-primary/20 font-medium' 
                         : 'glass backdrop-blur-md text-text rounded-tl-none border border-text/5 dark:border-white/5'
                     }`}>
+                      {m.replyTo && (
+                        <button 
+                          onClick={() => scrollToMessage(m.replyTo.id)}
+                          className="mb-2 p-2 bg-black/10 dark:bg-white/10 rounded-lg border-l-2 border-primary text-left block w-full hover:bg-black/20 dark:hover:bg-white/20 transition-colors"
+                        >
+                          <span className="text-[10px] font-bold text-primary block uppercase tracking-wider">You</span>
+                          <span className="text-xs opacity-60 line-clamp-1 italic">"{m.replyTo.text}"</span>
+                        </button>
+                      )}
                       {m.text && <FormattedMessage text={m.text} setIsOpen={setIsOpen} />}
                       {m.image && (
                         <motion.img 
