@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Github, ExternalLink, Zap } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Github, ExternalLink, Zap, School, Laptop } from 'lucide-react';
 import { highlights } from '../constants/projects';
 
 // --- Mockup Components ---
@@ -32,12 +32,18 @@ const PhoneFrame = ({ children, className = "" }) => (
   </div>
 );
 
+
 const ProjectHighlight = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedImg, setSelectedImg] = useState(null);
+  const [selectedImgIdx, setSelectedImgIdx] = useState(null);
+
+  const currentProjectImages = highlights[currentIndex]?.mobileImages || highlights[currentIndex]?.images || [];
   const [showMobileArrows, setShowMobileArrows] = useState(false);
-  const [direction, setDirection] = useState(0); // 1 for next, -1 for prev
+  const [direction, setDirection] = useState(0);
   const hideTimeoutRef = useRef(null);
+
+  // Static primary mobile image (no auto-play)
+  const currentMobileImg = highlights[currentIndex]?.mobileImages?.[0] || null;
 
   const triggerActivity = useCallback(() => {
     setShowMobileArrows(true);
@@ -130,7 +136,7 @@ const ProjectHighlight = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-12 flex flex-col items-center text-center gap-2"
+          className="mb-2 md:mb-4 flex flex-col items-center text-center gap-2"
         >
           <div className="flex items-center justify-center gap-4 md:gap-8">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold">Featured <span className="text-primary">Projects</span></h2>
@@ -176,7 +182,7 @@ const ProjectHighlight = () => {
             <ChevronRight size={20} className="md:w-6 md:h-6" />
           </button>
 
-          <div className="relative overflow-hidden pt-32 pb-32 -mt-32 -mb-32">
+          <div className="relative overflow-hidden pt-32 pb-32 -mt-20 -mb-20">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
                 key={currentIndex}
@@ -208,35 +214,83 @@ const ProjectHighlight = () => {
                   className="relative aspect-4/3 md:aspect-video lg:aspect-video flex items-center justify-center"
                 >
                   <div className="absolute inset-0 bg-primary/5 blur-[100px] rounded-full scale-75" />
-                  
-                  {/* Browser Mockup */}
-                  <div className="relative w-[90%] md:w-[85%] aspect-video z-10">
-                    <BrowserFrame>
-                       {highlights[currentIndex].images ? (
-                        <button 
-                          onClick={() => setSelectedImg(highlights[currentIndex].images[0])}
-                          className="w-full h-full cursor-zoom-in"
-                        >
-                          <img src={highlights[currentIndex].images[0]} alt="Web view" className="w-full h-full object-cover" />
-                        </button>
-                       ) : (
-                        <div className="w-full h-full bg-linear-to-br from-[#1e1e22] to-[#2a2a30] flex items-center justify-center text-6xl">🛍️</div>
-                       )}
-                    </BrowserFrame>
-                  </div>
 
-                  {/* Phone Mockup (Overlapping) */}
-                  {highlights[currentIndex].images?.[1] && (
-                    <div className="absolute bottom-[-12%] right-[2%] md:right-[-2%] z-20 hover:scale-105 transition-transform duration-500">
-                      <PhoneFrame>
-                        <button 
-                          onClick={() => setSelectedImg(highlights[currentIndex].images[1])}
-                          className="w-full h-full cursor-zoom-in"
-                        >
-                          <img src={highlights[currentIndex].images[1]} alt="Mobile view" className="w-full h-full object-cover" />
-                        </button>
-                      </PhoneFrame>
-                    </div>
+                  {highlights[currentIndex].mobileImages ? (
+                    /* Mobile-only: browser shows SOS emoji card, phone overlaps with first screenshot */
+                    <>
+                      <div className="relative w-[90%] md:w-[85%] aspect-video z-10">
+                        <BrowserFrame>
+                          <div className="w-full h-full bg-linear-to-br from-[#1e1e22] to-[#2a2a30] flex flex-col items-center justify-center select-none relative overflow-hidden">
+                            <div className="absolute inset-0 bg-red-500/10 blur-[80px] rounded-full scale-75" />
+                            <span className="text-6xl md:text-7xl relative hover:scale-115 transition-transform duration-300 cursor-default">🆘</span>
+                          </div>
+                        </BrowserFrame>
+                      </div>
+                      <div className="absolute bottom-[-18%] md:bottom-[-22%] right-[2%] md:right-[-2%] z-20 hover:scale-105 transition-transform duration-500">
+                        <PhoneFrame>
+                          <button
+                            onClick={() => setSelectedImgIdx(0)}
+                            className="w-full h-full cursor-zoom-in relative group/phone"
+                          >
+                            <img
+                              src={currentMobileImg}
+                              alt="Mobile screen"
+                              className="w-full h-full object-cover object-top"
+                            />
+                            {/* Photos Count Badge */}
+                            {highlights[currentIndex].mobileImages?.length > 1 && (
+                              <div className="absolute bottom-4 right-4 glass px-2.5 py-1 rounded-full border border-white/10 text-[10px] font-bold tracking-wide uppercase flex items-center gap-1.5 shadow-lg select-none bg-black/60 text-white backdrop-blur-md">
+                                <span>+{highlights[currentIndex].mobileImages.length} Photos</span>
+                              </div>
+                            )}
+                          </button>
+                        </PhoneFrame>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* Browser Mockup */}
+                      <div className="relative w-[90%] md:w-[85%] aspect-video z-10">
+                        <BrowserFrame>
+                           {highlights[currentIndex].images ? (
+                            <button 
+                              onClick={() => setSelectedImgIdx(0)}
+                              className="w-full h-full cursor-zoom-in"
+                            >
+                              <img src={highlights[currentIndex].images[0]} alt="Web view" className="w-full h-full object-cover" />
+                            </button>
+                           ) : (
+                            <div className="w-full h-full bg-linear-to-br from-[#1e1e22] to-[#2a2a30] flex items-center justify-center">
+                              {highlights[currentIndex].emoji === '🏫' ? (
+                                <School className="w-20 h-20 text-primary/70 animate-pulse" />
+                              ) : (
+                                <Laptop className="w-20 h-20 text-primary/70 animate-pulse" />
+                              )}
+                            </div>
+                           )}
+                        </BrowserFrame>
+                      </div>
+                      {/* Phone Mockup (Overlapping) */}
+                      {highlights[currentIndex].images?.[1] && (
+                        <div className="absolute bottom-[-18%] md:bottom-[-22%] right-[2%] md:right-[-2%] z-20 hover:scale-105 transition-transform duration-500">
+                          <PhoneFrame>
+                            <button 
+                              onClick={() => setSelectedImgIdx(1)}
+                              className="w-full h-full cursor-zoom-in relative group/phone"
+                            >
+                              <img src={highlights[currentIndex].images[1]} alt="Mobile view" className="w-full h-full object-cover" />
+                              {/* Photos Count Badge */}
+                              {highlights[currentIndex].images?.length > 1 && (
+                                <div className="absolute bottom-4 right-4 glass px-2.5 py-1 rounded-full border border-white/10 text-[10px] font-bold tracking-wide uppercase flex items-center gap-1.5 shadow-lg select-none bg-black/60 text-white backdrop-blur-md">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
+                                  <span>+{highlights[currentIndex].images.length} Photos</span>
+                                </div>
+                              )}
+                            </button>
+                          </PhoneFrame>
+                        </div>
+                      )}
+                    </>
                   )}
                 </motion.div>
 
@@ -292,13 +346,13 @@ const ProjectHighlight = () => {
 
       {/* Lightbox Modal */}
       <AnimatePresence>
-        {selectedImg && (
+        {selectedImgIdx !== null && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            onClick={() => setSelectedImg(null)}
+            onClick={() => setSelectedImgIdx(null)}
             className="fixed inset-0 z-100 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out"
           >
             <motion.div
@@ -306,19 +360,52 @@ const ProjectHighlight = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
               transition={{ type: "spring", stiffness: 200, damping: 25 }}
-              className="relative max-w-5xl w-full h-full flex items-center justify-center"
+              className="relative max-w-5xl w-full h-full flex items-center justify-center cursor-default"
+              onClick={(e) => e.stopPropagation()}
             >
+              {/* Previous Image Button */}
+              {currentProjectImages.length > 1 && (
+                <button
+                  onClick={() => setSelectedImgIdx(prev => (prev - 1 + currentProjectImages.length) % currentProjectImages.length)}
+                  className="absolute left-4 p-3 glass rounded-full text-white hover:bg-primary transition-all z-110"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft size={24} />
+                </button>
+              )}
+
               <img 
-                src={selectedImg} 
-                alt="Full screen view" 
-                className="max-w-full max-h-full object-contain rounded-xl shadow-2xl"
+                src={currentProjectImages[selectedImgIdx]} 
+                alt={`Project screenshot ${selectedImgIdx + 1}`} 
+                className="max-w-[85%] max-h-[85%] object-contain rounded-xl shadow-2xl cursor-zoom-out"
+                onClick={() => setSelectedImgIdx(null)}
               />
+
+              {/* Next Image Button */}
+              {currentProjectImages.length > 1 && (
+                <button
+                  onClick={() => setSelectedImgIdx(prev => (prev + 1) % currentProjectImages.length)}
+                  className="absolute right-4 p-3 glass rounded-full text-white hover:bg-primary transition-all z-110"
+                  aria-label="Next image"
+                >
+                  <ChevronRight size={24} />
+                </button>
+              )}
+
+              {/* Close Button */}
               <button 
-                onClick={() => setSelectedImg(null)}
+                onClick={() => setSelectedImgIdx(null)}
                 className="absolute top-4 right-4 p-3 glass rounded-full text-white hover:bg-primary transition-all"
               >
                 <Zap className="rotate-45" size={24} />
               </button>
+
+              {/* Image Counter Badge */}
+              {currentProjectImages.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 glass px-3 py-1.5 rounded-full border border-white/10 text-xs font-semibold tracking-wider text-white bg-black/60 backdrop-blur-md">
+                  {selectedImgIdx + 1} / {currentProjectImages.length}
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}
