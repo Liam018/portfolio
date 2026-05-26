@@ -146,13 +146,13 @@ const About = () => {
                   </div>
                   
                   <p className="text-lg text-text leading-relaxed">
-                    I'm <Highlight>Liam Kurt Kasten Edaño</Highlight>, a passionate IT student at <Highlight>Saint Louis College</Highlight>.
+                    I am <Highlight>Liam Kurt Kasten Edaño</Highlight>, a graduate of <Highlight>Bachelor of Science in Information Technology</Highlight> from <Highlight>Saint Louis College</Highlight>, with a strong foundation in full-stack web and mobile development.
                   </p>
                   <p className="text-lg text-text leading-relaxed">
-                    My journey is fueled by the intersection of beautiful design and reliable functionality. I specialize in <Highlight>React Native</Highlight>, <Highlight>Supabase</Highlight>, and <Highlight>Full-stack</Highlight> development.
+                    I specialize in <Highlight>React.js</Highlight>, <Highlight>React Native</Highlight>, and <Highlight>Laravel</Highlight>, developing responsive, performant applications that prioritize both user experience and technical quality.
                   </p>
                   <p className="text-lg text-text leading-relaxed">
-                    Driven by curiosity and a commitment to continuous learning, I enjoy turning complex challenges into intuitive experiences that deliver real value.
+                    I am committed to continuous growth as a developer and dedicated to building solutions that are both functional and meaningful.
                   </p>
                 </motion.div>
               ) : (

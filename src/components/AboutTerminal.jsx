@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useInView } from 'framer-motion';
 import { Terminal, FastForward, FileText, X, Minus, Maximize2, Book, Gamepad, Music } from 'lucide-react';
-import resumePdf from '../assets/RESUME.pdf';
+import resumePdf from '../assets/Resume2026_LiamEdaño.pdf';
 
 const AboutTerminal = ({ viewMode, setViewMode }) => {
   const terminalScrollRef = useRef(null);
@@ -15,7 +15,7 @@ const AboutTerminal = ({ viewMode, setViewMode }) => {
   const [isAutoTyping, setIsAutoTyping] = useState(false);
   const [typingIndex, setTypingIndex] = useState(0);
 
-  const introText = "Liam Kurt Kasten Edaño — Pursuing BSIT at Saint Louis College. My journey is fueled by the intersection of beautiful design and reliable functionality. I specialize in React Native, Supabase, and Full-stack Web Development, driven by curiosity and a commitment to continuous learning.";
+  const introText = "I am Liam Kurt Kasten Edaño, a graduate of Bachelor of Science in Information Technology from Saint Louis College, with a strong foundation in full-stack web and mobile development. I specialize in React.js, React Native, and Laravel, developing responsive and performant applications that prioritize both user experience and technical quality. I am committed to continuous growth as a developer and dedicated to building solutions that are both functional and meaningful.";
 
   const iconMap = {
     Book: <Book size={14} className="inline-block ml-1.5 text-secondary" />,
@@ -25,9 +25,9 @@ const AboutTerminal = ({ viewMode, setViewMode }) => {
 
   const commands = {
     help: 'Available: whoami, tech, resume, socials, hobbies, contact, clear',
-    whoami: 'Liam Kurt — IT Student & Full-stack Developer based in La Union.',
-    tech: 'Core Stack: React Native, Supabase, Vite, Tailwind, React, and Django REST.',
-    resume: 'Click to download: Liam_Resume.pdf',
+    whoami: 'Liam Kurt — BSIT Graduate & Full-Stack Developer based in La Union.',
+    tech: 'Core Stack: React.js, React Native, Laravel, PHP, Tailwind, PostgreSQL, MySQL, Django REST.',
+    resume: 'Click to download: Resume2026_LiamEdano.pdf',
     socials: 'github.com/Liam018 \n linkedin.com/in/liam-kurt-edano',
     contact: 'liamkurt014@gmail.com',
     hobbies: 'Reading Manhwa/Manga/Donghua [Book], Playing online games [Gamepad], Listening to music [Music]',
@@ -38,7 +38,7 @@ const AboutTerminal = ({ viewMode, setViewMode }) => {
   const formatTerminalText = (text) => {
     if (!text) return null;
     
-    const keywords = ['Liam Kurt Kasten Edaño', 'Saint Louis College', 'React Native', 'Supabase', 'Full-stack', 'Vite', 'Tailwind', 'React', 'BSIT', 'La Union'];
+    const keywords = ['Liam Kurt Kasten Edaño', 'Saint Louis College', 'React.js', 'React Native', 'Laravel', 'Full-Stack Developer', 'National Food Authority', 'La Union', 'BSIT Graduate', 'GIS'];
     const hashtags = ['#skills', '#about', '#projects', '#contact'];
     
     // Convert to word-based processing
@@ -68,9 +68,9 @@ const AboutTerminal = ({ viewMode, setViewMode }) => {
       }
 
       // Format Resume Link
-      if (word === 'Liam_Resume.pdf') {
+      if (word === 'Resume2026_LiamEdano.pdf') {
         result.push(
-          <a key={i} href={resumePdf} download="Liam_Kurt_Resume.pdf" className="text-accent hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5 font-bold group">
+          <a key={i} href={resumePdf} download="Resume2026_LiamEdano.pdf" className="text-accent hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5 font-bold group">
             <FileText size={14} className="group-hover:scale-110 transition-transform" />
             {word}
           </a>
