@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Github, ExternalLink, Zap, School, Laptop } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Github, ExternalLink, School, Laptop, X, ShieldAlert } from 'lucide-react';
 import { highlights } from '../constants/projects';
 
 // --- Mockup Components ---
@@ -220,9 +220,10 @@ const ProjectHighlight = () => {
                     <>
                       <div className="relative w-[90%] md:w-[85%] aspect-video z-10">
                         <BrowserFrame>
-                          <div className="w-full h-full bg-linear-to-br from-[#1e1e22] to-[#2a2a30] flex flex-col items-center justify-center select-none relative overflow-hidden">
+                          <div className="w-full h-full bg-linear-to-br from-[#1b1b1f] to-[#26262b] flex flex-col items-center justify-center select-none relative overflow-hidden p-6 text-center">
                             <div className="absolute inset-0 bg-red-500/10 blur-[80px] rounded-full scale-75" />
-                            <span className="text-6xl md:text-7xl relative hover:scale-115 transition-transform duration-300 cursor-default">🆘</span>
+                            <ShieldAlert className="w-16 h-16 md:w-20 md:h-20 text-red-500/80 hover:scale-110 transition-transform duration-300 cursor-default animate-pulse" />
+                            <span className="mt-4 text-[10px] md:text-xs font-mono tracking-widest text-red-500/60 uppercase">Emergency SOS & Community Support</span>
                           </div>
                         </BrowserFrame>
                       </div>
@@ -353,7 +354,7 @@ const ProjectHighlight = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
             onClick={() => setSelectedImgIdx(null)}
-            className="fixed inset-0 z-100 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out"
+            className="fixed inset-0 z-1000 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out"
           >
             <motion.div
               initial={{ scale: 0.92, opacity: 0 }}
@@ -367,7 +368,7 @@ const ProjectHighlight = () => {
               {currentProjectImages.length > 1 && (
                 <button
                   onClick={() => setSelectedImgIdx(prev => (prev - 1 + currentProjectImages.length) % currentProjectImages.length)}
-                  className="absolute left-4 p-3 glass rounded-full text-white hover:bg-primary transition-all z-110"
+                  className="absolute left-4 md:left-8 p-3.5 md:p-4 bg-black/60 hover:bg-primary border border-white/15 hover:border-primary/50 text-white rounded-full transition-all duration-300 shadow-xl backdrop-blur-md hover:scale-110 active:scale-95 flex items-center justify-center z-110"
                   aria-label="Previous image"
                 >
                   <ChevronLeft size={24} />
@@ -385,7 +386,7 @@ const ProjectHighlight = () => {
               {currentProjectImages.length > 1 && (
                 <button
                   onClick={() => setSelectedImgIdx(prev => (prev + 1) % currentProjectImages.length)}
-                  className="absolute right-4 p-3 glass rounded-full text-white hover:bg-primary transition-all z-110"
+                  className="absolute right-4 md:right-8 p-3.5 md:p-4 bg-black/60 hover:bg-primary border border-white/15 hover:border-primary/50 text-white rounded-full transition-all duration-300 shadow-xl backdrop-blur-md hover:scale-110 active:scale-95 flex items-center justify-center z-110"
                   aria-label="Next image"
                 >
                   <ChevronRight size={24} />
@@ -395,14 +396,15 @@ const ProjectHighlight = () => {
               {/* Close Button */}
               <button 
                 onClick={() => setSelectedImgIdx(null)}
-                className="absolute top-4 right-4 p-3 glass rounded-full text-white hover:bg-primary transition-all"
+                className="absolute top-4 right-4 p-3 bg-black/60 hover:bg-primary border border-white/15 text-white rounded-full transition-all duration-300 shadow-xl backdrop-blur-md hover:scale-110 active:scale-95 flex items-center justify-center z-120 group/close"
+                aria-label="Close image viewer"
               >
-                <Zap className="rotate-45" size={24} />
+                <X size={24} className="transition-transform duration-300 group-hover/close:rotate-90" />
               </button>
 
               {/* Image Counter Badge */}
               {currentProjectImages.length > 1 && (
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 glass px-3 py-1.5 rounded-full border border-white/10 text-xs font-semibold tracking-wider text-white bg-black/60 backdrop-blur-md">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 border border-white/15 px-4 py-2 rounded-full text-xs font-semibold tracking-wider text-white shadow-xl backdrop-blur-md">
                   {selectedImgIdx + 1} / {currentProjectImages.length}
                 </div>
               )}
