@@ -37,7 +37,10 @@ const ProjectHighlight = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedImgIdx, setSelectedImgIdx] = useState(null);
 
-  const currentProjectImages = highlights[currentIndex]?.mobileImages || highlights[currentIndex]?.images || [];
+  const currentProjectImages = [
+    ...(highlights[currentIndex]?.images || []),
+    ...(highlights[currentIndex]?.mobileImages || []),
+  ];
   const [showMobileArrows, setShowMobileArrows] = useState(false);
   const [direction, setDirection] = useState(0);
   const hideTimeoutRef = useRef(null);
@@ -216,21 +219,30 @@ const ProjectHighlight = () => {
                   <div className="absolute inset-0 bg-primary/5 blur-[100px] rounded-full scale-75" />
 
                   {highlights[currentIndex].mobileImages ? (
-                    /* Mobile-only: browser shows SOS emoji card, phone overlaps with first screenshot */
+                    /* Has mobile images: browser shows web screenshot (if available) or placeholder, phone shows mobile gallery */
                     <>
                       <div className="relative w-[90%] md:w-[85%] aspect-video z-10">
                         <BrowserFrame>
-                          <div className="w-full h-full bg-linear-to-br from-[#1b1b1f] to-[#26262b] flex flex-col items-center justify-center select-none relative overflow-hidden p-6 text-center">
-                            <div className="absolute inset-0 bg-red-500/10 blur-[80px] rounded-full scale-75" />
-                            <ShieldAlert className="w-16 h-16 md:w-20 md:h-20 text-red-500/80 hover:scale-110 transition-transform duration-300 cursor-default animate-pulse" />
-                            <span className="mt-4 text-[10px] md:text-xs font-mono tracking-widest text-red-500/60 uppercase">Emergency SOS & Community Support</span>
-                          </div>
+                          {highlights[currentIndex].images?.[0] ? (
+                            <button
+                              onClick={() => setSelectedImgIdx(0)}
+                              className="w-full h-full cursor-zoom-in"
+                            >
+                              <img src={highlights[currentIndex].images[0]} alt="Web view" className="w-full h-full object-cover" />
+                            </button>
+                          ) : (
+                            <div className="w-full h-full bg-linear-to-br from-[#1b1b1f] to-[#26262b] flex flex-col items-center justify-center select-none relative overflow-hidden p-6 text-center">
+                              <div className="absolute inset-0 bg-red-500/10 blur-[80px] rounded-full scale-75" />
+                              <ShieldAlert className="w-16 h-16 md:w-20 md:h-20 text-red-500/80 hover:scale-110 transition-transform duration-300 cursor-default" />
+                              <span className="mt-4 text-[10px] md:text-xs font-mono tracking-widest text-red-500/60 uppercase">Emergency SOS & Community Support</span>
+                            </div>
+                          )}
                         </BrowserFrame>
                       </div>
                       <div className="absolute bottom-[-18%] md:bottom-[-22%] right-[2%] md:right-[-2%] z-20 hover:scale-105 transition-transform duration-500">
                         <PhoneFrame>
                           <button
-                            onClick={() => setSelectedImgIdx(0)}
+                            onClick={() => setSelectedImgIdx(highlights[currentIndex].images?.[0] ? 1 : 0)}
                             className="w-full h-full cursor-zoom-in relative group/phone"
                           >
                             <img
@@ -263,9 +275,9 @@ const ProjectHighlight = () => {
                            ) : (
                             <div className="w-full h-full bg-linear-to-br from-[#1e1e22] to-[#2a2a30] flex items-center justify-center">
                               {highlights[currentIndex].emoji === '🏫' ? (
-                                <School className="w-20 h-20 text-primary/70 animate-pulse" />
+                                <School className="w-20 h-20 text-primary/70" />
                               ) : (
-                                <Laptop className="w-20 h-20 text-primary/70 animate-pulse" />
+                                <Laptop className="w-20 h-20 text-primary/70" />
                               )}
                             </div>
                            )}
