@@ -6,6 +6,7 @@ import ResumePage from './pages/ResumePage';
 import Preloader from './components/Preloader';
 import Navbar from './components/Navbar';
 import ScrollToTopFAB from './components/ScrollToTopFAB';
+import { ThemeProvider } from './components/ThemeProvider';
 
 const Navigation = () => {
   const location = useLocation();
@@ -41,22 +42,24 @@ function App() {
   }, [isLoading]);
 
   return (
-    <Router>
-      <AnimatePresence mode="wait">
-        {isLoading && <Preloader key="preloader" />}
-      </AnimatePresence>
-      
-      {!isLoading && (
-        <div className="relative">
-          <Navigation />
-          <Routes>
-            <Route path="/" element={<Portfolio />} />
-            <Route path="/resume" element={<ResumePage />} />
-          </Routes>
-          <ScrollToTopFAB />
-        </div>
-      )}
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <AnimatePresence mode="wait">
+          {isLoading && <Preloader key="preloader" />}
+        </AnimatePresence>
+
+        {!isLoading && (
+          <div className="relative">
+            <Navigation />
+            <Routes>
+              <Route path="/" element={<Portfolio />} />
+              <Route path="/resume" element={<ResumePage />} />
+            </Routes>
+            <ScrollToTopFAB />
+          </div>
+        )}
+      </Router>
+    </ThemeProvider>
   );
 }
 

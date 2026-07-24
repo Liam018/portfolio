@@ -4,15 +4,15 @@ import { ChevronLeft, ChevronRight, Github, ExternalLink, School, Laptop, X, Shi
 import { highlights } from '../constants/projects';
 
 // --- Mockup Components ---
-const BrowserFrame = ({ children }) => (
-  <div className="w-full h-full bg-[#1a1a1e] rounded-xl border border-white/10 overflow-hidden flex flex-col">
-    <div className="h-6 md:h-8 bg-[#252529] border-b border-white/5 flex items-center px-3 md:px-4 gap-1.5 md:gap-2 shrink-0">
-      <div className="flex gap-1 md:gap-1.5">
-        <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[var(--terminal-red)]" />
-        <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[var(--terminal-yellow)]" />
-        <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[var(--terminal-green)]" />
+const BrowserFrame = ({ children, className = "" }) => (
+  <div className={`w-full h-full bg-[#1a1a1e] rounded-xl sm:rounded-2xl border border-white/10 overflow-hidden flex flex-col shadow-2xl ${className}`}>
+    <div className="h-6 sm:h-7 md:h-8 bg-[#252529] border-b border-white/5 flex items-center px-2.5 sm:px-3 md:px-4 gap-1.5 sm:gap-2 shrink-0">
+      <div className="flex gap-1 sm:gap-1.5">
+        <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[var(--terminal-red)]" />
+        <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[var(--terminal-yellow)]" />
+        <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[var(--terminal-green)]" />
       </div>
-      <div className="flex-1 max-w-[400px] h-4 md:h-5 bg-black/20 rounded-md mx-auto" />
+      <div className="flex-1 max-w-[180px] sm:max-w-[300px] md:max-w-[400px] h-3.5 sm:h-4 md:h-5 bg-black/30 rounded-md mx-auto" />
     </div>
     <div className="flex-1 overflow-hidden relative">
       {children}
@@ -21,14 +21,16 @@ const BrowserFrame = ({ children }) => (
 );
 
 const PhoneFrame = ({ children, className = "" }) => (
-  <div className={`relative w-[150px] h-[300px] md:w-[220px] md:h-[450px] bg-black rounded-[30px] md:rounded-[45px] p-1.5 md:p-2 border-2px md:border-2px border-[#1e1e22] ${className}`}>
-    <div className="absolute top-1 md:top-2 left-1/2 -translate-x-1/2 w-12 md:w-20 h-4 md:h-6 bg-black rounded-b-[15px] md:rounded-b-[20px] z-20 flex items-center justify-center">
-       <div className="w-6 md:w-10 h-1 md:h-1.5 bg-[#141416] rounded-full" />
+  <div className={`relative w-full h-full bg-black rounded-[20px] sm:rounded-[28px] md:rounded-[36px] p-1 sm:p-1.5 md:p-2 border-2 border-[#1e1e22] shadow-2xl ${className}`}>
+    {/* Dynamic Island / Notch */}
+    <div className="absolute top-1 sm:top-1.5 left-1/2 -translate-x-1/2 w-10 sm:w-14 md:w-16 h-2.5 sm:h-3.5 md:h-4 bg-black rounded-b-xl sm:rounded-b-2xl z-20 flex items-center justify-center">
+       <div className="w-4 sm:w-6 h-0.5 sm:h-1 bg-[#141416] rounded-full" />
     </div>
-    <div className="w-full h-full rounded-[20px] md:rounded-[32px] overflow-hidden relative z-10 bg-[#16161a]">
+    <div className="w-full h-full rounded-[15px] sm:rounded-[22px] md:rounded-[28px] overflow-hidden relative z-10 bg-[#16161a]">
       {children}
     </div>
-    <div className="absolute -right-1 top-20 w-1 h-12 bg-[#1e1e22] rounded-l-md" />
+    {/* Side button */}
+    <div className="absolute -right-[3px] top-12 sm:top-16 w-[3px] h-8 sm:h-12 bg-[#1e1e22] rounded-r-sm" />
   </div>
 );
 
@@ -171,7 +173,7 @@ const ProjectHighlight = () => {
           {/* Side Navigation Arrows */}
           <button 
             onClick={prev}
-            className={`absolute left-0 md:-left-4 lg:-left-12 top-[40%] md:top-1/2 -translate-y-1/2 z-40 p-2 md:p-4 glass rounded-full transition-all duration-500 flex items-center justify-center border border-primary/20 backdrop-blur-xl bg-primary/10! hover:bg-primary! hover:text-white ${showMobileArrows ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'} md:opacity-0 md:group-hover:opacity-100 md:-translate-x-4 md:group-hover:translate-x-0`}
+            className={`absolute left-0 md:-left-4 lg:-left-12 top-[35%] sm:top-[40%] md:top-1/2 -translate-y-1/2 z-40 p-2 md:p-4 glass rounded-full transition-all duration-500 flex items-center justify-center border border-primary/20 backdrop-blur-xl bg-primary/10! hover:bg-primary! hover:text-white ${showMobileArrows ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'} md:opacity-0 md:group-hover:opacity-100 md:-translate-x-4 md:group-hover:translate-x-0`}
             aria-label="Previous Project"
           >
             <ChevronLeft size={20} className="md:w-6 md:h-6" />
@@ -179,13 +181,13 @@ const ProjectHighlight = () => {
           
           <button 
             onClick={next}
-            className={`absolute right-0 md:-right-4 lg:-right-12 top-[40%] md:top-1/2 -translate-y-1/2 z-40 p-2 md:p-4 glass rounded-full transition-all duration-500 flex items-center justify-center border border-primary/20 backdrop-blur-xl bg-primary/10! hover:bg-primary! hover:text-white ${showMobileArrows ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'} md:opacity-0 md:group-hover:opacity-100 md:translate-x-4 md:group-hover:translate-x-0`}
+            className={`absolute right-0 md:-right-4 lg:-right-12 top-[35%] sm:top-[40%] md:top-1/2 -translate-y-1/2 z-40 p-2 md:p-4 glass rounded-full transition-all duration-500 flex items-center justify-center border border-primary/20 backdrop-blur-xl bg-primary/10! hover:bg-primary! hover:text-white ${showMobileArrows ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'} md:opacity-0 md:group-hover:opacity-100 md:translate-x-4 md:group-hover:translate-x-0`}
             aria-label="Next Project"
           >
             <ChevronRight size={20} className="md:w-6 md:h-6" />
           </button>
 
-          <div className="relative overflow-hidden pt-32 pb-32 -mt-20 -mb-20">
+          <div className="relative overflow-hidden pt-16 pb-24 sm:pt-24 sm:pb-28 md:pt-32 md:pb-32 -mt-8 -mb-8 sm:-mt-12 sm:-mb-12 md:-mt-20 md:-mb-20">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
                 key={currentIndex}
@@ -206,7 +208,7 @@ const ProjectHighlight = () => {
                   if (info.offset.x > 80) prev();
                   else if (info.offset.x < -80) next();
                 }}
-                className="grid lg:grid-cols-2 gap-16 items-center cursor-grab active:cursor-grabbing"
+                className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center cursor-grab active:cursor-grabbing"
               >
                 {/* Visual Side: Overlapping Mockups */}
                 <motion.div 
@@ -214,97 +216,68 @@ const ProjectHighlight = () => {
                   whileInView={{ opacity: 1, scale: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative aspect-4/3 md:aspect-video lg:aspect-video flex items-center justify-center"
+                  className="relative w-full flex items-center justify-center pt-4 pb-12 sm:pb-16 md:pb-16 px-2 sm:px-4"
                 >
-                  <div className="absolute inset-0 bg-primary/5 blur-[100px] rounded-full scale-75" />
+                  <div className="absolute inset-0 bg-primary/5 blur-[100px] rounded-full scale-75 pointer-events-none" />
 
-                  {highlights[currentIndex].mobileImages ? (
-                    /* Has mobile images: browser shows web screenshot (if available) or placeholder, phone shows mobile gallery */
-                    <>
-                      <div className="relative w-[90%] md:w-[85%] aspect-video z-10">
-                        <BrowserFrame>
-                          {highlights[currentIndex].images?.[0] ? (
-                            <button
-                              onClick={() => setSelectedImgIdx(0)}
-                              className="w-full h-full cursor-zoom-in"
-                            >
-                              <img src={highlights[currentIndex].images[0]} alt="Web view" className="w-full h-full object-cover" />
-                            </button>
+                  {/* Unified Mockup Group Wrapper */}
+                  <div className="relative w-full max-w-[560px] aspect-video">
+                    {/* Browser Mockup */}
+                    <BrowserFrame>
+                      {highlights[currentIndex].images?.[0] ? (
+                        <button
+                          onClick={() => setSelectedImgIdx(0)}
+                          className="w-full h-full cursor-zoom-in group/browser block"
+                        >
+                          <img 
+                            src={highlights[currentIndex].images[0]} 
+                            alt={`${highlights[currentIndex].title} Web view`} 
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover/browser:scale-102" 
+                          />
+                        </button>
+                      ) : highlights[currentIndex].mobileImages ? (
+                        /* Case where project has mobile images but no web screenshots (e.g. SHERCLE) */
+                        <div className="w-full h-full bg-linear-to-br from-[#1b1b1f] to-[#26262b] flex flex-col items-center justify-center select-none relative overflow-hidden p-6 text-center">
+                          <div className="absolute inset-0 bg-red-500/10 blur-[80px] rounded-full scale-75" />
+                          <ShieldAlert className="w-16 h-16 md:w-20 md:h-20 text-red-500/80 hover:scale-110 transition-transform duration-300 cursor-default" />
+                          <span className="mt-4 text-[10px] md:text-xs font-mono tracking-widest text-red-500/60 uppercase">Emergency SOS &amp; Community Support</span>
+                        </div>
+                      ) : (
+                        /* Placeholder when no images exist */
+                        <div className="w-full h-full bg-linear-to-br from-[#1e1e22] to-[#2a2a30] flex items-center justify-center">
+                          {highlights[currentIndex].emoji === '🏫' ? (
+                            <School className="w-20 h-20 text-primary/70" />
                           ) : (
-                            <div className="w-full h-full bg-linear-to-br from-[#1b1b1f] to-[#26262b] flex flex-col items-center justify-center select-none relative overflow-hidden p-6 text-center">
-                              <div className="absolute inset-0 bg-red-500/10 blur-[80px] rounded-full scale-75" />
-                              <ShieldAlert className="w-16 h-16 md:w-20 md:h-20 text-red-500/80 hover:scale-110 transition-transform duration-300 cursor-default" />
-                              <span className="mt-4 text-[10px] md:text-xs font-mono tracking-widest text-red-500/60 uppercase">Emergency SOS & Community Support</span>
-                            </div>
+                            <Laptop className="w-20 h-20 text-primary/70" />
                           )}
-                        </BrowserFrame>
-                      </div>
-                      <div className="absolute bottom-[-18%] md:bottom-[-22%] right-[2%] md:right-[-2%] z-20 hover:scale-105 transition-transform duration-500">
+                        </div>
+                      )}
+                    </BrowserFrame>
+
+                    {/* Overlapping Phone Mockup - Anchored to Browser Mockup Wrapper */}
+                    {(currentMobileImg || highlights[currentIndex].images?.[1]) && (
+                      <div className="absolute -bottom-6 -right-2 sm:-bottom-8 sm:-right-4 md:-bottom-10 md:-right-6 z-20 w-[36%] sm:w-[34%] max-w-[190px] aspect-[9/18.5] hover:scale-105 transition-transform duration-500">
                         <PhoneFrame>
                           <button
-                            onClick={() => setSelectedImgIdx(highlights[currentIndex].images?.[0] ? 1 : 0)}
-                            className="w-full h-full cursor-zoom-in relative group/phone"
+                            onClick={() => setSelectedImgIdx(currentMobileImg ? (highlights[currentIndex].images?.length || 0) : 1)}
+                            className="w-full h-full cursor-zoom-in relative group/phone block"
                           >
                             <img
-                              src={currentMobileImg}
-                              alt="Mobile screen"
-                              className="w-full h-full object-cover object-top"
+                              src={currentMobileImg || highlights[currentIndex].images[1]}
+                              alt={`${highlights[currentIndex].title} Mobile screen`}
+                              className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/phone:scale-105"
                             />
                             {/* Photos Count Badge */}
-                            {highlights[currentIndex].mobileImages?.length > 1 && (
-                              <div className="absolute bottom-4 right-4 glass px-2.5 py-1 rounded-full border border-white/10 text-[10px] font-bold tracking-wide uppercase flex items-center gap-1.5 shadow-lg select-none bg-black/60 text-white backdrop-blur-md">
-                                <span>+{highlights[currentIndex].mobileImages.length} Photos</span>
+                            {currentProjectImages.length > 1 && (
+                              <div className="absolute bottom-3 right-3 glass px-2.5 py-1 rounded-full border border-white/10 text-[10px] font-bold tracking-wide uppercase flex items-center gap-1.5 shadow-lg select-none bg-black/70 text-white backdrop-blur-md">
+                                <span>+{currentProjectImages.length} Photos</span>
                               </div>
                             )}
                           </button>
                         </PhoneFrame>
                       </div>
-                    </>
-                  ) : (
-                    <>
-                      {/* Browser Mockup */}
-                      <div className="relative w-[90%] md:w-[85%] aspect-video z-10">
-                        <BrowserFrame>
-                           {highlights[currentIndex].images ? (
-                            <button 
-                              onClick={() => setSelectedImgIdx(0)}
-                              className="w-full h-full cursor-zoom-in"
-                            >
-                              <img src={highlights[currentIndex].images[0]} alt="Web view" className="w-full h-full object-cover" />
-                            </button>
-                           ) : (
-                            <div className="w-full h-full bg-linear-to-br from-[#1e1e22] to-[#2a2a30] flex items-center justify-center">
-                              {highlights[currentIndex].emoji === '🏫' ? (
-                                <School className="w-20 h-20 text-primary/70" />
-                              ) : (
-                                <Laptop className="w-20 h-20 text-primary/70" />
-                              )}
-                            </div>
-                           )}
-                        </BrowserFrame>
-                      </div>
-                      {/* Phone Mockup (Overlapping) */}
-                      {highlights[currentIndex].images?.[1] && (
-                        <div className="absolute bottom-[-18%] md:bottom-[-22%] right-[2%] md:right-[-2%] z-20 hover:scale-105 transition-transform duration-500">
-                          <PhoneFrame>
-                            <button 
-                              onClick={() => setSelectedImgIdx(1)}
-                              className="w-full h-full cursor-zoom-in relative group/phone"
-                            >
-                              <img src={highlights[currentIndex].images[1]} alt="Mobile view" className="w-full h-full object-cover" />
-                              {/* Photos Count Badge */}
-                              {highlights[currentIndex].images?.length > 1 && (
-                                <div className="absolute bottom-4 right-4 glass px-2.5 py-1 rounded-full border border-white/10 text-[10px] font-bold tracking-wide uppercase flex items-center gap-1.5 shadow-lg select-none bg-black/60 text-white backdrop-blur-md">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
-                                  <span>+{highlights[currentIndex].images.length} Photos</span>
-                                </div>
-                              )}
-                            </button>
-                          </PhoneFrame>
-                        </div>
-                      )}
-                    </>
-                  )}
+                    )}
+                  </div>
                 </motion.div>
 
                 {/* Content Side */}
@@ -313,7 +286,7 @@ const ProjectHighlight = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="space-y-8 flex flex-col items-center text-center lg:items-start lg:text-left"
+                  className="space-y-8 flex flex-col items-center text-center lg:items-start lg:text-left pt-10 sm:pt-14 md:pt-0"
                 >
                   <div className="space-y-4 flex flex-col items-center lg:items-start">
                     <span className="inline-block px-3 py-1 bg-primary/10 border border-primary/20 rounded-md text-primary font-bold text-xs tracking-widest uppercase">

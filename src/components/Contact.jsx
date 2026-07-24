@@ -42,8 +42,8 @@ const Contact = () => {
     { 
       icon: <Linkedin className="w-5 h-5" />, 
       label: "LinkedIn", 
-      value: "liam-kurt-edano-bb47623a9", 
-      href: "https://www.linkedin.com/in/liam-kurt-edano-bb47623a9",
+      value: "liam-kurt-kasten-edano-bb47623a9", 
+      href: "https://www.linkedin.com/in/liam-kurt-kasten-edano-bb47623a9",
       color: "text-secondary"
     },
     { 

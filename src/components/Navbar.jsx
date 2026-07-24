@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useScroll, useSpring, useTransform } from 'fra
 import { Menu, X, Github, Linkedin, ArrowRight, FileText } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
+
 import logoAsset from '../assets/LKKE.png';
 
 const Navbar = () => {
@@ -123,7 +124,7 @@ const Navbar = () => {
 
   const socialLinks = [
     { icon: <Github size={20} />, href: "https://github.com/Liam018", label: "GitHub" },
-    { icon: <Linkedin size={20} />, href: "https://www.linkedin.com/in/liam-kurt-edano-bb47623a9", label: "LinkedIn" }
+    { icon: <Linkedin size={20} />, href: "https://www.linkedin.com/in/liam-kurt-kasten-edano-bb47623a9", label: "LinkedIn" }
   ];
 
   return (
@@ -168,14 +169,14 @@ const Navbar = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-display font-bold accent-gradient leading-tight tracking-tight">
+              <span className="text-lg font-display font-bold leading-tight tracking-tight">
                 Liam Kurt<span className="hidden sm:inline"> Kasten Edano</span><span className="sm:hidden">...</span>
               </span>
             </div>
           </motion.a>
 
           {/* Desktop Nav Links */}
-          <div className="hidden lg:flex items-center glass rounded-full px-2 py-1.5 backdrop-blur-md glass-bg">
+          <div className="hidden lg:flex items-center glass rounded-full px-2 py-1.5 backdrop-blur-md">
             <div className="flex items-center space-x-1">
               {navLinks.map((link) => (
                 isHomePage ? (
@@ -209,29 +210,35 @@ const Navbar = () => {
                 )
               ))}
             </div>
-            
-            <div className="w-px h-6 bg-white/10 mx-4" />
-            
-            <div className="flex items-center space-x-3 pr-2">
+
+            {/* Separator: nav links → social */}
+            <div className="w-px h-5 bg-border mx-3 shrink-0" />
+
+            <div className="flex items-center gap-1 pr-1">
+              {socialLinks.map((social) => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  whileHover={{ y: -3, scale: 1.15, rotate: social.label === 'GitHub' ? -5 : 5 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="p-2 text-text-muted hover:text-primary transition-colors duration-300"
+                >
+                  {social.icon}
+                </motion.a>
+              ))}
+
+              {/* Separator: social → theme toggle */}
+              <div className="w-px h-5 bg-border mx-1 shrink-0" />
+
+              {/* Theme Toggle — Desktop */}
               <ThemeToggle />
-              <div className="flex items-center space-x-2">
-                {socialLinks.map((social) => (
-                  <motion.a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    whileHover={{ y: -3, scale: 1.15, rotate: social.label === 'GitHub' ? -5 : 5 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="p-2 text-text-muted hover:text-primary transition-colors duration-300"
-                  >
-                    {social.icon}
-                  </motion.a>
-                ))}
-              </div>
             </div>
           </div>
+
+
 
           {/* Connect Button (Desktop) */}
           <div className="hidden lg:flex items-center space-x-3">
@@ -254,11 +261,15 @@ const Navbar = () => {
           </div>
 
           {/* Mobile UI Buttons */}
-          <div className="lg:hidden flex items-center space-x-4">
+          <div className="lg:hidden flex items-center space-x-2">
+            <ThemeToggle />
+
+            <div className="w-px h-6 bg-border" />
+
             <Link to="/resume" aria-label="View Resume" className="p-2 rounded-xl bg-text/5 border border-border text-text">
               <FileText size={24} />
             </Link>
-            <ThemeToggle />
+
             <motion.button 
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsOpen(!isOpen)} 
@@ -280,7 +291,7 @@ const Navbar = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.3 }}
-              className="absolute bottom-0 left-8 right-8 h-[2px] z-20 pointer-events-none"
+              className="absolute bottom-0 left-8 right-8 h-0.5 z-20 pointer-events-none"
             >
               <div className="relative w-full h-full bg-white/5 dark:bg-black/20 rounded-full overflow-hidden">
                 <motion.div 
@@ -358,7 +369,7 @@ const Navbar = () => {
                 ))}
               </div>
 
-              <div className="h-px bg-border w-full opacity-50" />
+
 
               <div className="flex flex-col space-y-6">
                 <span className="text-xs font-bold uppercase tracking-[0.3em] text-text-muted">Connect</span>

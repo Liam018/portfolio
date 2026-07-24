@@ -1,203 +1,127 @@
-import { useCallback, useEffect, useRef, useState } from "react"
-import { Moon, Sun } from "lucide-react"
-import { flushSync } from "react-dom"
+import { useRef } from 'react';
+import { useTheme } from '@/hooks/useTheme';
 
-import { cn } from "@/lib/utils"
+// ─── SVG Icon: Sun ──────────────────────────────────────────────────────────
+const SunIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-[18px] h-[18px] stroke-amber-400"
+  >
+    <circle cx="12" cy="12" r="4" />
+    <line x1="12" y1="2"  x2="12" y2="5" />
+    <line x1="12" y1="19" x2="12" y2="22" />
+    <line x1="4.22" y1="4.22"  x2="6.34" y2="6.34" />
+    <line x1="17.66" y1="17.66" x2="19.78" y2="19.78" />
+    <line x1="2"  y1="12" x2="5"  y2="12" />
+    <line x1="19" y1="12" x2="22" y2="12" />
+    <line x1="4.22" y1="19.78" x2="6.34" y2="17.66" />
+    <line x1="17.66" y1="6.34"  x2="19.78" y2="4.22" />
+  </svg>
+);
 
-function polygonCollapsed(cx, cy, vertexCount) {
-  const pairs = Array.from({ length: vertexCount }, () => `${cx}px ${cy}px`).join(", ")
-  return `polygon(${pairs})`
-}
+// ─── SVG Icon: Moon ─────────────────────────────────────────────────────────
+const MoonIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-[18px] h-[18px] stroke-sky-300"
+  >
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+  </svg>
+);
 
-function getThemeTransitionClipPaths(variant, cx, cy, maxRadius, viewportWidth, viewportHeight) {
-  switch (variant) {
-    case "circle":
-      return [
-        `circle(0px at ${cx}px ${cy}px)`,
-        `circle(${maxRadius}px at ${cx}px ${cy}px)`,
-      ]
-    case "square": {
-      const halfW = Math.max(cx, viewportWidth - cx)
-      const halfH = Math.max(cy, viewportHeight - cy)
-      const halfSide = Math.max(halfW, halfH) * 1.05
-      const end = [
-        `${cx - halfSide}px ${cy - halfSide}px`,
-        `${cx + halfSide}px ${cy - halfSide}px`,
-        `${cx + halfSide}px ${cy + halfSide}px`,
-        `${cx - halfSide}px ${cy + halfSide}px`,
-      ].join(", ")
-      return [polygonCollapsed(cx, cy, 4), `polygon(${end})`];
-    }
-    case "triangle": {
-      const scale = maxRadius * 2.2
-      const dx = (Math.sqrt(3) / 2) * scale
-      const verts = [
-        `${cx}px ${cy - scale}px`,
-        `${cx + dx}px ${cy + 0.5 * scale}px`,
-        `${cx - dx}px ${cy + 0.5 * scale}px`,
-      ].join(", ")
-      return [polygonCollapsed(cx, cy, 3), `polygon(${verts})`];
-    }
-    case "diamond": {
-      // Slightly larger than the view-transition circle radius so axis-aligned coverage matches the circle reveal.
-      const R = maxRadius * Math.SQRT2
-      const end = [
-        `${cx}px ${cy - R}px`,
-        `${cx + R}px ${cy}px`,
-        `${cx}px ${cy + R}px`,
-        `${cx - R}px ${cy}px`,
-      ].join(", ")
-      return [polygonCollapsed(cx, cy, 4), `polygon(${end})`];
-    }
-    case "hexagon": {
-      const R = maxRadius * Math.SQRT2
-      const verts = []
-      for (let i = 0; i < 6; i++) {
-        const a = -Math.PI / 2 + (i * Math.PI) / 3
-        verts.push(`${cx + R * Math.cos(a)}px ${cy + R * Math.sin(a)}px`)
-      }
-      return [polygonCollapsed(cx, cy, 6), `polygon(${verts.join(", ")})`];
-    }
-    case "rectangle": {
-      const halfW = Math.max(cx, viewportWidth - cx)
-      const halfH = Math.max(cy, viewportHeight - cy)
-      const end = [
-        `${cx - halfW}px ${cy - halfH}px`,
-        `${cx + halfW}px ${cy - halfH}px`,
-        `${cx + halfW}px ${cy + halfH}px`,
-        `${cx - halfW}px ${cy + halfH}px`,
-      ].join(", ")
-      return [polygonCollapsed(cx, cy, 4), `polygon(${end})`];
-    }
-    case "star": {
-      // Small overscan so the last frames never leave a 1px seam before the transition group ends.
-      const R = maxRadius * Math.SQRT2 * 1.03
-      const innerRatio = 0.42
-      const starPolygon = (radius) => {
-        const verts = []
-        for (let i = 0; i < 5; i++) {
-          const outerA = -Math.PI / 2 + (i * 2 * Math.PI) / 5
-          verts.push(`${cx + radius * Math.cos(outerA)}px ${cy + radius * Math.sin(outerA)}px`)
-          const innerA = outerA + Math.PI / 5
-          verts.push(
-            `${cx + radius * innerRatio * Math.cos(innerA)}px ${cy + radius * innerRatio * Math.sin(innerA)}px`
-          )
-        }
-        return `polygon(${verts.join(", ")})`;
-      }
-      const startR = Math.max(2, R * 0.025)
-      return [starPolygon(startR), starPolygon(R)];
-    }
-    default:
-      return [
-        `circle(0px at ${cx}px ${cy}px)`,
-        `circle(${maxRadius}px at ${cx}px ${cy}px)`,
-      ]
-  }
-}
+// ─── Animated Theme Toggler ──────────────────────────────────────────────────
+/**
+ * @param {object}  props
+ * @param {"circle"|"fade"} [props.variant="circle"]  Transition style
+ * @param {number}  [props.duration=600]               Transition ms
+ * @param {string}  [props.className]                  Extra Tailwind classes
+ */
+export function AnimatedThemeToggler({
+  variant = 'circle',
+  duration = 600,
+  className = '',
+  ...rest
+}) {
+  const { isDark, toggleTheme } = useTheme();
+  const buttonRef = useRef(null);
 
-export const AnimatedThemeToggler = ({
-  className,
-  duration = 400,
-  variant,
-  fromCenter = false,
-  ...props
-}) => {
-  const shape = variant ?? "circle"
-  const [isDark, setIsDark] = useState(false)
-  const buttonRef = useRef(null)
+  const handleToggle = async () => {
+    if (
+      variant === 'circle' &&
+      typeof document.startViewTransition === 'function' &&
+      buttonRef.current
+    ) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
 
-  useEffect(() => {
-    const updateTheme = () => {
-      setIsDark(document.documentElement.classList.contains("dark"))
-    }
+      const endRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
 
-    updateTheme()
+      document.documentElement.dataset.magicuiThemeVt = 'active';
 
-    const observer = new MutationObserver(updateTheme)
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    })
+      const transition = document.startViewTransition(() => {
+        toggleTheme();
+      });
 
-    return () => observer.disconnect();
-  }, [])
+      await transition.ready;
 
-  const toggleTheme = useCallback(() => {
-    const button = buttonRef.current
-    if (!button) return
-
-    const viewportWidth = window.visualViewport?.width ?? window.innerWidth
-    const viewportHeight = window.visualViewport?.height ?? window.innerHeight
-
-    let x
-    let y
-    if (fromCenter) {
-      x = viewportWidth / 2
-      y = viewportHeight / 2
-    } else {
-      const { top, left, width, height } = button.getBoundingClientRect()
-      x = left + width / 2
-      y = top + height / 2
-    }
-
-    const maxRadius = Math.hypot(Math.max(x, viewportWidth - x), Math.max(y, viewportHeight - y))
-
-    const applyTheme = () => {
-      const newTheme = !isDark
-      setIsDark(newTheme)
-      document.documentElement.classList.toggle("dark")
-      localStorage.setItem("theme", newTheme ? "dark" : "light")
-    }
-
-    if (typeof document.startViewTransition !== "function") {
-      applyTheme()
-      return
-    }
-
-    const root = document.documentElement
-    root.dataset.magicuiThemeVt = "active"
-    root.style.setProperty("--magicui-theme-toggle-vt-duration", `${duration}ms`)
-    const cleanup = () => {
-      delete root.dataset.magicuiThemeVt
-      root.style.removeProperty("--magicui-theme-toggle-vt-duration")
-    }
-
-    const transition = document.startViewTransition(() => {
-      flushSync(applyTheme)
-    })
-    if (typeof transition?.finished?.finally === "function") {
-      transition.finished.finally(cleanup)
-    } else {
-      cleanup()
-    }
-
-    const ready = transition?.ready
-    if (ready && typeof ready.then === "function") {
-      const clipPath = getThemeTransitionClipPaths(shape, x, y, maxRadius, viewportWidth, viewportHeight)
-      ready.then(() => {
-        document.documentElement.animate({
-          clipPath,
-        }, {
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
           duration,
-          // Star: linear avoids easing overshoot that fights polygon interpolation at t→1; VT group duration is synced above.
-          easing: shape === "star" ? "linear" : "ease-in-out",
-          fill: "forwards",
-          pseudoElement: "::view-transition-new(root)",
-        })
-      })
+          easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+          pseudoElement: '::view-transition-new(root)',
+        }
+      );
+
+      transition.finished.then(() => {
+        document.documentElement.removeAttribute('data-magicui-theme-vt');
+      });
+    } else {
+      toggleTheme();
     }
-  }, [shape, fromCenter, duration, isDark])
+  };
 
   return (
     <button
-      type="button"
       ref={buttonRef}
-      onClick={toggleTheme}
-      className={cn(className)}
-      {...props}>
-      {isDark ? <Sun /> : <Moon />}
-      <span className="sr-only">Toggle theme</span>
+      onClick={handleToggle}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      className={`
+        relative flex items-center justify-center
+        w-9 h-9 rounded-xl cursor-pointer
+        active:scale-90 transition-transform duration-150
+        ${className}
+      `}
+      {...rest}
+    >
+      {/* Spinning icon — key forces re-mount animation on every toggle */}
+      <span
+        key={isDark ? 'moon' : 'sun'}
+        className="relative z-10 flex items-center justify-center [animation:theme-icon-in_0.35s_ease-out_both]"
+      >
+        {isDark ? <MoonIcon /> : <SunIcon />}
+      </span>
     </button>
   );
 }
+

@@ -108,10 +108,17 @@
 
     body {
         @apply font-sans antialiased selection:bg-primary/30 selection:text-primary bg-background text-foreground;
-        transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        transition:
+            background-color 0.65s cubic-bezier(0.65, 0, 0.35, 1),
+            color 0.65s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         @apply font-display font-bold tracking-tight;
     }
 
@@ -126,7 +133,9 @@
         backdrop-filter: blur(16px) saturate(180%);
         -webkit-backdrop-filter: blur(16px) saturate(180%);
         border: 1px solid var(--border);
-        transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        transition:
+            background-color 0.65s cubic-bezier(0.65, 0, 0.35, 1),
+            border-color 0.65s cubic-bezier(0.65, 0, 0.35, 1);
         transform: translateZ(0);
         -webkit-transform: translateZ(0);
         backface-visibility: hidden;
@@ -218,75 +227,110 @@
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
     --animate-orbit: orbit calc(var(--duration)*1s) linear infinite;
-  @keyframes orbit {
-  0% {
-    transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
-        }
-  100% {
-    transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg));
-        }
-    }
-  --animate-shiny-text: shiny-text 8s infinite;
-  --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
-  --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear
-;
-  @keyframes shiny-text {
-  0%, 90%, 100% {
-    background-position: calc(-100% - var(--shiny-width)) 0;
-        }
-  30%, 60% {
-    background-position: calc(100% + var(--shiny-width)) 0;
-        }
-    }
-  @keyframes shimmer-slide {
-  to {
-    transform: translate(calc(100cqw - 100%), 0);
-        }
-    }
-  @keyframes spin-around {
-  0% {
-    transform: translateZ(0) rotate(0);
-        }
-  15%, 35% {
-    transform: translateZ(0) rotate(90deg);
-        }
-  65%, 85% {
-    transform: translateZ(0) rotate(270deg);
-        }
-  100% {
-    transform: translateZ(0) rotate(360deg);
-        }
-    }
-  --animate-aurora: aurora 8s ease-in-out infinite alternate;
-  @keyframes aurora {
-  0% {
-    background-position: 0% 50%;
-    transform: rotate(-5deg) scale(0.9);
-        }
-  25% {
-    background-position: 50% 100%;
-    transform: rotate(5deg) scale(1.1);
-        }
-  50% {
-    background-position: 100% 50%;
-    transform: rotate(-3deg) scale(0.95);
-        }
-  75% {
-    background-position: 50% 0%;
-    transform: rotate(3deg) scale(1.05);
-        }
-  100% {
-    background-position: 0% 50%;
-    transform: rotate(-5deg) scale(0.9);
-        }
-    }}
 
-/* Magic UI Animated Theme Toggler */
+    @keyframes orbit {
+        0% {
+            transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
+        }
+
+        100% {
+            transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg));
+        }
+    }
+
+    --animate-shiny-text: shiny-text 8s infinite;
+    --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+    --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+
+    @keyframes shiny-text {
+
+        0%,
+        90%,
+        100% {
+            background-position: calc(-100% - var(--shiny-width)) 0;
+        }
+
+        30%,
+        60% {
+            background-position: calc(100% + var(--shiny-width)) 0;
+        }
+    }
+
+    @keyframes shimmer-slide {
+        to {
+            transform: translate(calc(100cqw - 100%), 0);
+        }
+    }
+
+    @keyframes spin-around {
+        0% {
+            transform: translateZ(0) rotate(0);
+        }
+
+        15%,
+        35% {
+            transform: translateZ(0) rotate(90deg);
+        }
+
+        65%,
+        85% {
+            transform: translateZ(0) rotate(270deg);
+        }
+
+        100% {
+            transform: translateZ(0) rotate(360deg);
+        }
+    }
+
+    --animate-aurora: aurora 8s ease-in-out infinite alternate;
+
+    @keyframes aurora {
+        0% {
+            background-position: 0% 50%;
+            transform: rotate(-5deg) scale(0.9);
+        }
+
+        25% {
+            background-position: 50% 100%;
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        50% {
+            background-position: 100% 50%;
+            transform: rotate(-3deg) scale(0.95);
+        }
+
+        75% {
+            background-position: 50% 0%;
+            transform: rotate(3deg) scale(1.05);
+        }
+
+        100% {
+            background-position: 0% 50%;
+            transform: rotate(-5deg) scale(0.9);
+        }
+    }
+}
+
+/* ─── Theme Toggle: View Transition clip-path rules ───────────────── */
 [data-magicui-theme-vt="active"]::view-transition-group(root) {
     animation-duration: var(--magicui-theme-toggle-vt-duration);
 }
+
 [data-magicui-theme-vt="active"]::view-transition-old(root),
 [data-magicui-theme-vt="active"]::view-transition-new(root) {
     animation: none;
     mix-blend-mode: normal;
+}
+
+/* Icon spin-in keyframe — used via Tailwind [animation:theme-icon-in_…] */
+@keyframes theme-icon-in {
+    from {
+        transform: rotate(-90deg) scale(0.4);
+        opacity: 0;
+    }
+    to {
+        transform: rotate(0deg) scale(1);
+        opacity: 1;
+    }
 }
