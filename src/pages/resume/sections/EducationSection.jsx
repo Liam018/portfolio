@@ -2,7 +2,7 @@ import { GraduationCap } from 'lucide-react';
 import { RevealSection, EyebrowLabel, BezelCard, SectionHeading } from '../ResumeUI';
 import { education } from '../resumeData';
 
-/* ── #6: Flex-based timeline — dot + line segments per row, no absolute math ── */
+/* ── Flex-based timeline — dot + line segments per row, no absolute math ── */
 const EducationSection = () => (
   <RevealSection delay={0.05} className="mb-12">
     <EyebrowLabel label="Education" icon={GraduationCap} />
@@ -29,7 +29,7 @@ const EducationSection = () => (
               />
               {/* Connecting spine segment — hidden on last item */}
               {!isLast && (
-                <div className="w-px flex-1 mt-2 bg-black/[0.08] dark:bg-white/[0.08]" />
+                <div className="w-px flex-1 mt-2 bg-black/8 dark:bg-white/8" />
               )}
             </div>
 

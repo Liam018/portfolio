@@ -21,10 +21,10 @@ const ProjectsSection = () => (
           <BezelCard hoverGlow className="h-full">
             <div className="p-6 space-y-3.5 h-full flex flex-col relative">
 
-              {/* #3: Faint background project number */}
+              {/* Faint background project number */}
               <span
                 aria-hidden="true"
-                className="absolute top-4 right-5 text-[4.5rem] font-black leading-none select-none pointer-events-none tabular-nums text-foreground/[0.04]"
+                className="absolute top-4 right-5 text-[4.5rem] font-black leading-none select-none pointer-events-none tabular-nums text-foreground/4"
               >
                 {String(i + 1).padStart(2, '0')}
               </span>
@@ -54,10 +54,10 @@ const ProjectsSection = () => (
               </div>
 
               {/* Bullets */}
-              <ul className="space-y-2 border-t border-black/[0.06] dark:border-white/[0.06] pt-3 flex-1">
+              <ul className="space-y-2 border-t border-black/6 dark:border-white/6 pt-3 flex-1">
                 {proj.bullets.map((bullet, j) => (
                   <li key={j} className="flex items-start gap-2 text-[12.5px] text-muted-foreground leading-relaxed">
-                    <span className="mt-[5px] shrink-0 w-1 h-1 rounded-full bg-primary/50" />
+                    <span className="mt-1.25 shrink-0 w-1 h-1 rounded-full bg-primary/50" />
                     {bullet}
                   </li>
                 ))}

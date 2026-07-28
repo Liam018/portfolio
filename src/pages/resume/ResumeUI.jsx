@@ -1,10 +1,9 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { easeCubic } from './resumeMotion';
 
 /* ── Scroll-aware section reveal wrapper ── */
-// Accepts optional `id` prop for anchor links (#13)
+// Accepts optional `id` prop for anchor links 
 export const RevealSection = ({ children, delay = 0, className = '', id }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px 0px' });
@@ -22,26 +21,26 @@ export const RevealSection = ({ children, delay = 0, className = '', id }) => {
   );
 };
 
-/* ── Editorial section eyebrow: line ── pill ── line (#2) ── */
+/* ── Editorial section eyebrow: line ── pill  ── */
 export const EyebrowLabel = ({ label, icon: Icon }) => (
   <div className="flex items-center gap-3 mb-5">
-    <div className="flex-1 h-px bg-black/[0.08] dark:bg-white/[0.08]" />
+    <div className="flex-1 h-px bg-black/8 dark:bg-white/8" />
     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/8 border border-primary/15 text-primary text-[10px] font-bold uppercase tracking-[0.18em]">
       {Icon && <Icon size={10} strokeWidth={2.5} />}
       {label}
     </div>
-    <div className="flex-1 h-px bg-black/[0.08] dark:bg-white/[0.08]" />
+    <div className="flex-1 h-px bg-black/8 dark:bg-white/8" />
   </div>
 );
 
 /* ── Solid card with optional hover glow ── */
-// dark:bg-white/[0.07] for better dark-mode presence (#7)
+// dark:bg-white/[0.07] for better dark-mode presence
 export const BezelCard = ({ children, className = '', hoverGlow = false }) => (
   <div
     className={`
       relative rounded-2xl overflow-hidden
       bg-white dark:bg-white/[0.07]
-      border border-black/[0.08] dark:border-white/[0.09]
+      border border-black/8 dark:border-white/9
       shadow-[0_1px_3px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)]
       dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.07)]
       transition-all duration-300
@@ -62,7 +61,7 @@ export const TechPill = ({ label }) => (
   </span>
 );
 
-/* ── Section heading with optional hover anchor link (#13) ── */
+/* ── Section heading with optional hover anchor link── */
 export const SectionHeading = ({ children, anchor }) => (
   <h2 className="group text-2xl font-black tracking-[-0.02em] mb-6 text-foreground flex items-center gap-2">
     {children}
@@ -70,7 +69,7 @@ export const SectionHeading = ({ children, anchor }) => (
       <a
         href={`#${anchor}`}
         aria-label={`Link to ${anchor} section`}
-        className="opacity-0 group-hover:opacity-35 hover:!opacity-100 text-muted-foreground transition-opacity duration-200 font-mono text-base font-normal"
+        className="opacity-0 group-hover:opacity-35 hover:opacity-100! text-muted-foreground transition-opacity duration-200 font-mono text-base font-normal"
       >
         #
       </a>

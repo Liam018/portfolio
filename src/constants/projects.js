@@ -56,13 +56,13 @@ export const highlights = [
     color: "from-primary/20 to-secondary/20"
   },
   
-  {
-    title: "Interactive Campus Kiosk",
-    category: "3rd Year Final Project • Web App",
-    emoji: "🏫",
-    desc: "A comprehensive solution for student campus life, developed as my 3rd-year final project. Offers navigation via maps, announcements, and a QR-based feedback system.",
-    tech: ["React", "Django REST", "MariaDB", "Vite", "Tailwind"],
-    links: { github: "https://github.com/Liam018", demo: "#" },
-    color: "from-secondary/20 to-accent/20"
-  }
+  // {
+  //   title: "Interactive Campus Kiosk",
+  //   category: "3rd Year Final Project • Web App",
+  //   emoji: "🏫",
+  //   desc: "A comprehensive solution for student campus life, developed as my 3rd-year final project. Offers navigation via maps, announcements, and a QR-based feedback system.",
+  //   tech: ["React", "Django REST", "MariaDB", "Vite", "Tailwind"],
+  //   links: { github: "https://github.com/Liam018", demo: "#" },
+  //   color: "from-secondary/20 to-accent/20"
+  // }
 ];

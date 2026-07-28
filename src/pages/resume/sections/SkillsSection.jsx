@@ -64,9 +64,9 @@ const SkillsSection = () => (
               <span
                 key={prof}
                 className="px-3 py-1.5 rounded-xl
-                  bg-black/[0.04] dark:bg-white/[0.05]
+                  bg-black/4 dark:bg-white/5
                   text-muted-foreground
-                  border border-black/[0.07] dark:border-white/[0.08]
+                  border border-black/[0.07] dark:border-white/8
                   text-[11px] font-medium hover:text-foreground transition-colors duration-250 cursor-default"
               >
                 {prof}

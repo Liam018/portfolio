@@ -14,6 +14,7 @@ const Navbar = () => {
     }
     return false;
   });
+  const [hideNavbar, setHideNavbar] = useState(false);
   const navRef = useRef(null);
   const [activeSection, setActiveSection] = useState('');
   const [hoveredLink, setHoveredLink] = useState(null);
@@ -65,6 +66,23 @@ const Navbar = () => {
       // Auto-activate contact section if at bottom of page
       if ((window.innerHeight + Math.round(window.scrollY)) >= document.documentElement.scrollHeight - 50) {
         setActiveSection('contact');
+        return;
+      }
+
+      // Scroll position spy for active section highlighting
+      const sections = ['hero', 'about', 'skills', 'project-highlight', 'contact'];
+      const scrollPosition = window.scrollY + (window.innerHeight * 0.35);
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i]);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition <= top + height) {
+            setActiveSection(sections[i]);
+            break;
+          }
+        }
       }
     };
     window.addEventListener('scroll', handleScroll);
@@ -80,13 +98,11 @@ const Navbar = () => {
       });
     };
     
-    // Slight delay to ensure content layout is fully calculated 
-    // after the preloader mounts the main app content
     const timer = setTimeout(calculateInitialProgress, 100);
 
     const handleIntersect = (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
+        if (entry.isIntersecting) {
           setActiveSection(entry.target.id);
         }
       });
@@ -94,20 +110,49 @@ const Navbar = () => {
 
     const observerOption = {
       root: null,
-      rootMargin: '-20% 0px -20% 0px', // More balanced active area
-      threshold: [0.1, 0.5],
+      rootMargin: '-25% 0px -25% 0px',
+      threshold: [0.1, 0.4],
     };
 
     const observer = new IntersectionObserver(handleIntersect, observerOption);
     const sections = ['hero', 'about', 'skills', 'project-highlight', 'contact'];
-    sections.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
+
+    const observeSections = () => {
+      sections.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    };
+
+    observeSections();
+    const observerTimer = setTimeout(observeSections, 300);
+
+    // Observer to hide Navbar when Footer is in view
+    const handleFooterIntersect = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
+          setHideNavbar(true);
+        } else {
+          setHideNavbar(false);
+        }
+      });
+    };
+
+    const footerObserver = new IntersectionObserver(handleFooterIntersect, {
+      root: null,
+      threshold: [0.1, 0.3],
     });
+
+    const footerEl = document.getElementById('footer');
+    if (footerEl) observer.observe(footerEl);
+    if (footerEl) footerObserver.observe(footerEl);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timer);
+      clearTimeout(observerTimer);
       observer.disconnect();
+      footerObserver.disconnect();
     };
   }, []);
 
@@ -128,7 +173,14 @@ const Navbar = () => {
   ];
 
   return (
-    <nav ref={navRef} className="fixed w-full z-50 flex justify-center pointer-events-none pt-4 md:pt-6">
+    <nav 
+      ref={navRef} 
+      className={`fixed w-full z-50 flex justify-center transition-all duration-500 ${
+        hideNavbar 
+          ? '-translate-y-40 opacity-0 pointer-events-none' 
+          : 'translate-y-0 opacity-100 pointer-events-none pt-4 md:pt-6'
+      }`}
+    >
       <motion.div 
         initial={{ 
           y: -150, 
@@ -145,7 +197,7 @@ const Navbar = () => {
         transition={{ 
           duration: 0.8,
           delay: 0.2,
-          ease: [0.22, 1, 0.36, 1] // Smooth quintic ease
+          ease: [0.22, 1, 0.36, 1]
         }}
         className={`relative flex items-center justify-between px-6 transition-all duration-500 pointer-events-auto ${
           scrolled 
@@ -237,8 +289,6 @@ const Navbar = () => {
               <ThemeToggle />
             </div>
           </div>
-
-
 
           {/* Connect Button (Desktop) */}
           <div className="hidden lg:flex items-center space-x-3">
@@ -340,7 +390,6 @@ const Navbar = () => {
                       
                       if (!isHomePage) {
                         navigate('/');
-                        // Small delay for navigation to complete
                         setTimeout(() => {
                           const target = document.querySelector(href.replace('/', ''));
                           if (target) target.scrollIntoView({ behavior: 'smooth' });
@@ -368,8 +417,6 @@ const Navbar = () => {
                   </motion.a>
                 ))}
               </div>
-
-
 
               <div className="flex flex-col space-y-6">
                 <span className="text-xs font-bold uppercase tracking-[0.3em] text-text-muted">Connect</span>

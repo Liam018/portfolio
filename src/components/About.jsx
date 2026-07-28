@@ -1,7 +1,6 @@
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { Terminal } from 'lucide-react';
-import profileIllustration from '../assets/profile_illustration.png';
 import AboutTerminal from './AboutTerminal';
 import profile from '../assets/profile1.png';
 import profileHover from '../assets/profile4.png';
@@ -15,12 +14,12 @@ const smoothTransition = {
 };
 
 const Highlight = ({ children }) => (
-  <span className="text-secondary font-bold brightness-110">{children}</span>
+  <span className="text-primary font-bold">{children}</span>
 );
 
 const About = () => {
   const containerRef = useRef(null);
-  const [viewMode, setViewMode] = useState('terminal'); // 'static' | 'terminal' | 'fullscreen'
+  const [viewMode, setViewMode] = useState('static'); // 'static' | 'terminal' | 'fullscreen'
   const [isHovered, setIsHovered] = useState(false);
 
   // Handle scroll lock and auto-close on navigation
@@ -31,7 +30,6 @@ const About = () => {
 
     if (viewMode === 'fullscreen') {
       document.body.style.overflow = 'hidden';
-      // Listen for when user clicks navbar links while in fullscreen
       window.addEventListener('hashchange', handleHashChange);
     } else {
       document.body.style.overflow = 'auto';
@@ -49,7 +47,6 @@ const About = () => {
   });
 
   const smoothConfig = { stiffness: 50, damping: 20, restDelta: 0.001 };
-  
   const rawOpacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
   const rawScale = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.95, 1, 1, 0.95]);
   const opacity = useSpring(rawOpacity, smoothConfig);
@@ -59,73 +56,67 @@ const About = () => {
     <section 
       ref={containerRef} 
       id="about" 
-      className={`${viewMode === 'fullscreen' ? 'fixed inset-0 z-9999 bg-white dark:bg-[#050505] flex items-center justify-center py-0 overflow-y-auto' : 'py-24 relative overflow-hidden'}`}
+      className={`${viewMode === 'fullscreen' ? 'fixed inset-0 z-9999 bg-background flex items-center justify-center py-0 overflow-y-auto' : 'py-8 sm:py-14 lg:py-16 relative overflow-hidden bg-background text-text select-none'}`}
     >
       <motion.div 
         style={viewMode === 'fullscreen' ? {} : { opacity, scale, transformOrigin: 'center center', willChange: 'transform, opacity' }}
         className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full ${viewMode === 'fullscreen' ? 'h-full flex flex-col justify-center' : ''}`}
       >
         {viewMode !== 'fullscreen' && (
-          <div className="text-center mb-2 md:mb-4">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="flex items-center justify-center gap-3"
-            >
-              <Terminal className="text-secondary hidden sm:block" size={36} />
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-extrabold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent pb-1">
-                Tracing My Path
-              </h2>
-            </motion.div>
+          /* Editorial Section Header */
+          <div className="space-y-2.5 mb-6 sm:mb-8 text-left max-w-2xl">
+            <div className="inline-flex items-center gap-2">
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-primary">
+                // Tracing My Path
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-display font-extrabold text-text tracking-tight leading-tight">
+              About Me.
+            </h2>
+            <p className="text-xs sm:text-base text-text-muted leading-relaxed font-normal">
+              A passionate IT graduate and full-stack developer committed to crafting performant web and mobile applications.
+            </p>
           </div>
         )}
-        <div className={`grid ${viewMode === 'fullscreen' ? 'grid-cols-1 max-w-6xl mx-auto' : 'lg:grid-cols-2 max-w-6xl mx-auto'} gap-4 lg:gap-6 items-center w-full`}>
+
+        <div className={`grid ${viewMode === 'fullscreen' ? 'grid-cols-1 max-w-6xl mx-auto' : 'grid-cols-1 lg:grid-cols-12 max-w-7xl mx-auto'} gap-6 lg:gap-12 items-center justify-items-center justify-center w-full`}>
           
-          {/* Left Side: Visuals - Hidden in Fullscreen */}
+          {/* Left Side: Visual Profile Avatar (Cols 1-5) */}
           {viewMode !== 'fullscreen' && (
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={smoothTransition}
-              viewport={{ once: true, margin: "-15%" }}
-              className="flex flex-col items-center relative"
+              viewport={{ once: true, margin: "-10%" }}
+              className="lg:col-span-5 flex flex-col items-center justify-center w-full relative"
             >
-              <div className="relative z-10 p-2 overflow-hidden max-w-[280px] sm:max-w-[340px] w-full mx-auto mask-[linear-gradient(to_bottom,black_70%,transparent_100%)]">
-                 <motion.img 
+              <div className="w-full max-w-[260px] sm:max-w-[300px] overflow-hidden rounded-2xl mx-auto flex items-center justify-center">
+                <motion.img 
                   src={isHovered ? profileHover : profile} 
-                  alt="Profile Illustration"
-                  className="w-full h-auto object-cover rounded-[38px] transition-all duration-500"
+                  alt="Liam Kurt Edaño Profile"
+                  className="w-full h-auto object-cover rounded-2xl transition-all duration-500 cursor-pointer"
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
                   animate={{ 
-                    y: [0, -5, 0],
-                    scale: isHovered ? 1.05 : 1,
+                    y: [0, -6, 0],
+                    scale: isHovered ? 1.04 : 1,
                   }}
                   transition={{
-                    y: {
-                      duration: 6,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    },
-                    scale: {
-                      duration: 0.4,
-                      ease: "easeOut"
-                    }
+                    y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+                    scale: { duration: 0.3, ease: "easeOut" }
                   }}
-                 />
+                />
               </div>
             </motion.div>
           )}
 
-          {/* Right Side: Interactive Content */}
+          {/* Right Side: Interactive Content (Cols 6-12) */}
           <motion.div
-            initial={viewMode === 'fullscreen' ? {} : { opacity: 0, y: 40 }}
+            initial={viewMode === 'fullscreen' ? {} : { opacity: 0, y: 30 }}
             whileInView={viewMode === 'fullscreen' ? {} : { opacity: 1, y: 0 }}
             transition={{ ...smoothTransition, delay: 0.1 }}
-            viewport={{ once: true, margin: "-15%" }}
-            className={`w-full relative ${viewMode === 'fullscreen' ? 'h-full flex flex-col' : 'min-h-[450px]'}`}
+            viewport={{ once: true, margin: "-10%" }}
+            className={`w-full relative ${viewMode === 'fullscreen' ? 'h-full flex flex-col' : 'lg:col-span-7 flex flex-col justify-center'}`}
           >
             <AnimatePresence mode="wait">
               {viewMode === 'static' ? (
@@ -134,25 +125,26 @@ const About = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
+                  className="space-y-5 bg-card/40 border border-border/60 p-6 sm:p-8 rounded-2xl"
                 >
-                  <div className="flex justify-end mb-6">
+                  <div className="flex justify-between items-center pb-2 border-b border-border/40">
+                    <span className="text-xs font-mono font-semibold text-text-muted uppercase tracking-wider">// Profile Overview</span>
                     <button 
                       onClick={() => setViewMode('terminal')}
-                      className="text-xs uppercase tracking-widest font-bold px-4 py-2 rounded-xl border border-border glass hover:bg-primary/10 hover:text-primary transition-all flex items-center gap-2"
+                      className="text-xs font-mono font-bold px-3.5 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
                     >
-                      <Terminal size={14} /> Open Terminal
+                      <Terminal size={14} /> <span>Open Terminal</span>
                     </button>
                   </div>
                   
-                  <p className="text-lg text-text leading-relaxed">
-                    I am <Highlight>Liam Kurt Kasten Edaño</Highlight>, a graduate of <Highlight>Bachelor of Science in Information Technology</Highlight> from <Highlight>Saint Louis College</Highlight>, with a strong foundation in full-stack web and mobile development.
+                  <p className="text-sm sm:text-base text-text-muted leading-relaxed">
+                    I am <Highlight>Liam Kurt Kasten Edaño</Highlight>, a graduate of <Highlight>Bachelor of Science in Information Technology</Highlight> from <Highlight>Saint Louis College</Highlight>, with a strong foundation in full-stack web and mobile software engineering.
                   </p>
-                  <p className="text-lg text-text leading-relaxed">
-                    I specialize in <Highlight>React.js</Highlight>, <Highlight>React Native</Highlight>, and <Highlight>Laravel</Highlight>, developing responsive, performant applications that prioritize both user experience and technical quality.
+                  <p className="text-sm sm:text-base text-text-muted leading-relaxed">
+                    I specialize in <Highlight>React.js</Highlight>, <Highlight>React Native</Highlight>, <Highlight>Django</Highlight>, and <Highlight>Laravel</Highlight>, engineering responsive, high-performance applications that prioritize user experience and code craftsmanship.
                   </p>
-                  <p className="text-lg text-text leading-relaxed">
-                    I am committed to continuous growth as a developer and dedicated to building solutions that are both functional and meaningful.
+                  <p className="text-sm sm:text-base text-text-muted leading-relaxed">
+                    I am committed to continuous learning and dedicated to crafting impactful digital solutions.
                   </p>
                 </motion.div>
               ) : (
@@ -161,7 +153,7 @@ const About = () => {
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
-                  className={`flex flex-col w-full h-full`}
+                  className="flex flex-col w-full h-full"
                 >
                   <AboutTerminal viewMode={viewMode} setViewMode={setViewMode} />
                 </motion.div>

@@ -31,10 +31,10 @@ const ExperienceSection = () => (
           </div>
 
           {/* Bullets */}
-          <ul className="space-y-2 border-t border-black/[0.06] dark:border-white/[0.06] pt-4">
+          <ul className="space-y-2 border-t border-black/6 dark:border-white/6 pt-4">
             {exp.bullets.map((bullet, j) => (
               <li key={j} className="flex items-start gap-2.5 text-[13px] text-muted-foreground leading-relaxed">
-                <CheckCircle2 size={13} strokeWidth={2} className="mt-[3px] shrink-0 text-primary/60" />
+                <CheckCircle2 size={13} strokeWidth={2} className="mt-0.75 shrink-0 text-primary/60" />
                 {bullet}
               </li>
             ))}
