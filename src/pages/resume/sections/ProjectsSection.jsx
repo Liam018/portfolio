@@ -45,7 +45,7 @@ const ProjectsSection = () => (
                     </span>
                   )} */}
                 </div>
-                <p className="text-[11px] font-semibold text-secondary mt-0.5">{proj.context}</p>
+                <p className="text-[11px] font-mono font-semibold text-text-muted mt-0.5">{proj.context}</p>
               </div>
 
               {/* Tech pills */}
@@ -54,10 +54,10 @@ const ProjectsSection = () => (
               </div>
 
               {/* Bullets */}
-              <ul className="space-y-2 border-t border-black/6 dark:border-white/6 pt-3 flex-1">
+              <ul className="space-y-2 border-t border-border/40 pt-3 flex-1">
                 {proj.bullets.map((bullet, j) => (
-                  <li key={j} className="flex items-start gap-2 text-[12.5px] text-muted-foreground leading-relaxed">
-                    <span className="mt-1.25 shrink-0 w-1 h-1 rounded-full bg-primary/50" />
+                  <li key={j} className="flex items-start gap-2 text-[12.5px] text-text-muted leading-relaxed">
+                    <span className="mt-1.25 shrink-0 w-1 h-1 rounded-full bg-text-muted/50" />
                     {bullet}
                   </li>
                 ))}

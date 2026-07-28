@@ -24,29 +24,24 @@ export const RevealSection = ({ children, delay = 0, className = '', id }) => {
 /* ── Editorial section eyebrow: line ── pill  ── */
 export const EyebrowLabel = ({ label, icon: Icon }) => (
   <div className="flex items-center gap-3 mb-5">
-    <div className="flex-1 h-px bg-black/8 dark:bg-white/8" />
-    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/8 border border-primary/15 text-primary text-[10px] font-bold uppercase tracking-[0.18em]">
+    <div className="flex-1 h-px bg-border/40" />
+    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-card border border-border/60 text-text-muted font-mono font-bold text-[10px] uppercase tracking-[0.18em]">
       {Icon && <Icon size={10} strokeWidth={2.5} />}
       {label}
     </div>
-    <div className="flex-1 h-px bg-black/8 dark:bg-white/8" />
+    <div className="flex-1 h-px bg-border/40" />
   </div>
 );
 
 /* ── Solid card with optional hover glow ── */
-// dark:bg-white/[0.07] for better dark-mode presence
 export const BezelCard = ({ children, className = '', hoverGlow = false }) => (
   <div
     className={`
       relative rounded-2xl overflow-hidden
-      bg-white dark:bg-white/[0.07]
-      border border-black/8 dark:border-white/9
-      shadow-[0_1px_3px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)]
-      dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.07)]
+      bg-card/40
+      border border-border/60
       transition-all duration-300
-      ${hoverGlow
-        ? 'hover:border-primary/25 hover:shadow-[0_4px_20px_-4px_rgba(59,130,246,0.15),inset_0_1px_0_rgba(255,255,255,0.8)] dark:hover:shadow-[0_4px_20px_-4px_rgba(59,130,246,0.2),inset_0_1px_0_rgba(255,255,255,0.07)]'
-        : ''}
+      ${hoverGlow ? 'hover:border-border/90 hover:bg-card/60' : ''}
       ${className}
     `}
   >
@@ -56,7 +51,7 @@ export const BezelCard = ({ children, className = '', hoverGlow = false }) => (
 
 /* ── Technology pill badge ── */
 export const TechPill = ({ label }) => (
-  <span className="px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full bg-primary/8 text-primary border border-primary/14 transition-colors duration-300 hover:bg-primary/15">
+  <span className="px-2.5 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider rounded-full bg-background/80 text-text-muted border border-border/70 transition-colors duration-200 hover:text-text hover:border-border">
     {label}
   </span>
 );

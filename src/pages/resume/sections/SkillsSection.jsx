@@ -25,11 +25,11 @@ const SkillsSection = () => (
               <motion.span
                 key={skill.name}
                 variants={fadeUp}
-                className="px-3 py-1.5 rounded-xl bg-primary/8 text-primary border border-primary/14
-                  text-[11px] font-semibold flex items-center gap-1.5
-                  hover:bg-primary/15 hover:border-primary/28 transition-colors duration-250 cursor-default"
+                className="px-3 py-1.5 rounded-xl bg-background/80 text-text-muted border border-border/70
+                  text-[11px] font-mono font-semibold flex items-center gap-1.5
+                  hover:text-text hover:border-border transition-colors duration-200 cursor-default"
               >
-                <span className="w-1 h-1 rounded-full bg-primary" />
+                <span className="w-1 h-1 rounded-full bg-text-muted/60" />
                 {skill.name}
               </motion.span>
             ))}
@@ -40,13 +40,13 @@ const SkillsSection = () => (
       {/* Design tools */}
       <BezelCard>
         <div className="p-6 space-y-3">
-          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Design tools</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-text-muted">Design tools</p>
           <div className="flex flex-wrap gap-2">
             {skills.design.map(tool => (
               <span
                 key={tool}
-                className="px-3 py-1.5 rounded-xl bg-secondary/8 text-secondary border border-secondary/14
-                  text-[11px] font-semibold hover:bg-secondary/15 transition-colors duration-250 cursor-default"
+                className="px-3 py-1.5 rounded-xl bg-background/80 text-text-muted border border-border/70
+                  text-[11px] font-mono font-semibold hover:text-text hover:border-border transition-colors duration-200 cursor-default"
               >
                 {tool}
               </span>

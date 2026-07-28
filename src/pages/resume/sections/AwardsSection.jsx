@@ -22,13 +22,13 @@ const AwardsSection = () => (
           <BezelCard className="h-full">
             <div className="p-6 space-y-3 h-full">
               <div className="flex items-start gap-3">
-                <div className="shrink-0 w-9 h-9 rounded-xl bg-amber-400/12 border border-amber-400/22 flex items-center justify-center">
-                  <ach.icon size={16} className="text-amber-500" strokeWidth={2} />
+                <div className="shrink-0 w-9 h-9 rounded-xl bg-card border border-border/70 flex items-center justify-center">
+                  <ach.icon size={16} className="text-text-muted" strokeWidth={2} />
                 </div>
-                <h3 className="text-sm font-bold text-foreground leading-snug">{ach.title}</h3>
+                <h3 className="text-sm font-bold text-text leading-snug">{ach.title}</h3>
               </div>
-              <p className="text-[11px] font-semibold text-primary">{ach.org}</p>
-              <p className="text-[12.5px] text-muted-foreground leading-relaxed italic border-l-2 border-primary/20 pl-3">
+              <p className="text-[11px] font-mono font-semibold text-text-muted">{ach.org}</p>
+              <p className="text-[12.5px] text-text-muted leading-relaxed italic border-l-2 border-border/40 pl-3">
                 "{ach.desc}"
               </p>
             </div>

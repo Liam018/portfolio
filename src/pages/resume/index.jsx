@@ -29,11 +29,22 @@ const SECTION_LABELS = {
 const ResumePage = () => {
   const { scrollYProgress } = useScroll();
   const [activeSection, setActiveSection] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = 'Resume — Liam Kurt Edaño';
     return () => { document.title = 'Portfolio — Liam Kurt Edaño'; };
+  }, []);
+
+  // Track scroll position to show floating navbar pill only when scrolled past top hero
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
@@ -60,27 +71,25 @@ const ResumePage = () => {
         style={{ scaleX: scrollYProgress, transformOrigin: '0% 50%' }}
       />
 
-      {/* Ambient background glows */}
-      <div aria-hidden="true" className="print:hidden fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute -top-32 -left-32 w-120 h-120 rounded-full bg-primary/5 blur-[120px]" />
-        <div className="absolute top-1/2 -right-40 w-96 h-96 rounded-full bg-primary/4 blur-[100px]" />
-      </div>
-
-      {/* Floating Header Nav Bar */}
-      <div className="print:hidden sticky top-4 z-50 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      {/* Sticky Header Nav Bar — always visible, elevates glass backdrop on scroll */}
+      <div className="print:hidden sticky top-4 z-50 pt-4 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto mb-6 sm:mb-8">
         <motion.div
-          initial={{ y: -24, opacity: 0 }}
+          initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, ease: easeCubic }}
-          className="flex items-center justify-between gap-3 px-4 py-2.5 rounded-full bg-card/70 border border-border/60 backdrop-blur-xl shadow-lg"
+          transition={{ duration: 0.5, ease: easeCubic }}
+          className={`flex items-center justify-between gap-3 px-4 py-2.5 rounded-full transition-all duration-300 ${
+            isScrolled
+              ? 'bg-card/85 border border-border/70 backdrop-blur-xl shadow-lg'
+              : 'bg-card/40 border border-transparent backdrop-blur-md'
+          }`}
         >
           {/* Left: Back Link & Active Section */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 text-xs font-mono font-bold text-text-muted hover:text-primary transition-colors duration-200 group"
+              className="inline-flex items-center gap-2 text-xs font-mono font-bold text-text-muted hover:text-text transition-colors duration-200 group shrink-0"
             >
-              <span className="w-6 h-6 rounded-full bg-background/80 border border-border/70 flex items-center justify-center group-hover:border-primary/50 group-hover:bg-primary/10 transition-all duration-200">
+              <span className="w-6 h-6 rounded-full bg-background/80 border border-border/70 flex items-center justify-center group-hover:border-text/30 group-hover:bg-text/5 transition-all duration-200">
                 <ChevronLeft size={13} className="group-hover:-translate-x-0.5 transition-transform duration-200" />
               </span>
               <span className="hidden sm:inline">Portfolio</span>
@@ -95,7 +104,7 @@ const ResumePage = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -6 }}
                   transition={{ duration: 0.2 }}
-                  className="flex items-center gap-1.5 text-[11px] font-mono font-bold text-primary uppercase tracking-wider"
+                  className="flex items-center gap-1 text-[10px] sm:text-[11px] font-mono font-bold text-text-muted uppercase tracking-wider max-w-25 xs:max-w-[140px] sm:max-w-none truncate"
                   aria-live="polite"
                   aria-label={`Currently viewing: ${SECTION_LABELS[activeSection]}`}
                 >
@@ -106,26 +115,26 @@ const ResumePage = () => {
           </div>
 
           {/* Right: Theme Toggle & PDF Download */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <ThemeToggle />
 
             <motion.a
               href={resumePdf}
               download="Resume2026_LiamEdano.pdf"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.96 }}
               transition={spring}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary hover:bg-primary/90 text-white text-xs font-bold shadow-md hover:shadow-primary/20 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-text text-background text-[11px] sm:text-xs font-bold shadow-xs hover:opacity-90 transition-all cursor-pointer shrink-0"
             >
               <Download size={13} strokeWidth={2.5} />
-              <span>Download PDF</span>
+              <span>Download <span className="hidden xs:inline">PDF</span></span>
             </motion.a>
           </div>
         </motion.div>
       </div>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-8">
+      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-2">
         <section id="hero" className="scroll-mt-20 mb-14">
           <RevealSection>
             <ResumeHero />

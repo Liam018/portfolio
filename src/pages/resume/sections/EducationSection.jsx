@@ -22,14 +22,14 @@ const EducationSection = () => (
                 className={`
                   w-3 h-3 rounded-full border-2 shrink-0 z-10
                   ${edu.primary
-                    ? 'bg-primary border-primary shadow-[0_0_0_4px_rgba(59,130,246,0.14)]'
-                    : 'bg-white dark:bg-[#111] border-black/20 dark:border-white/20'
+                    ? 'bg-text border-text'
+                    : 'bg-background border-border/70'
                   }
                 `}
               />
               {/* Connecting spine segment — hidden on last item */}
               {!isLast && (
-                <div className="w-px flex-1 mt-2 bg-black/8 dark:bg-white/8" />
+                <div className="w-px flex-1 mt-2 bg-border/40" />
               )}
             </div>
 
@@ -38,19 +38,19 @@ const EducationSection = () => (
               <BezelCard hoverGlow={edu.primary}>
                 <div
                   className={`p-5 sm:p-6 flex flex-wrap justify-between items-start gap-3
-                    ${edu.primary ? 'border-l-2 border-primary/40' : ''}
+                    ${edu.primary ? 'border-l-2 border-border/80' : ''}
                   `}
                 >
                   <div className="space-y-0.5 min-w-0">
-                    <h3 className="text-sm font-bold text-foreground">{edu.degree}</h3>
-                    <p className="text-[12.5px] text-muted-foreground">{edu.school} · {edu.location}</p>
+                    <h3 className="text-sm font-bold text-text">{edu.degree}</h3>
+                    <p className="text-[12.5px] text-text-muted">{edu.school} · {edu.location}</p>
                     {edu.details && (
-                      <p className="text-[11.5px] text-muted-foreground/70 italic pt-1 border-l-2 border-primary/20 pl-2.5 mt-1">
+                      <p className="text-[11.5px] text-text-muted/70 italic pt-1 border-l-2 border-border/40 pl-2.5 mt-1">
                         {edu.details}
                       </p>
                     )}
                   </div>
-                  <span className="text-[11px] font-mono font-semibold text-primary shrink-0">
+                  <span className="text-[11px] font-mono font-semibold text-text-muted shrink-0">
                     {edu.period}
                   </span>
                 </div>

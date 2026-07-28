@@ -21,10 +21,10 @@ const SeminarsSection = () => (
           <BezelCard>
             <div className="p-5 space-y-1.5">
               <div className="flex items-start justify-between gap-2">
-                <h4 className="text-[12.5px] font-bold text-foreground leading-tight">{s.title}</h4>
-                <span className="text-[10px] font-mono text-primary shrink-0">{s.period}</span>
+                <h4 className="text-[12.5px] font-bold text-text leading-tight">{s.title}</h4>
+                <span className="text-[10px] font-mono text-text-muted shrink-0">{s.period}</span>
               </div>
-              <p className="text-[11px] text-muted-foreground">{s.org}</p>
+              <p className="text-[11px] text-text-muted">{s.org}</p>
             </div>
           </BezelCard>
         </motion.div>

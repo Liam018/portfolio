@@ -13,10 +13,6 @@ const smoothTransition = {
   mass: 0.6,
 };
 
-const Highlight = ({ children }) => (
-  <span className="text-primary font-bold">{children}</span>
-);
-
 const About = () => {
   const containerRef = useRef(null);
   const [viewMode, setViewMode] = useState('static'); // 'static' | 'terminal' | 'fullscreen'
@@ -73,9 +69,9 @@ const About = () => {
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-display font-extrabold text-text tracking-tight leading-tight">
               About Me.
             </h2>
-            <p className="text-xs sm:text-base text-text-muted leading-relaxed font-normal">
+            {/* <p className="text-xs sm:text-base text-text-muted leading-relaxed font-normal">
               A passionate IT graduate and full-stack developer committed to crafting performant web and mobile applications.
-            </p>
+            </p> */}
           </div>
         )}
 
@@ -90,7 +86,7 @@ const About = () => {
               viewport={{ once: true, margin: "-10%" }}
               className="lg:col-span-5 flex flex-col items-center justify-center w-full relative"
             >
-              <div className="w-full max-w-[260px] sm:max-w-[300px] overflow-hidden rounded-2xl mx-auto flex items-center justify-center">
+              <div className="w-full max-w-65 sm:max-w-75 overflow-hidden rounded-2xl mx-auto flex items-center justify-center">
                 <motion.img 
                   src={isHovered ? profileHover : profile} 
                   alt="Liam Kurt Edaño Profile"
@@ -138,10 +134,10 @@ const About = () => {
                   </div>
                   
                   <p className="text-sm sm:text-base text-text-muted leading-relaxed">
-                    I am <Highlight>Liam Kurt Kasten Edaño</Highlight>, a graduate of <Highlight>Bachelor of Science in Information Technology</Highlight> from <Highlight>Saint Louis College</Highlight>, with a strong foundation in full-stack web and mobile software engineering.
+                    I am <span className="font-semibold text-text">Liam Kurt Kasten Edaño</span>, a graduate of <span className="font-semibold text-text">Bachelor of Science in Information Technology</span> from <span className="font-semibold text-text">Saint Louis College</span>, with a strong foundation in full-stack web and mobile software engineering.
                   </p>
                   <p className="text-sm sm:text-base text-text-muted leading-relaxed">
-                    I specialize in <Highlight>React.js</Highlight>, <Highlight>React Native</Highlight>, <Highlight>Django</Highlight>, and <Highlight>Laravel</Highlight>, engineering responsive, high-performance applications that prioritize user experience and code craftsmanship.
+                    I specialize in <span className="font-semibold text-text">React.js</span>, <span className="font-semibold text-text">React Native</span>, <span className="font-semibold text-text">Django</span>, and <span className="font-semibold text-text">Laravel</span>, engineering responsive, high-performance applications that prioritize user experience and code craftsmanship.
                   </p>
                   <p className="text-sm sm:text-base text-text-muted leading-relaxed">
                     I am committed to continuous learning and dedicated to crafting impactful digital solutions.

@@ -56,27 +56,20 @@ const ResumeHero = () => {
   return (
     <BezelCard>
       <div className="relative overflow-hidden p-8 sm:p-10 md:p-12">
-        {/* Subtle ambient sheen */}
-        <div className="absolute inset-0 bg-linear-to-br from-primary/6 via-transparent to-secondary/4 pointer-events-none" />
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/6 blur-[80px] rounded-full pointer-events-none" />
-
         <div className="relative space-y-3.5">
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/18 text-primary text-[10px] font-bold uppercase tracking-[0.16em]">
+            <span className="px-3 py-1 rounded-full bg-background/80 border border-border/70 text-text-muted text-[10px] font-mono font-bold uppercase tracking-[0.16em]">
               BSIT Graduate · 2026
             </span>
-            <span className="px-3 py-1 rounded-full bg-secondary/8 border border-secondary/15 text-secondary text-[10px] font-bold uppercase tracking-[0.16em]">
+            <span className="px-3 py-1 rounded-full bg-background/80 border border-border/70 text-text-muted text-[10px] font-mono font-bold uppercase tracking-[0.16em]">
               Full-Stack Developer
             </span>
           </div>
 
           {/* Name */}
           <h1 className="text-3xl sm:text-4xl md:text-[2.75rem] font-black tracking-[-0.03em] leading-[1.1] text-foreground">
-            Liam Kurt Kasten{' '}
-            <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
-              C. Edaño
-            </span>
+            Liam Kurt Kasten C. Edaño
           </h1>
 
           {/* Tagline */}
