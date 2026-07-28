@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Portfolio from './pages/Portfolio';
-import ResumePage from './pages/ResumePage';
+import ResumePage from './pages/resume';
 import Preloader from './components/Preloader';
 import Navbar from './components/Navbar';
 import ScrollToTopFAB from './components/ScrollToTopFAB';
