@@ -1,15 +1,21 @@
 import pitchel from '../assets/pitchel.png';
 
 export const INITIAL_MESSAGE = {
+  id: 'init-msg-001',
   role: 'bot',
+  timestamp: new Date().toISOString(),
   text: "Hi! I'm Liam's AI assistant. Ask me anything about his skills, projects, or background! #skills"
 };
 
 export const SUGGESTIONS = [
-  { label: "Skills?", query: "skills" },
-  { label: "Projects?", query: "projects" },
-  { label: "Education?", query: "education" },
-  { label: "Contact?", query: "contact" }
+  { label: "Skills", query: "What are Liam's skills?" },
+  { label: "Projects", query: "Tell me about Liam's projects" },
+  { label: "Achievements", query: "What are Liam's achievements?" },
+  { label: "Experience", query: "Tell me about Liam's experience" },
+  { label: "Education", query: "What is Liam's education?" },
+  { label: "Available?", query: "Is Liam available for hire?" },
+  { label: "Contact", query: "How can I contact Liam?" },
+  { label: "About", query: "Who is Liam?" },
 ];
 
 export const KNOWLEDGE_BASE = {
@@ -19,13 +25,15 @@ export const KNOWLEDGE_BASE = {
   contact: "You can reach Liam at **liamkurt014@gmail.com** or find him on LinkedIn and GitHub @Liam018. More details at #contact.",
   background: "Liam is a BSIT graduate and full-stack developer from Bangcusay, San Fernando City, La Union. He completed his OJT at the **National Food Authority – Regional Office I**, where he built a public information kiosk and a GIS mapping system. Meet him at #about.",
   achievements: "Liam placed **1st Runner-Up (2nd Place)** at the 7th eGov Awards 2026 for SHERCLE, and won **3rd Place (Most Viable Product)** at the PATCH Hackathon 2025 for AgriLAKO.",
+  experience: "Liam completed his On-the-Job Training (OJT) at the **National Food Authority – Regional Office I**, where he developed a full-stack public information kiosk system and a GIS-based project mapping tool (**ProjeSight**). He has hands-on experience building real-world apps across web and mobile platforms. See his work at #project-highlight.",
+  availability: "Liam is currently **open to opportunities** — whether full-time roles, freelance projects, or collaborations. He's based in San Fernando City, La Union and can work remotely. Reach out at #contact!",
   // Meme Logic
   pagbilan: "Kala ko ba ayaw mo?",
   gustoko: "Ha? Ilan?",
   bente: "Tarantadooo",
   bakit: "Saan mo ilalagay?",
   dito: "Ohhululll",
-  default: "I'm not sure about that. Try asking about his **skills**, **projects**, **education**, **achievements**, or **contact** info!"
+  default: "I'm not sure about that. Try asking about his **skills**, **projects**, **experience**, **education**, **achievements**, or **contact** info!"
 };
 
 export const findBestResponse = (query) => {
@@ -44,6 +52,8 @@ export const findBestResponse = (query) => {
   if (/(education|study|school|college|degree|learn|graduate)/i.test(q)) return { text: KNOWLEDGE_BASE.education };
   if (/(contact|email|reach|message|hire|linkedin|github)/i.test(q)) return { text: KNOWLEDGE_BASE.contact };
   if (/(achieve|award|hackathon|win|place|competition|egov|patch)/i.test(q)) return { text: KNOWLEDGE_BASE.achievements };
+  if (/(experience|ojt|intern|training|job|career)/i.test(q)) return { text: KNOWLEDGE_BASE.experience };
+  if (/(available|availab|open|opportunit|salary|pay|freelance|remote|hire)/i.test(q)) return { text: KNOWLEDGE_BASE.availability };
   if (/(who|about|background|bio|profile|liam)/i.test(q)) return { text: KNOWLEDGE_BASE.background };
 
   return { text: KNOWLEDGE_BASE.default };

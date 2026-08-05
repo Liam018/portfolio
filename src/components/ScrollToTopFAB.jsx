@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { useChatBot } from '../hooks/useChatBot';
 
 const ScrollToTopFAB = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const location = useLocation();
   const isResumePage = location.pathname === '/resume';
+  const { isOpen: isChatOpen } = useChatBot();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,14 +41,14 @@ const ScrollToTopFAB = () => {
     });
   };
 
-  // SVG ring properties
-  const radius = 26;
+  // SVG ring properties (based on 64x64 viewBox)
+  const radius = 28;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (scrollProgress / 100) * circumference;
 
   return (
     <AnimatePresence>
-      {isVisible && (
+      {isVisible && !isChatOpen && (
         <motion.button
           layout // Add layout prop for smooth position transitions
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -55,7 +57,7 @@ const ScrollToTopFAB = () => {
           whileHover={{ scale: 1.1, y: -4 }}
           whileTap={{ scale: 0.95 }}
           onClick={scrollToTop}
-          className={`fixed bottom-7 ${isResumePage ? 'right-8' : 'right-[104px]'} z-100 w-14 h-14 rounded-full glass shadow-2xl flex items-center justify-center group outline-none transition-[right] duration-500 ease-in-out`}
+          className={`fixed bottom-6 ${isResumePage ? 'right-6 sm:right-8' : 'right-21 sm:right-26'} z-40 w-14 h-14 sm:w-16 sm:h-16 rounded-full glass shadow-2xl flex items-center justify-center group outline-none transition-[right] duration-500 ease-in-out`}
           aria-label="Scroll to top"
         >
 
@@ -63,14 +65,14 @@ const ScrollToTopFAB = () => {
           <div className="absolute inset-0 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors duration-300" />
 
           {/* Flat Progress Ring */}
-          <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none">
+          <svg viewBox="0 0 64 64" className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none">
             <motion.circle
-              cx="28"
-              cy="28"
+              cx="32"
+              cy="32"
               r={radius}
               fill="transparent"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.5"
               strokeDasharray={circumference}
               animate={{ strokeDashoffset: offset }}
               transition={{ type: "spring", stiffness: 100, damping: 20, mass: 0.5 }}
@@ -81,7 +83,7 @@ const ScrollToTopFAB = () => {
 
           {/* Icon */}
           <div className="relative z-10 flex items-center justify-center text-primary group-hover:text-primary transition-colors duration-300">
-            <ArrowUp size={24} className="group-hover:-translate-y-0.5 transition-transform duration-300" />
+            <ArrowUp className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-y-0.5 transition-transform duration-300" />
           </div>
 
           {/* Ambient Glow */}
