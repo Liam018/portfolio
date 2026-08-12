@@ -35,6 +35,23 @@ import shercle14 from '../assets/shercle_photos/mobile/shercle14.jpg';
 import shercle15 from '../assets/shercle_photos/mobile/shercle15.jpg';
 import shercle16 from '../assets/shercle_photos/mobile/shercle16.jpg';
 
+// ProjeSIGHT
+import projesightHome from '../assets/projesight/home.png';
+import projesightLogin from '../assets/projesight/login.png';
+import projesightAddProj from '../assets/projesight/add_proj.png';
+import projesightAddProj1 from '../assets/projesight/add_proj1.png';
+import projesightAddProj2 from '../assets/projesight/add_proj2.png';
+import projesightViewProj from '../assets/projesight/view_proj.png';
+import projesightViewProj1 from '../assets/projesight/view_proj1.png';
+import projesightViewProj2 from '../assets/projesight/view_proj2.png';
+import projesightEditProj from '../assets/projesight/edit_proj.png';
+import projesightReport from '../assets/projesight/report.png';
+import projesightReport1 from '../assets/projesight/report1.png';
+import projesightAudit from '../assets/projesight/audit.png';
+import projesightUser from '../assets/projesight/user.png';
+import projesightArchive from '../assets/projesight/archive.png';
+import projesightSettings from '../assets/projesight/settings.png';
+
 export const highlights = [
   {
     title: "SHERCLE",
@@ -56,6 +73,16 @@ export const highlights = [
     color: "from-primary/20 to-secondary/20"
   },
   
+  {
+    title: "ProjeSIGHT",
+    category: "Full-Stack Web App • GIS & Infrastructure Monitoring",
+    images: [projesightHome, projesightAddProj, projesightAddProj1, projesightAddProj2, projesightViewProj, projesightViewProj1, projesightViewProj2, projesightEditProj, projesightReport, projesightReport1, projesightAudit, projesightUser, projesightArchive, projesightSettings],
+    mobileImages: [projesightLogin],
+    desc: "A full-stack GIS and infrastructure project monitoring platform. Features an interactive Leaflet map with PSGC administrative hierarchy, complete project & financial lifecycle tracking, automated bi-monthly compliance report generation, JWT-based role access control (Admin / Staff / Viewer), security audit logging, and site photo uploads.",
+    tech: ["React", "Vite", "Leaflet", "Node.js", "Express.js", "MySQL", "JWT", "Bcrypt.js", "Multer"],
+    links: { github: "https://github.com/Liam018", live: "#" },
+    color: "from-blue-500/20 to-cyan-400/20"
+  },
   // {
   //   title: "Interactive Campus Kiosk",
   //   category: "3rd Year Final Project • Web App",
