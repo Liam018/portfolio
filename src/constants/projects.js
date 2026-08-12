@@ -58,7 +58,7 @@ export const highlights = [
     category: "e-Gov Competition Entry • Mobile App",
     mobileImages: [shercle1, shercle2, shercle3, shercle4, shercle5, shercle6, shercle7, shercle8, shercle10, shercle11, shercle12, shercle13, shercle14, shercle15, shercle16],
     desc: "1st Runner-Up at the 7th eGov Awards 2026 — a mobile-based SOS and Community Support System. Features emergency alerts, live location sharing, and incident reporting designed to improve community safety and emergency response coordination.",
-    tech: ["React", "React Native", "Expo", "PostgreSQL (Supabase)", "Tailwind"],
+    tech: ["React", "Vite", "React Native", "Expo", "PostgreSQL (Supabase)", "Tailwind"],
     links: { github: "https://github.com/Liam018", live: "#" },
     color: "from-red-500/20 to-orange-400/20"
   },
@@ -68,7 +68,7 @@ export const highlights = [
     images: [agrilakoweb, agrilakoWeb1, agrilakoWeb2, agrilakoWeb3, agrilakoWeb4, agrilakoWeb5],
     mobileImages: [agrilako, agrilakoMobile1, agrilakoMobile2, agrilakoMobile3, agrilakoMobile4, agrilakoMobile5, agrilakoMobile6, agrilakoMobile7, agrilakoMobile8, agrilakoMobile9, agrilakoMobile10, agrilakoMobile11, agrilakoMobile12, agrilakoMobile13, agrilakoMobile14],
     desc: "My Capstone project and 3rd place PATCH Hackathon entry: an agricultural e-commerce platform for La Union farmers. Built with React (Web), React Native (Mobile), and PostgreSQL (Backend). Features cooperative management, product listings, order tracking, and an admin dashboard for OPAG.",
-    tech: ["React Native", "React", "PostgreSQL (Supabase)", "Tailwind", "Expo"],
+    tech: ["React Native", "React", "Vite", "PostgreSQL (Supabase)", "Tailwind", "Expo"],
     links: { github: "https://github.com/Liam018", live: "#" },
     color: "from-primary/20 to-secondary/20"
   },
@@ -79,7 +79,7 @@ export const highlights = [
     images: [projesightHome, projesightAddProj, projesightAddProj1, projesightAddProj2, projesightViewProj, projesightViewProj1, projesightViewProj2, projesightEditProj, projesightReport, projesightReport1, projesightAudit, projesightUser, projesightArchive, projesightSettings],
     mobileImages: [projesightLogin],
     desc: "A full-stack GIS and infrastructure project monitoring platform. Features an interactive Leaflet map with PSGC administrative hierarchy, complete project & financial lifecycle tracking, automated bi-monthly compliance report generation, JWT-based role access control (Admin / Staff / Viewer), security audit logging, and site photo uploads.",
-    tech: ["React", "Vite", "Leaflet", "Node.js", "Express.js", "MySQL", "JWT", "Bcrypt.js", "Multer"],
+    tech: ["React", "Vite", "Leaflet", "Node.js", "Express.js", "MySQL", "JWT", "Bcrypt.js"],
     links: { github: "https://github.com/Liam018", live: "#" },
     color: "from-blue-500/20 to-cyan-400/20"
   },
