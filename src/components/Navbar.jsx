@@ -234,7 +234,8 @@ const Navbar = () => {
             whileTap={{ scale: 0.95 }}
             className="flex items-center space-x-3 group cursor-pointer"
           >
-            <div
+            <motion.div
+              layoutId="mobile-nav-logo-box"
               id="navbar-logo-anchor"
               className="w-10 h-10 rounded-xl overflow-hidden shadow-lg group-hover:shadow-primary/40 transition-shadow duration-300"
             >
@@ -243,7 +244,7 @@ const Navbar = () => {
                 alt="LKKE Logo" 
                 className="w-full h-full object-cover"
               />
-            </div>
+            </motion.div>
             <div className="flex flex-col">
               <motion.span layoutId="mobile-nav-name" className="text-lg font-display font-bold leading-tight tracking-tight">
                 {scrolled ? (
@@ -260,11 +261,13 @@ const Navbar = () => {
             <div className="flex items-center space-x-1">
               {navLinks.map((link) => (
                 isHomePage ? (
-                  <a 
-                    key={link.name} 
+                  <a
+                    key={link.name}
                     href={link.href}
-                    className={`relative px-4 py-2 text-sm font-medium transition-colors duration-300 ${
-                      activeSection === link.id ? 'text-white' : 'text-text-muted hover:text-text'
+                    className={`relative px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-full ${
+                      activeSection === link.id
+                        ? 'text-primary'
+                        : 'text-text-muted hover:text-primary'
                     }`}
                   >
                     <span className="relative z-10">{link.name}</span>
@@ -272,8 +275,13 @@ const Navbar = () => {
                       <motion.div
                         layoutId="nav-pill"
                         initial={false}
-                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                        className="absolute inset-0 rounded-full z-0 bg-linear-to-r from-primary to-secondary"
+                        transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                        className="absolute inset-0 rounded-full z-0"
+                        style={{
+                          background: 'color-mix(in srgb, var(--primary) 12%, transparent)',
+                          border: '1px solid color-mix(in srgb, var(--primary) 30%, transparent)',
+                          boxShadow: '0 0 12px 1px color-mix(in srgb, var(--primary) 20%, transparent)',
+                        }}
                       />
                     )}
                   </a>
@@ -281,7 +289,7 @@ const Navbar = () => {
                   <Link
                     key={link.name}
                     to={link.href}
-                    className="relative px-4 py-2 text-sm font-medium text-text-muted hover:text-text transition-colors duration-300"
+                    className="relative px-4 py-2 text-sm font-semibold text-text-muted hover:text-primary transition-colors duration-200 rounded-full"
                   >
                     {link.name}
                   </Link>

@@ -151,24 +151,30 @@ const Footer = () => {
               <h5 className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-widest text-primary">
                 // Navigation
               </h5>
-              <ul className="space-y-2.5">
+              <ul className="space-y-2.5 sm:space-y-3">
                 {navLinks.map((link) => (
                   <li key={link.name}>
                     {link.isRoute ? (
                       <Link
                         to={link.href}
-                        className="group inline-flex items-center gap-2 text-xs sm:text-sm text-text-muted hover:text-text font-medium transition-colors py-1 sm:py-0.5"
+                        className="group flex items-center justify-between text-xs sm:text-sm text-text-muted hover:text-text transition-colors py-1 sm:py-0.5 border-b border-transparent hover:border-border/60"
                       >
-                        <span className="h-1.5 w-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors shrink-0" />
-                        <span className="group-hover:translate-x-1 transition-transform">{link.name}</span>
+                        <span className="inline-flex items-center gap-1.5 sm:gap-2 font-medium">
+                          <span className="h-1.5 w-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors shrink-0" />
+                          <span>{link.name}</span>
+                        </span>
+                        <ArrowUpRight size={13} className="opacity-70 sm:opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 text-text-muted group-hover:text-primary" />
                       </Link>
                     ) : (
                       <a
                         href={link.href}
-                        className="group inline-flex items-center gap-2 text-xs sm:text-sm text-text-muted hover:text-text font-medium transition-colors py-1 sm:py-0.5"
+                        className="group flex items-center justify-between text-xs sm:text-sm text-text-muted hover:text-text transition-colors py-1 sm:py-0.5 border-b border-transparent hover:border-border/60"
                       >
-                        <span className="h-1.5 w-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors shrink-0" />
-                        <span className="group-hover:translate-x-1 transition-transform">{link.name}</span>
+                        <span className="inline-flex items-center gap-1.5 sm:gap-2 font-medium">
+                          <span className="h-1.5 w-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors shrink-0" />
+                          <span>{link.name}</span>
+                        </span>
+                        <ArrowUpRight size={13} className="opacity-70 sm:opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 text-text-muted group-hover:text-primary" />
                       </a>
                     )}
                   </li>

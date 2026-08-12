@@ -310,36 +310,36 @@ const ProjectHighlight = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => { setSelectedImgIdx(null); setIsZoomed(false); }}
-            className="fixed inset-0 z-9999 bg-black/90 dark:bg-black/95 backdrop-blur-xl flex flex-col items-center justify-between p-4 sm:p-6 cursor-zoom-out select-none"
+            className="fixed inset-0 z-9999 bg-black/90 dark:bg-black/95 backdrop-blur-xl flex flex-col items-center justify-between p-3 sm:p-6 cursor-zoom-out select-none"
           >
             {/* Top Glass Header Bar */}
-            <div className="w-full max-w-6xl z-40 flex items-center justify-between pointer-events-auto" onClick={(e) => e.stopPropagation()}>
-              <div className="flex items-center gap-3 bg-black/60 border border-white/15 backdrop-blur-md px-4 py-2 rounded-full shadow-lg">
-                <span className="text-xs font-mono font-bold text-primary uppercase tracking-wider">
+            <div className="w-full max-w-6xl z-40 flex items-center justify-between gap-2 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center gap-2 sm:gap-3 bg-black/70 border border-white/15 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg max-w-[72%] sm:max-w-none truncate">
+                <span className="text-[11px] sm:text-xs font-mono font-bold text-primary uppercase tracking-wider truncate">
                   {highlights[currentIndex].title}
                 </span>
-                <span className="text-white/30">/</span>
-                <span className="text-xs font-mono font-semibold text-white/90">
-                  0{selectedImgIdx + 1} / 0{currentProjectImages.length}
+                <span className="text-white/30 shrink-0">/</span>
+                <span className="text-[11px] sm:text-xs font-mono font-semibold text-white/90 shrink-0">
+                  Image {selectedImgIdx + 1} of {currentProjectImages.length}
                 </span>
-                <span className="hidden md:inline text-xs text-white/50 pl-2 border-l border-white/15">
+                <span className="hidden md:inline text-xs text-white/50 pl-2 border-l border-white/15 shrink-0">
                   <kbd className="px-1.5 py-0.5 bg-white/10 rounded text-[10px]">Esc</kbd> Close • <kbd className="px-1.5 py-0.5 bg-white/10 rounded text-[10px]">← / →</kbd> Nav
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <button
                   onClick={() => setIsZoomed((prev) => !prev)}
-                  className="p-2.5 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
+                  className="p-2 sm:p-2.5 bg-black/70 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
                   title={isZoomed ? "Zoom Out (1.5x)" : "Zoom In (1.5x)"}
                   aria-label="Toggle zoom"
                 >
-                  {isZoomed ? <ZoomOut size={18} /> : <ZoomIn size={18} />}
+                  {isZoomed ? <ZoomOut size={16} className="sm:w-[18px] sm:h-[18px]" /> : <ZoomIn size={16} className="sm:w-[18px] sm:h-[18px]" />}
                 </button>
 
                 <button
                   onClick={toggleFullscreen}
-                  className="p-2.5 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer hidden sm:flex"
+                  className="p-2 sm:p-2.5 bg-black/70 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer hidden sm:flex"
                   title={isFullscreen ? "Exit Fullscreen" : "Fullscreen Mode"}
                   aria-label="Toggle fullscreen"
                 >
@@ -348,7 +348,7 @@ const ProjectHighlight = () => {
 
                 <button
                   onClick={() => { setSelectedImgIdx(null); setIsZoomed(false); }}
-                  className="p-2.5 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
+                  className="p-2 sm:p-2.5 bg-black/70 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
                   aria-label="Close lightbox"
                 >
                   <X size={18} />
@@ -358,16 +358,16 @@ const ProjectHighlight = () => {
 
             {/* Main Lightbox Display Area with Touch Drag / Swipe */}
             <div
-              className="relative max-w-6xl w-full flex-1 flex items-center justify-center cursor-default my-2"
+              className="relative max-w-6xl w-full flex-1 flex items-center justify-center cursor-default my-2 px-1 sm:px-4"
               onClick={(e) => e.stopPropagation()}
             >
               {currentProjectImages.length > 1 && (
                 <button
                   onClick={() => { setSelectedImgIdx((prev) => (prev - 1 + currentProjectImages.length) % currentProjectImages.length); setIsZoomed(false); }}
-                  className="absolute left-2 sm:left-4 z-30 p-3 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
+                  className="absolute left-1 sm:left-4 z-30 p-2.5 sm:p-3 bg-black/70 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
                   aria-label="Previous image"
                 >
-                  <ChevronLeft size={22} />
+                  <ChevronLeft size={20} className="sm:w-[22px] sm:h-[22px]" />
                 </button>
               )}
 
@@ -386,8 +386,8 @@ const ProjectHighlight = () => {
                     setIsZoomed(false);
                   }
                 }}
-                className={`relative max-w-[90%] max-h-[78vh] rounded-2xl overflow-hidden shadow-2xl border border-white/15 backdrop-blur-sm ${
-                  isZoomed ? 'scale-125 cursor-zoom-out z-20' : 'cursor-zoom-in'
+                className={`relative max-w-[95%] sm:max-w-[90%] max-h-[72vh] sm:max-h-[78vh] rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border border-white/15 backdrop-blur-sm ${
+                  isZoomed ? 'scale-125 cursor-zoom-out z-20 overflow-auto' : 'cursor-zoom-in'
                 }`}
                 onClick={() => setIsZoomed((prev) => !prev)}
               >
@@ -398,24 +398,24 @@ const ProjectHighlight = () => {
                   alt="Project screenshot full view"
                   loading="eager"
                   decoding="async"
-                  className="max-h-[78vh] w-auto h-auto object-contain rounded-2xl select-none mx-auto block"
+                  className="max-h-[72vh] sm:max-h-[78vh] w-auto max-w-full h-auto object-contain rounded-xl sm:rounded-2xl select-none mx-auto block"
                 />
               </motion.div>
 
               {currentProjectImages.length > 1 && (
                 <button
                   onClick={() => { setSelectedImgIdx((prev) => (prev + 1) % currentProjectImages.length); setIsZoomed(false); }}
-                  className="absolute right-2 sm:right-4 z-30 p-3 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
+                  className="absolute right-1 sm:right-4 z-30 p-2.5 sm:p-3 bg-black/70 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
                   aria-label="Next image"
                 >
-                  <ChevronRight size={22} />
+                  <ChevronRight size={20} className="sm:w-[22px] sm:h-[22px]" />
                 </button>
               )}
             </div>
 
             {/* Bottom Interactive Thumbnail Gallery Strip */}
             {currentProjectImages.length > 1 && (
-              <div className="w-full max-w-2xl z-40 overflow-x-auto [::-webkit-scrollbar]:hidden [scrollbar-width:none] [-ms-overflow-style:none] py-2.5 px-3.5 bg-black/70 border border-white/15 backdrop-blur-xl rounded-2xl flex items-center justify-start gap-2.5 shadow-2xl pointer-events-auto shrink-0" onClick={(e) => e.stopPropagation()}>
+              <div className="w-full max-w-2xl z-40 overflow-x-auto [::-webkit-scrollbar]:hidden [scrollbar-width:none] [-ms-overflow-style:none] py-2 sm:py-2.5 px-3 bg-black/70 border border-white/15 backdrop-blur-xl rounded-xl sm:rounded-2xl flex items-center justify-start gap-2 sm:gap-2.5 shadow-2xl pointer-events-auto shrink-0" onClick={(e) => e.stopPropagation()}>
                 {currentProjectImages.map((imgSrc, idx) => (
                   <button
                     key={idx}

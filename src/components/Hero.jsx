@@ -69,14 +69,14 @@ const Hero = () => {
           >
             <a
               href="#project-highlight"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 bg-primary hover:bg-primary/90 text-white font-bold text-sm transition-all shadow-lg hover:shadow-primary/20 min-h-[44px] cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 bg-primary hover:bg-primary/90 text-white font-bold text-sm transition-all shadow-lg hover:shadow-primary/20 min-h-11 cursor-pointer"
             >
               <span>View My Work</span>
               <ArrowDown size={15} />
             </a>
             <a
               href="#contact"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 border border-border/80 hover:border-primary/40 hover:bg-card/60 text-text font-bold text-sm transition-all min-h-[44px] cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 border border-border/80 hover:border-primary/40 hover:bg-card/60 text-text font-bold text-sm transition-all min-h-11 cursor-pointer"
             >
               <span>Contact Me</span>
             </a>
