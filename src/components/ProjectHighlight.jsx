@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
-import { ChevronLeft, ChevronRight, School, Laptop, X, ShieldAlert } from 'lucide-react';
+import { ChevronLeft, ChevronRight, School, Laptop, X, ShieldAlert, Maximize2, Minimize2, ZoomIn, ZoomOut } from 'lucide-react';
 import { highlights } from '../constants/projects';
 
 // Mockup Frames
@@ -32,16 +32,34 @@ const smoothTransition = { type: "spring", stiffness: 120, damping: 22, mass: 0.
 const ProjectHighlight = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedImgIdx, setSelectedImgIdx] = useState(null);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [showMobileArrows, setShowMobileArrows] = useState(false);
   const [direction, setDirection] = useState(0);
   const hideTimeoutRef = useRef(null);
   const containerRef = useRef(null);
+  const thumbnailRefs = useRef([]);
 
   const currentProjectImages = [
     ...(highlights[currentIndex]?.images || []),
     ...(highlights[currentIndex]?.mobileImages || []),
   ];
   const currentMobileImg = highlights[currentIndex]?.mobileImages?.[0] || null;
+
+  useEffect(() => {
+    thumbnailRefs.current = [];
+  }, [currentIndex]);
+
+  // Auto-scroll active preview thumbnail into center view
+  useEffect(() => {
+    if (selectedImgIdx !== null && thumbnailRefs.current[selectedImgIdx]) {
+      thumbnailRefs.current[selectedImgIdx].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }, [selectedImgIdx]);
 
   const triggerActivity = useCallback(() => {
     setShowMobileArrows(true);
@@ -61,17 +79,74 @@ const ProjectHighlight = () => {
     triggerActivity();
   }, [triggerActivity]);
 
+  // Keyboard navigation & Lightbox controls
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') prev();
-      if (e.key === 'ArrowRight') next();
+      if (selectedImgIdx !== null) {
+        if (e.key === 'Escape') {
+          if (isZoomed) {
+            setIsZoomed(false);
+          } else {
+            setSelectedImgIdx(null);
+          }
+        } else if (e.key === 'ArrowRight') {
+          setSelectedImgIdx((prev) => (prev + 1) % currentProjectImages.length);
+          setIsZoomed(false);
+        } else if (e.key === 'ArrowLeft') {
+          setSelectedImgIdx((prev) => (prev - 1 + currentProjectImages.length) % currentProjectImages.length);
+          setIsZoomed(false);
+        }
+      } else {
+        if (e.key === 'ArrowLeft') prev();
+        if (e.key === 'ArrowRight') next();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
     };
-  }, [next, prev]);
+  }, [next, prev, selectedImgIdx, isZoomed, currentProjectImages.length]);
+
+  // Lock body scroll during full-view modal
+  useEffect(() => {
+    if (selectedImgIdx !== null) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+      setIsZoomed(false);
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedImgIdx]);
+
+  // Native Fullscreen handler
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+      setIsFullscreen(true);
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+      setIsFullscreen(false);
+    }
+  };
+
+  // Preload adjacent images (+1 / -1) when Lightbox modal is open
+  useEffect(() => {
+    if (selectedImgIdx === null || !currentProjectImages.length) return;
+    const nextIdx = (selectedImgIdx + 1) % currentProjectImages.length;
+    const prevIdx = (selectedImgIdx - 1 + currentProjectImages.length) % currentProjectImages.length;
+
+    [currentProjectImages[nextIdx], currentProjectImages[prevIdx]].forEach((src) => {
+      if (src) {
+        const img = new Image();
+        img.src = src;
+      }
+    });
+  }, [selectedImgIdx, currentProjectImages]);
 
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
   const smoothConfig = { stiffness: 50, damping: 20, restDelta: 0.001 };
@@ -130,9 +205,20 @@ const ProjectHighlight = () => {
                 <div className="relative w-full max-w-[520px] aspect-video">
                   <BrowserFrame>
                     {highlights[currentIndex].images?.[0] ? (
-                      <button onClick={() => setSelectedImgIdx(0)} className="w-full h-full cursor-zoom-in group/browser block">
-                        <img src={highlights[currentIndex].images[0]} alt={`${highlights[currentIndex].title} Web view`} className="w-full h-full object-cover group-hover/browser:scale-102 transition-transform duration-500" />
-                      </button>
+                      <motion.button
+                        layoutId={`project-img-box-${currentIndex}-0`}
+                        onClick={() => setSelectedImgIdx(0)}
+                        className="w-full h-full cursor-zoom-in group/browser block relative overflow-hidden text-left"
+                      >
+                        <motion.img
+                          layoutId={`project-img-${currentIndex}-0`}
+                          src={highlights[currentIndex].images[0]}
+                          alt={`${highlights[currentIndex].title} Web view`}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover group-hover/browser:scale-102 transition-transform duration-500"
+                        />
+                      </motion.button>
                     ) : highlights[currentIndex].mobileImages ? (
                       <div className="w-full h-full bg-linear-to-br from-[#18181b] to-[#27272a] flex flex-col items-center justify-center p-6 text-center">
                         <ShieldAlert className="w-14 h-14 text-red-500/80" />
@@ -145,12 +231,28 @@ const ProjectHighlight = () => {
                     )}
                   </BrowserFrame>
 
-                  {(currentMobileImg || highlights[currentIndex].images?.[1]) && (
+                  {currentMobileImg && (
                     <div className="absolute -bottom-5 -right-2 sm:-bottom-7 sm:-right-4 z-20 w-[35%] max-w-[170px] aspect-[9/18.5]">
                       <PhoneFrame>
-                        <button onClick={() => setSelectedImgIdx(currentMobileImg ? (highlights[currentIndex].images?.length || 0) : 1)} className="w-full h-full cursor-zoom-in relative group/phone block">
-                          <img src={currentMobileImg || highlights[currentIndex].images[1]} alt={`${highlights[currentIndex].title} Mobile screen`} className="w-full h-full object-cover object-top group-hover/phone:scale-105 transition-transform duration-500" />
-                        </button>
+                        {(() => {
+                          const phoneImgIdx = highlights[currentIndex].images?.length || 0;
+                          return (
+                            <motion.button
+                              layoutId={`project-img-box-${currentIndex}-${phoneImgIdx}`}
+                              onClick={() => setSelectedImgIdx(phoneImgIdx)}
+                              className="w-full h-full cursor-zoom-in relative group/phone block overflow-hidden text-left"
+                            >
+                              <motion.img
+                                layoutId={`project-img-${currentIndex}-${phoneImgIdx}`}
+                                src={currentMobileImg}
+                                alt={`${highlights[currentIndex].title} Mobile screen`}
+                                loading="lazy"
+                                decoding="async"
+                                className="w-full h-full object-cover object-top group-hover/phone:scale-105 transition-transform duration-500"
+                              />
+                            </motion.button>
+                          );
+                        })()}
                       </PhoneFrame>
                     </div>
                   )}
@@ -194,26 +296,142 @@ const ProjectHighlight = () => {
 
       </motion.div>
 
-      {/* Lightbox Modal */}
+      {/* Enhanced Lightbox Modal with Shared Element Morphing */}
       <AnimatePresence>
         {selectedImgIdx !== null && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedImgIdx(null)} className="fixed inset-0 z-9999 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-zoom-out">
-            <div className="relative max-w-5xl w-full h-full flex items-center justify-center cursor-default" onClick={(e) => e.stopPropagation()}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            onClick={() => { setSelectedImgIdx(null); setIsZoomed(false); }}
+            className="fixed inset-0 z-9999 bg-black/90 dark:bg-black/95 backdrop-blur-xl flex flex-col items-center justify-between p-4 sm:p-6 cursor-zoom-out select-none"
+          >
+            {/* Top Glass Header Bar */}
+            <div className="w-full max-w-6xl z-40 flex items-center justify-between pointer-events-auto" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center gap-3 bg-black/60 border border-white/15 backdrop-blur-md px-4 py-2 rounded-full shadow-lg">
+                <span className="text-xs font-mono font-bold text-primary uppercase tracking-wider">
+                  {highlights[currentIndex].title}
+                </span>
+                <span className="text-white/30">/</span>
+                <span className="text-xs font-mono font-semibold text-white/90">
+                  0{selectedImgIdx + 1} / 0{currentProjectImages.length}
+                </span>
+                <span className="hidden md:inline text-xs text-white/50 pl-2 border-l border-white/15">
+                  <kbd className="px-1.5 py-0.5 bg-white/10 rounded text-[10px]">Esc</kbd> Close • <kbd className="px-1.5 py-0.5 bg-white/10 rounded text-[10px]">← / →</kbd> Nav
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsZoomed((prev) => !prev)}
+                  className="p-2.5 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
+                  title={isZoomed ? "Zoom Out (1.5x)" : "Zoom In (1.5x)"}
+                  aria-label="Toggle zoom"
+                >
+                  {isZoomed ? <ZoomOut size={18} /> : <ZoomIn size={18} />}
+                </button>
+
+                <button
+                  onClick={toggleFullscreen}
+                  className="p-2.5 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer hidden sm:flex"
+                  title={isFullscreen ? "Exit Fullscreen" : "Fullscreen Mode"}
+                  aria-label="Toggle fullscreen"
+                >
+                  {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                </button>
+
+                <button
+                  onClick={() => { setSelectedImgIdx(null); setIsZoomed(false); }}
+                  className="p-2.5 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
+                  aria-label="Close lightbox"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* Main Lightbox Display Area with Touch Drag / Swipe */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 10 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+              className="relative max-w-6xl w-full flex-1 flex items-center justify-center cursor-default my-2"
+              onClick={(e) => e.stopPropagation()}
+            >
               {currentProjectImages.length > 1 && (
-                <button onClick={() => setSelectedImgIdx((prev) => (prev - 1 + currentProjectImages.length) % currentProjectImages.length)} className="absolute left-4 p-3 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20" aria-label="Previous image">
+                <button
+                  onClick={() => { setSelectedImgIdx((prev) => (prev - 1 + currentProjectImages.length) % currentProjectImages.length); setIsZoomed(false); }}
+                  className="absolute left-2 sm:left-4 z-30 p-3 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
+                  aria-label="Previous image"
+                >
                   <ChevronLeft size={22} />
                 </button>
               )}
-              <img src={currentProjectImages[selectedImgIdx]} alt="Project screenshot" className="max-w-[85%] max-h-[85%] object-contain rounded-xl shadow-2xl" />
+
+              <motion.div
+                layoutId={`project-img-box-${currentIndex}-${selectedImgIdx}`}
+                drag={!isZoomed ? "x" : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x > 80) {
+                    setSelectedImgIdx((prev) => (prev - 1 + currentProjectImages.length) % currentProjectImages.length);
+                    setIsZoomed(false);
+                  } else if (info.offset.x < -80) {
+                    setSelectedImgIdx((prev) => (prev + 1) % currentProjectImages.length);
+                    setIsZoomed(false);
+                  }
+                }}
+                className={`relative max-w-[90%] max-h-[75vh] rounded-2xl overflow-hidden shadow-2xl border border-white/15 transition-transform duration-300 ${
+                  isZoomed ? 'scale-125 cursor-zoom-out z-20' : 'cursor-zoom-in'
+                }`}
+                onClick={() => setIsZoomed((prev) => !prev)}
+                transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+              >
+                <motion.img
+                  layoutId={`project-img-${currentIndex}-${selectedImgIdx}`}
+                  src={currentProjectImages[selectedImgIdx]}
+                  alt="Project screenshot full view"
+                  loading="eager"
+                  decoding="async"
+                  className="w-full h-full max-h-[75vh] object-contain rounded-2xl select-none"
+                  transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+                />
+              </motion.div>
+
               {currentProjectImages.length > 1 && (
-                <button onClick={() => setSelectedImgIdx((prev) => (prev + 1) % currentProjectImages.length)} className="absolute right-4 p-3 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20" aria-label="Next image">
+                <button
+                  onClick={() => { setSelectedImgIdx((prev) => (prev + 1) % currentProjectImages.length); setIsZoomed(false); }}
+                  className="absolute right-2 sm:right-4 z-30 p-3 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20 shadow-lg backdrop-blur-md cursor-pointer"
+                  aria-label="Next image"
+                >
                   <ChevronRight size={22} />
                 </button>
               )}
-              <button onClick={() => setSelectedImgIdx(null)} className="absolute top-4 right-4 p-2.5 bg-black/60 hover:bg-primary text-white rounded-full transition-all border border-white/20" aria-label="Close lightbox">
-                <X size={22} />
-              </button>
-            </div>
+            </motion.div>
+
+            {/* Bottom Interactive Thumbnail Gallery Strip */}
+            {currentProjectImages.length > 1 && (
+              <div className="w-full max-w-2xl z-40 overflow-x-auto [::-webkit-scrollbar]:hidden [scrollbar-width:none] [-ms-overflow-style:none] py-2.5 px-3.5 bg-black/70 border border-white/15 backdrop-blur-xl rounded-2xl flex items-center justify-start gap-2.5 shadow-2xl pointer-events-auto shrink-0" onClick={(e) => e.stopPropagation()}>
+                {currentProjectImages.map((imgSrc, idx) => (
+                  <button
+                    key={idx}
+                    ref={(el) => (thumbnailRefs.current[idx] = el)}
+                    onClick={() => { setSelectedImgIdx(idx); setIsZoomed(false); }}
+                    className={`relative w-12 sm:w-16 aspect-video shrink-0 rounded-lg overflow-hidden border-2 transition-all duration-300 cursor-pointer ${
+                      selectedImgIdx === idx 
+                        ? 'border-primary ring-2 ring-primary/40 scale-105 opacity-100 shadow-md shadow-primary/20' 
+                        : 'border-white/10 opacity-50 hover:opacity-100 hover:border-white/40'
+                    }`}
+                    aria-label={`Jump to image ${idx + 1}`}
+                  >
+                    <img src={imgSrc} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

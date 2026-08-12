@@ -1,56 +1,56 @@
-import agrilako from '../assets/agrilakoMobile.jpg';
-import agrilakoweb from '../assets/agrilakoWeb.png';
-import agrilakoWeb1 from '../assets/agrilako/web/image_1.png';
-import agrilakoWeb2 from '../assets/agrilako/web/image_2.png';
-import agrilakoWeb3 from '../assets/agrilako/web/image_3.png';
-import agrilakoWeb4 from '../assets/agrilako/web/image_4.png';
-import agrilakoWeb5 from '../assets/agrilako/web/image_5.png';
-import agrilakoMobile1 from '../assets/agrilako/mobile/image_1.jpg';
-import agrilakoMobile2 from '../assets/agrilako/mobile/image_2.jpg';
-import agrilakoMobile3 from '../assets/agrilako/mobile/image_3.jpg';
-import agrilakoMobile4 from '../assets/agrilako/mobile/image_4.jpg';
-import agrilakoMobile5 from '../assets/agrilako/mobile/image_5.jpg';
-import agrilakoMobile6 from '../assets/agrilako/mobile/image_6.jpg';
-import agrilakoMobile7 from '../assets/agrilako/mobile/image_7.jpg';
-import agrilakoMobile8 from '../assets/agrilako/mobile/image_8.jpg';
-import agrilakoMobile9 from '../assets/agrilako/mobile/image_9.jpg';
-import agrilakoMobile10 from '../assets/agrilako/mobile/image_10.jpg';
-import agrilakoMobile11 from '../assets/agrilako/mobile/image_11.jpg';
-import agrilakoMobile12 from '../assets/agrilako/mobile/image_12.jpg';
-import agrilakoMobile13 from '../assets/agrilako/mobile/image_13.jpg';
-import agrilakoMobile14 from '../assets/agrilako/mobile/image_14.jpg';
-import shercle1 from '../assets/shercle_photos/mobile/shercle1.jpg';
-import shercle2 from '../assets/shercle_photos/mobile/shercle2.jpg';
-import shercle3 from '../assets/shercle_photos/mobile/shercle3.jpg';
-import shercle4 from '../assets/shercle_photos/mobile/shercle4.jpg';
-import shercle5 from '../assets/shercle_photos/mobile/shercle5.jpg';
-import shercle6 from '../assets/shercle_photos/mobile/shercle6.jpg';
-import shercle7 from '../assets/shercle_photos/mobile/shercle7.jpg';
-import shercle8 from '../assets/shercle_photos/mobile/shercle8.jpg';
-import shercle10 from '../assets/shercle_photos/mobile/shercle10.jpg';
-import shercle11 from '../assets/shercle_photos/mobile/shercle11.jpg';
-import shercle12 from '../assets/shercle_photos/mobile/shercle12.jpg';
-import shercle13 from '../assets/shercle_photos/mobile/shercle13.jpg';
-import shercle14 from '../assets/shercle_photos/mobile/shercle14.jpg';
-import shercle15 from '../assets/shercle_photos/mobile/shercle15.jpg';
-import shercle16 from '../assets/shercle_photos/mobile/shercle16.jpg';
+import agrilako from '../assets/agrilakoMobile.webp';
+import agrilakoweb from '../assets/agrilakoWeb.webp';
+import agrilakoWeb1 from '../assets/agrilako/web/image_1.webp';
+import agrilakoWeb2 from '../assets/agrilako/web/image_2.webp';
+import agrilakoWeb3 from '../assets/agrilako/web/image_3.webp';
+import agrilakoWeb4 from '../assets/agrilako/web/image_4.webp';
+import agrilakoWeb5 from '../assets/agrilako/web/image_5.webp';
+import agrilakoMobile1 from '../assets/agrilako/mobile/image_1.webp';
+import agrilakoMobile2 from '../assets/agrilako/mobile/image_2.webp';
+import agrilakoMobile3 from '../assets/agrilako/mobile/image_3.webp';
+import agrilakoMobile4 from '../assets/agrilako/mobile/image_4.webp';
+import agrilakoMobile5 from '../assets/agrilako/mobile/image_5.webp';
+import agrilakoMobile6 from '../assets/agrilako/mobile/image_6.webp';
+import agrilakoMobile7 from '../assets/agrilako/mobile/image_7.webp';
+import agrilakoMobile8 from '../assets/agrilako/mobile/image_8.webp';
+import agrilakoMobile9 from '../assets/agrilako/mobile/image_9.webp';
+import agrilakoMobile10 from '../assets/agrilako/mobile/image_10.webp';
+import agrilakoMobile11 from '../assets/agrilako/mobile/image_11.webp';
+import agrilakoMobile12 from '../assets/agrilako/mobile/image_12.webp';
+import agrilakoMobile13 from '../assets/agrilako/mobile/image_13.webp';
+import agrilakoMobile14 from '../assets/agrilako/mobile/image_14.webp';
+import shercle1 from '../assets/shercle_photos/mobile/shercle1.webp';
+import shercle2 from '../assets/shercle_photos/mobile/shercle2.webp';
+import shercle3 from '../assets/shercle_photos/mobile/shercle3.webp';
+import shercle4 from '../assets/shercle_photos/mobile/shercle4.webp';
+import shercle5 from '../assets/shercle_photos/mobile/shercle5.webp';
+import shercle6 from '../assets/shercle_photos/mobile/shercle6.webp';
+import shercle7 from '../assets/shercle_photos/mobile/shercle7.webp';
+import shercle8 from '../assets/shercle_photos/mobile/shercle8.webp';
+import shercle10 from '../assets/shercle_photos/mobile/shercle10.webp';
+import shercle11 from '../assets/shercle_photos/mobile/shercle11.webp';
+import shercle12 from '../assets/shercle_photos/mobile/shercle12.webp';
+import shercle13 from '../assets/shercle_photos/mobile/shercle13.webp';
+import shercle14 from '../assets/shercle_photos/mobile/shercle14.webp';
+import shercle15 from '../assets/shercle_photos/mobile/shercle15.webp';
+import shercle16 from '../assets/shercle_photos/mobile/shercle16.webp';
 
 // ProjeSIGHT
-import projesightHome from '../assets/projesight/home.png';
-import projesightLogin from '../assets/projesight/login.png';
-import projesightAddProj from '../assets/projesight/add_proj.png';
-import projesightAddProj1 from '../assets/projesight/add_proj1.png';
-import projesightAddProj2 from '../assets/projesight/add_proj2.png';
-import projesightViewProj from '../assets/projesight/view_proj.png';
-import projesightViewProj1 from '../assets/projesight/view_proj1.png';
-import projesightViewProj2 from '../assets/projesight/view_proj2.png';
-import projesightEditProj from '../assets/projesight/edit_proj.png';
-import projesightReport from '../assets/projesight/report.png';
-import projesightReport1 from '../assets/projesight/report1.png';
-import projesightAudit from '../assets/projesight/audit.png';
-import projesightUser from '../assets/projesight/user.png';
-import projesightArchive from '../assets/projesight/archive.png';
-import projesightSettings from '../assets/projesight/settings.png';
+import projesightHome from '../assets/projesight/home.webp';
+import projesightLogin from '../assets/projesight/login.webp';
+import projesightAddProj from '../assets/projesight/add_proj.webp';
+import projesightAddProj1 from '../assets/projesight/add_proj1.webp';
+import projesightAddProj2 from '../assets/projesight/add_proj2.webp';
+import projesightViewProj from '../assets/projesight/view_proj.webp';
+import projesightViewProj1 from '../assets/projesight/view_proj1.webp';
+import projesightViewProj2 from '../assets/projesight/view_proj2.webp';
+import projesightEditProj from '../assets/projesight/edit_proj.webp';
+import projesightReport from '../assets/projesight/report.webp';
+import projesightReport1 from '../assets/projesight/report1.webp';
+import projesightAudit from '../assets/projesight/audit.webp';
+import projesightUser from '../assets/projesight/user.webp';
+import projesightArchive from '../assets/projesight/archive.webp';
+import projesightSettings from '../assets/projesight/settings.webp';
 
 export const highlights = [
   {
@@ -76,8 +76,7 @@ export const highlights = [
   {
     title: "ProjeSIGHT",
     category: "Full-Stack Web App • GIS & Infrastructure Monitoring",
-    images: [projesightHome, projesightAddProj, projesightAddProj1, projesightAddProj2, projesightViewProj, projesightViewProj1, projesightViewProj2, projesightEditProj, projesightReport, projesightReport1, projesightAudit, projesightUser, projesightArchive, projesightSettings],
-    mobileImages: [projesightLogin],
+    images: [projesightHome, projesightLogin, projesightAddProj, projesightAddProj1, projesightAddProj2, projesightViewProj, projesightViewProj1, projesightViewProj2, projesightEditProj, projesightReport, projesightReport1, projesightAudit, projesightUser, projesightArchive, projesightSettings],
     desc: "A full-stack GIS and infrastructure project monitoring platform. Features an interactive Leaflet map with PSGC administrative hierarchy, complete project & financial lifecycle tracking, automated bi-monthly compliance report generation, JWT-based role access control (Admin / Staff / Viewer), security audit logging, and site photo uploads.",
     tech: ["React", "Vite", "Leaflet", "Node.js", "Express.js", "MySQL", "JWT", "Bcrypt.js"],
     links: { github: "https://github.com/Liam018", live: "#" },
