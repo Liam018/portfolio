@@ -234,13 +234,16 @@ const Navbar = () => {
             whileTap={{ scale: 0.95 }}
             className="flex items-center space-x-3 group cursor-pointer"
           >
-            <motion.div layoutId="mobile-nav-logo-box" className="w-10 h-10 rounded-xl overflow-hidden shadow-lg group-hover:shadow-primary/40 transition-shadow duration-300">
+            <div
+              id="navbar-logo-anchor"
+              className="w-10 h-10 rounded-xl overflow-hidden shadow-lg group-hover:shadow-primary/40 transition-shadow duration-300"
+            >
               <img 
                 src={logoAsset} 
                 alt="LKKE Logo" 
                 className="w-full h-full object-cover"
               />
-            </motion.div>
+            </div>
             <div className="flex flex-col">
               <motion.span layoutId="mobile-nav-name" className="text-lg font-display font-bold leading-tight tracking-tight">
                 {scrolled ? (

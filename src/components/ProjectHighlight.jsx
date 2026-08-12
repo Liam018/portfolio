@@ -12,7 +12,7 @@ const BrowserFrame = ({ children }) => (
         <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
         <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
       </div>
-      <div className="flex-1 max-w-[200px] sm:max-w-[320px] h-4 bg-black/40 rounded-md mx-auto" />
+      <div className="flex-1 max-w-50 sm:max-w-[320px] h-4 bg-black/40 rounded-md mx-auto" />
     </div>
     <div className="flex-1 overflow-hidden relative">{children}</div>
   </div>
@@ -28,6 +28,7 @@ const PhoneFrame = ({ children }) => (
 );
 
 const smoothTransition = { type: "spring", stiffness: 120, damping: 22, mass: 0.6 };
+const morphTransition = { type: 'spring', stiffness: 300, damping: 30, mass: 0.8 };
 
 const ProjectHighlight = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -202,21 +203,23 @@ const ProjectHighlight = () => {
               
               {/* Visual Side: Overlapping Mockups (Cols 1-6) */}
               <div className="lg:col-span-6 relative w-full flex items-center justify-center p-2">
-                <div className="relative w-full max-w-[520px] aspect-video">
+                <div className="relative w-full max-w-130 aspect-video">
                   <BrowserFrame>
                     {highlights[currentIndex].images?.[0] ? (
                       <motion.button
-                        layoutId={`project-img-box-${currentIndex}-0`}
+                        layoutId={`project-card-${currentIndex}-0`}
+                        transition={morphTransition}
                         onClick={() => setSelectedImgIdx(0)}
                         className="w-full h-full cursor-zoom-in group/browser block relative overflow-hidden text-left"
                       >
                         <motion.img
                           layoutId={`project-img-${currentIndex}-0`}
+                          transition={morphTransition}
                           src={highlights[currentIndex].images[0]}
                           alt={`${highlights[currentIndex].title} Web view`}
                           loading="lazy"
                           decoding="async"
-                          className="w-full h-full object-cover group-hover/browser:scale-102 transition-transform duration-500"
+                          className="w-full h-full object-cover"
                         />
                       </motion.button>
                     ) : highlights[currentIndex].mobileImages ? (
@@ -232,23 +235,25 @@ const ProjectHighlight = () => {
                   </BrowserFrame>
 
                   {currentMobileImg && (
-                    <div className="absolute -bottom-5 -right-2 sm:-bottom-7 sm:-right-4 z-20 w-[35%] max-w-[170px] aspect-[9/18.5]">
+                    <div className="absolute -bottom-5 -right-2 sm:-bottom-7 sm:-right-4 z-20 w-[35%] max-w-42.5 aspect-[9/18.5]">
                       <PhoneFrame>
                         {(() => {
                           const phoneImgIdx = highlights[currentIndex].images?.length || 0;
                           return (
                             <motion.button
-                              layoutId={`project-img-box-${currentIndex}-${phoneImgIdx}`}
+                              layoutId={`project-card-${currentIndex}-${phoneImgIdx}`}
+                              transition={morphTransition}
                               onClick={() => setSelectedImgIdx(phoneImgIdx)}
                               className="w-full h-full cursor-zoom-in relative group/phone block overflow-hidden text-left"
                             >
                               <motion.img
                                 layoutId={`project-img-${currentIndex}-${phoneImgIdx}`}
+                                transition={morphTransition}
                                 src={currentMobileImg}
                                 alt={`${highlights[currentIndex].title} Mobile screen`}
                                 loading="lazy"
                                 decoding="async"
-                                className="w-full h-full object-cover object-top group-hover/phone:scale-105 transition-transform duration-500"
+                                className="w-full h-full object-cover object-top"
                               />
                             </motion.button>
                           );
@@ -303,7 +308,7 @@ const ProjectHighlight = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.2 }}
             onClick={() => { setSelectedImgIdx(null); setIsZoomed(false); }}
             className="fixed inset-0 z-9999 bg-black/90 dark:bg-black/95 backdrop-blur-xl flex flex-col items-center justify-between p-4 sm:p-6 cursor-zoom-out select-none"
           >
@@ -352,11 +357,7 @@ const ProjectHighlight = () => {
             </div>
 
             {/* Main Lightbox Display Area with Touch Drag / Swipe */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.92, y: 10 }}
-              transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+            <div
               className="relative max-w-6xl w-full flex-1 flex items-center justify-center cursor-default my-2"
               onClick={(e) => e.stopPropagation()}
             >
@@ -371,7 +372,8 @@ const ProjectHighlight = () => {
               )}
 
               <motion.div
-                layoutId={`project-img-box-${currentIndex}-${selectedImgIdx}`}
+                layoutId={`project-card-${currentIndex}-${selectedImgIdx}`}
+                transition={morphTransition}
                 drag={!isZoomed ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.2}
@@ -384,20 +386,19 @@ const ProjectHighlight = () => {
                     setIsZoomed(false);
                   }
                 }}
-                className={`relative max-w-[90%] max-h-[75vh] rounded-2xl overflow-hidden shadow-2xl border border-white/15 transition-transform duration-300 ${
+                className={`relative max-w-[90%] max-h-[78vh] rounded-2xl overflow-hidden shadow-2xl border border-white/15 backdrop-blur-sm ${
                   isZoomed ? 'scale-125 cursor-zoom-out z-20' : 'cursor-zoom-in'
                 }`}
                 onClick={() => setIsZoomed((prev) => !prev)}
-                transition={{ type: 'spring', stiffness: 320, damping: 28 }}
               >
                 <motion.img
                   layoutId={`project-img-${currentIndex}-${selectedImgIdx}`}
+                  transition={morphTransition}
                   src={currentProjectImages[selectedImgIdx]}
                   alt="Project screenshot full view"
                   loading="eager"
                   decoding="async"
-                  className="w-full h-full max-h-[75vh] object-contain rounded-2xl select-none"
-                  transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+                  className="max-h-[78vh] w-auto h-auto object-contain rounded-2xl select-none mx-auto block"
                 />
               </motion.div>
 
@@ -410,7 +411,7 @@ const ProjectHighlight = () => {
                   <ChevronRight size={22} />
                 </button>
               )}
-            </motion.div>
+            </div>
 
             {/* Bottom Interactive Thumbnail Gallery Strip */}
             {currentProjectImages.length > 1 && (

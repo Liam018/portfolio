@@ -24,7 +24,7 @@ export const MobileMenu = ({
           initial={{ opacity: 0, scale: 0.9, y: -20, borderRadius: '2.5rem' }}
           animate={{ opacity: 1, scale: 1, y: 0, borderRadius: '0rem' }}
           exit={{ opacity: 0, scale: 0.9, y: -20, borderRadius: '2.5rem' }}
-          transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30, mass: 0.8 }}
           style={{ transformOrigin: 'top right', willChange: 'transform, opacity, border-radius' }}
           className="lg:hidden fixed inset-0 z-9999 bg-background/98 dark:bg-[#0a0a0a]/98 backdrop-blur-2xl flex flex-col justify-between p-6 sm:p-10 overscroll-contain overflow-y-auto pointer-events-auto"
         >
